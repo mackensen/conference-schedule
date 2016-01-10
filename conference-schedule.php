@@ -167,6 +167,42 @@ class Conference_Schedule {
 		// Register the schedule custom post type
 		register_post_type( 'schedule', $schedule_args );
 
+		// Define the labels for the speakers CPT
+		$speakers_labels = apply_filters( 'conf_schedule_speakers_CPT_labels', array(
+			'name'                  => _x( 'Speakers', 'Post Type General Name', 'conf-schedule' ),
+			'singular_name'         => _x( 'Speaker', 'Post Type Singular Name', 'conf-schedule' ),
+			'menu_name'             => __( 'Speakers', 'conf-schedule' ),
+			'name_admin_bar'        => __( 'Speakers', 'conf-schedule' ),
+			'archives'              => __( 'Speakers', 'conf-schedule' ),
+			'all_items'             => __( 'All Speakers', 'conf-schedule' ),
+			'add_new_item'          => __( 'Add New Speaker', 'conf-schedule' ),
+			'new_item'              => __( 'New Speaker', 'conf-schedule' ),
+			'edit_item'             => __( 'Edit Speaker', 'conf-schedule' ),
+			'update_item'           => __( 'Update Speaker', 'conf-schedule' ),
+			'view_item'             => __( 'View Speaker', 'conf-schedule' ),
+			'search_items'          => __( 'Search Speakers', 'conf-schedule' ),
+			'not_found'             => __( 'No speakers found', 'conf-schedule' ),
+			'not_found_in_trash'    => __( 'No speakers found in Trash', 'conf-schedule' ),
+		));
+
+		// Define the args for the speakers CPT
+		$speakers_args = apply_filters( 'conf_schedule_speakers_CPT_args', array(
+			'label'                 => __( 'Speakers', 'conf-schedule' ),
+			'description'           => __( 'The speakers content for your conference.', 'conf-schedule' ),
+			'labels'                => $speakers_labels,
+			'public'                => true,
+			'hierarchical'          => false,
+			'supports'              => array( 'title', 'editor', 'thumbnail', 'excerpt', 'revisions' ),
+			'has_archive'           => true,
+			'menu_icon'             => 'dashicons-admin-users',
+			'can_export'            => true,
+			'capability_type'       => 'post',
+			'show_in_menu'			=> 'edit.php?post_type=schedule',
+		));
+
+		// Register the speakers custom post type
+		register_post_type( 'speakers', $speakers_args );
+
 	}
 
 }
