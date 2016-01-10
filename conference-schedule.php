@@ -24,6 +24,11 @@ if ( ! defined( 'WPINC' ) ) {
 define( 'CONFERENCE_SCHEDULE_VERSION', '1.0.0' );
 define( 'CONFERENCE_SCHEDULE_PLUGIN_FILE', 'conference-schedule/conference-schedule.php' );
 
+// We only need admin functionality in the admin
+if ( is_admin() ) {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/admin.php';
+}
+
 class Conference_Schedule {
 
 	/**
@@ -129,7 +134,12 @@ class Conference_Schedule {
 		load_plugin_textdomain( 'conf-schedule', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 	}
 
-	// Register Custom Post Type
+	/**
+	 * Registers our plugins's custom post types.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 */
 	public function register_custom_post_types() {
 
 		// Define the labels for the schedule CPT
