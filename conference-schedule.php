@@ -162,6 +162,7 @@ class Conference_Schedule {
 			'menu_icon'             => 'dashicons-calendar',
 			'can_export'            => true,
 			'capability_type'       => 'post',
+			'show_in_rest'			=> true,
 		));
 
 		// Register the schedule custom post type
@@ -198,6 +199,7 @@ class Conference_Schedule {
 			'can_export'            => true,
 			'capability_type'       => 'post',
 			'show_in_menu'			=> 'edit.php?post_type=schedule',
+			'show_in_rest'			=> true,
 		));
 
 		// Register the speakers custom post type
