@@ -193,7 +193,7 @@ class Conference_Schedule_Admin {
 					$event_date = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ 'date'] );
 
 					// Update/save value
-					update_post_meta( $post_id, 'conf_sch_date', $event_date );
+					update_post_meta( $post_id, 'conf_sch_event_date', $event_date );
 
 				}
 
@@ -206,7 +206,7 @@ class Conference_Schedule_Admin {
 						$time_value = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ $time_key ] );
 
 						// Update/save value
-						update_post_meta( $post_id, "conf_sch_{$time_key}", date( 'H:i', strtotime( $time_value ) ) );
+						update_post_meta( $post_id, "conf_sch_event_{$time_key}", date( 'H:i', strtotime( $time_value ) ) );
 
 					}
 
@@ -231,7 +231,9 @@ class Conference_Schedule_Admin {
 		wp_nonce_field( 'conf_schedule_save_event_details', 'conf_schedule_save_event_details_nonce' );
 
 		// Get saved event details
-		$event_date = get_post_meta( $post_id, 'conf_sch_date', true );
+		$event_date = get_post_meta( $post_id, 'conf_sch_event_date', true );
+		$event_start_time = get_post_meta( $post_id, 'conf_sch_event_start_time', true );
+		$event_end_time = get_post_meta( $post_id, 'conf_sch_event_end_time', true );
 
 		?><table class="form-table">
 			<tbody>
@@ -244,13 +246,13 @@ class Conference_Schedule_Admin {
 				<tr>
 					<th scope="row"><label for="conf-sch-start-time">Start Time</label></th>
 					<td>
-						<input name="conf_schedule[event][start_time]" type="text" id="conf-sch-start-time" value="" class="regular-text conf-sch-time-field" />
+						<input name="conf_schedule[event][start_time]" type="text" id="conf-sch-start-time" value="<?php echo esc_attr( $event_start_time ); ?>" class="regular-text conf-sch-time-field" />
 					</td>
 				</tr>
 				<tr>
 					<th scope="row"><label for="conf-sch-end-time">End Time</label></th>
 					<td>
-						<input name="conf_schedule[event][end_time]" type="text" id="conf-sch-end-time" value="" class="regular-text conf-sch-time-field" />
+						<input name="conf_schedule[event][end_time]" type="text" id="conf-sch-end-time" value="<?php echo esc_attr( $event_end_time ); ?>" class="regular-text conf-sch-time-field" />
 					</td>
 				</tr>
 			</tbody>
