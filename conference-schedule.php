@@ -4,7 +4,7 @@
  * Plugin Name:       Conference Schedule
  * Plugin URI:        @TODO
  * Description:       @TODO
- * Version:           1.0.0
+ * Version:           0.5
  * Author:            Rachel Carden
  * Author URI:        https://bamadesigner.com
  * License:           GPL-2.0+
@@ -21,7 +21,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 // If you define them, will they be used?
-define( 'CONFERENCE_SCHEDULE_VERSION', '1.0.0' );
+define( 'CONFERENCE_SCHEDULE_VERSION', '0.5' );
 define( 'CONFERENCE_SCHEDULE_PLUGIN_FILE', 'conference-schedule/conference-schedule.php' );
 
 // We only need admin functionality in the admin
@@ -86,6 +86,9 @@ class Conference_Schedule {
 
 		// Register custom post types
 		add_action( 'init', array( $this, 'register_custom_post_types' ), 0 );
+
+		// Register taxonomies
+		add_action( 'init', array( $this, 'register_taxonomies' ), 0 );
 
 	}
 
@@ -214,6 +217,49 @@ class Conference_Schedule {
 
 		// Register the speakers custom post type
 		register_post_type( 'speakers', $speakers_args );
+
+	}
+
+	/**
+	 * Registers our plugins's taxonomies.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 */
+	public function register_taxonomies() {
+
+		// Define the labels for the categories taxonomy
+		$categories_labels = apply_filters( 'conf_schedule_categories_labels', array(
+			'name'						=> _x( 'Event Categories', 'Taxonomy General Name', 'conf-schedule' ),
+			'singular_name'				=> _x( 'Event Category', 'Taxonomy Singular Name', 'conf-schedule' ),
+			'menu_name'					=> __( 'Event Categories', 'conf-schedule' ),
+			'all_items'					=> __( 'All Event Categories', 'conf-schedule' ),
+			'new_item_name'				=> __( 'New Event Category', 'conf-schedule' ),
+			'add_new_item'				=> __( 'Add New Event Category', 'conf-schedule' ),
+			'edit_item'					=> __( 'Edit Event Category', 'conf-schedule' ),
+			'update_item'				=> __( 'Update Event Category', 'conf-schedule' ),
+			'view_item'					=> __( 'View Event Category', 'conf-schedule' ),
+			'separate_items_with_commas'=> __( 'Separate event categories with commas', 'conf-schedule' ),
+			'add_or_remove_items'		=> __( 'Add or remove event categories', 'conf-schedule' ),
+			'choose_from_most_used'		=> __( 'Choose from the most used event categories', 'conf-schedule' ),
+			'popular_items'				=> __( 'Popular event categories', 'conf-schedule' ),
+			'search_items'				=> __( 'Search Event Categories', 'conf-schedule' ),
+			'not_found'					=> __( 'Not Found', 'conf-schedule' ),
+			'no_terms'					=> __( 'No categories', 'conf-schedule' ),
+		));
+
+		// Define the arguments for the categories taxonomy
+		$categories_args = array(
+			'labels'					=> $categories_labels,
+			'hierarchical'				=> false,
+			'public'					=> true,
+			'show_ui'					=> true,
+			'show_admin_column'			=> true,
+			'show_in_nav_menus'			=> true,
+			'show_tagcloud'				=> false,
+			'meta_box_cb'				=> 'post_categories_meta_box',
+		);
+		register_taxonomy( 'schedule_categories', array( 'schedule' ), $categories_args );
 
 	}
 
