@@ -7,6 +7,10 @@
 		// Set our datepicker
 		$( '.conf-sch-date-field' ).datepicker();
 
+		// Setup alt field and format for event datepicker
+		$( '#conf-sch-date' ).datepicker( 'option', 'altField', '#conf-sch-date-alt' );
+		$( '#conf-sch-date' ).datepicker( 'option', 'altFormat', 'yy-mm-dd' );
+
 		// Set our timepicker
 		$( '.conf-sch-time-field' ).timepicker({
 			step: 15,

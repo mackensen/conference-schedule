@@ -35,7 +35,7 @@ class Conference_Schedule_Admin {
 	protected function __construct() {
 
 		// Add styles and scripts for the tools page
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ), 20 );
 
 		// Add meta boxes
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 1, 2 );
@@ -64,14 +64,6 @@ class Conference_Schedule_Admin {
 	private function __wakeup() {}
 
 	/**
-	 * Runs when the plugin is installed.
-	 *
-	 * @access  public
-	 * @since   1.0.0
-	 */
-	public function install() {}
-
-	/**
 	 * Add styles and scripts in the admin.
 	 *
 	 * @access  public
@@ -87,11 +79,11 @@ class Conference_Schedule_Admin {
 			wp_enqueue_style( 'jquery-ui', '//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', array(), CONFERENCE_SCHEDULE_VERSION );
 
 			// Enqueue the time picker
-			wp_enqueue_style( 'timepicker', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'css' ) . 'timepicker.css', array(), CONFERENCE_SCHEDULE_VERSION );
-			wp_register_script( 'timepicker', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'js' ) . 'jquery.timepicker.min.js', array( 'jquery' ), CONFERENCE_SCHEDULE_VERSION, true );
+			wp_enqueue_style( 'timepicker', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'css' ) . 'timepicker.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
+			wp_register_script( 'timepicker', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'js' ) . 'timepicker.min.js', array( 'jquery' ), CONFERENCE_SCHEDULE_VERSION, true );
 
 			// Enqueue the post script
-			wp_enqueue_script( 'conf-schedule-admin-post', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'js' ) . 'admin-post.js', array( 'jquery', 'jquery-ui-datepicker', 'timepicker' ), CONFERENCE_SCHEDULE_VERSION, true );
+			wp_enqueue_script( 'conf-schedule-admin-post', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'js' ) . 'admin-post.min.js', array( 'jquery', 'jquery-ui-datepicker', 'timepicker' ), CONFERENCE_SCHEDULE_VERSION, true );
 
 		}
 
@@ -231,16 +223,20 @@ class Conference_Schedule_Admin {
 		wp_nonce_field( 'conf_schedule_save_event_details', 'conf_schedule_save_event_details_nonce' );
 
 		// Get saved event details
-		$event_date = get_post_meta( $post_id, 'conf_sch_event_date', true );
+		$event_date = get_post_meta( $post_id, 'conf_sch_event_date', true ); // Y-m-d
 		$event_start_time = get_post_meta( $post_id, 'conf_sch_event_start_time', true );
 		$event_end_time = get_post_meta( $post_id, 'conf_sch_event_end_time', true );
+
+		// Convert event date to m/d/Y
+		$event_date_mdy = $event_date ? date( 'm/d/Y', strtotime( $event_date ) ) : null;
 
 		?><table class="form-table">
 			<tbody>
 				<tr>
 					<th scope="row"><label for="conf-sch-date">Date</label></th>
 					<td>
-						<input name="conf_schedule[event][date]" type="text" id="conf-sch-date" value="<?php echo esc_attr( $event_date ); ?>" class="regular-text conf-sch-date-field" />
+						<input type="text" id="conf-sch-date" value="<?php echo esc_attr( $event_date_mdy ); ?>" class="regular-text conf-sch-date-field" />
+						<input name="conf_schedule[event][date]" type="hidden" id="conf-sch-date-alt" value="<?php echo esc_attr( $event_date ); ?>" />
 					</td>
 				</tr>
 				<tr>
@@ -257,7 +253,6 @@ class Conference_Schedule_Admin {
 				</tr>
 			</tbody>
 		</table><?php
-
 
 	}
 
