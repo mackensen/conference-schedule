@@ -24,6 +24,10 @@ if ( ! defined( 'WPINC' ) ) {
 define( 'CONFERENCE_SCHEDULE_VERSION', '0.5' );
 define( 'CONFERENCE_SCHEDULE_PLUGIN_FILE', 'conference-schedule/conference-schedule.php' );
 
+// Require the files we need
+require_once plugin_dir_path( __FILE__ ) . 'includes/api.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/shortcodes.php';
+
 // We only need admin functionality in the admin
 if ( is_admin() ) {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/admin.php';
@@ -84,6 +88,10 @@ class Conference_Schedule {
 		// Runs when the plugin is upgraded
 		add_action( 'upgrader_process_complete', array( $this, 'upgrader_process_complete' ), 1, 2 );
 
+		// Adjust the schedule query
+		add_action( 'pre_get_posts', array( $this, 'filter_pre_get_posts' ), 20 );
+		add_filter( 'posts_clauses', array( $this, 'filter_posts_clauses' ), 20, 2 );
+
 		// Register custom post types
 		add_action( 'init', array( $this, 'register_custom_post_types' ), 0 );
 
@@ -138,6 +146,69 @@ class Conference_Schedule {
 	}
 
 	/**
+	 * Adjust the schedule query.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 */
+	public function filter_pre_get_posts( $query ) {
+
+		// Not in admin
+		if ( is_admin() ) {
+			return false;
+		}
+
+		// Have to check single array with json queries
+		$post_type = $query->get( 'post_type' );
+		if ( 'schedule' == $post_type
+			|| ( is_array( $post_type ) && in_array( 'schedule', $post_type ) && count( $post_type ) == 1 ) ) {
+
+			// Always get all schedule items
+			$query->set( 'posts_per_page' , '-1' );
+
+		}
+
+	}
+
+	/**
+	 * Filter the queries to "join" and order schedule information.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 */
+	public function filter_posts_clauses( $pieces, $query ) {
+		global $wpdb;
+
+		// Not in admin
+		if ( is_admin() ) {
+			return $pieces;
+		}
+
+		// Only for schedule query
+		$post_type = $query->get( 'post_type' );
+		if ( 'schedule' == $post_type
+			|| ( is_array( $post_type ) && in_array( 'schedule', $post_type ) && count( $post_type ) == 1 ) ) {
+
+			// Join to get name info
+			foreach( array( 'conf_sch_event_date', 'conf_sch_event_start_time', 'conf_sch_event_end_time' ) as $name_part ) {
+
+				// Might as well store the join info as fields
+				$pieces[ 'fields' ] .= ", {$name_part}.meta_value AS {$name_part}";
+
+				// "Join" to get the info
+				$pieces[ 'join' ] .= " LEFT JOIN {$wpdb->postmeta} {$name_part} ON {$name_part}.post_id = {$wpdb->posts}.ID AND {$name_part}.meta_key = '{$name_part}'";
+
+			}
+
+			// Setup the orderby
+			$pieces[ 'orderby' ] = " CAST( conf_sch_event_date.meta_value AS DATE ) ASC, conf_sch_event_start_time.meta_value ASC, conf_sch_event_end_time ASC";
+
+		}
+
+		return $pieces;
+	}
+
+	/**
 	 * Registers our plugins's custom post types.
 	 *
 	 * @access  public
@@ -171,7 +242,7 @@ class Conference_Schedule {
 			'public'                => true,
 			'hierarchical'          => false,
 			'supports'              => array( 'title', 'editor', 'thumbnail', 'excerpt', 'revisions' ),
-			'has_archive'           => true,
+			'has_archive'           => false,
 			'menu_icon'             => 'dashicons-calendar',
 			'can_export'            => true,
 			'capability_type'       => 'post',
