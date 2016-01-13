@@ -200,22 +200,22 @@ class Conference_Schedule_Admin {
 				}
 
 				// Make sure type is set
-				if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'event_type' ] ) ) {
-					$event_types = $_POST[ 'conf_schedule' ][ 'event' ][ 'event_type' ];
+				if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'event_categories' ] ) ) {
+					$event_categories = $_POST[ 'conf_schedule' ][ 'event' ][ 'event_categories' ];
 
 					// Make sure its an array
-					if ( ! is_array( $event_types ) ) {
-						$event_types = explode( ',', $event_types );
+					if ( ! is_array( $event_categories ) ) {
+						$event_categories = explode( ',', $event_categories );
 					}
 
 					// Make sure it has only IDs
-					$event_types = array_filter( $event_types, 'is_numeric' );
+					$event_categories = array_filter( $event_categories, 'is_numeric' );
 
 					// Convert to integer
-					$event_types = array_map( 'intval', $event_types );
+					$event_categories = array_map( 'intval', $event_categories );
 
 					// Set the terms
-					wp_set_object_terms( $post_id, $event_types, 'schedule_categories', false );
+					wp_set_object_terms( $post_id, $event_categories, 'schedule_categories', false );
 
 				}
 
@@ -275,8 +275,8 @@ class Conference_Schedule_Admin {
 		wp_nonce_field( 'conf_schedule_save_event_details', 'conf_schedule_save_event_details_nonce' );
 
 		// Get saved event details
-		$event_types = get_terms( 'schedule_categories', array( 'orderby' => 'name', 'order' => 'ASC', 'hide_empty' => false ) );
-		$selected_event_types = wp_get_object_terms( $post_id, 'schedule_categories', array( 'fields' => 'ids' ) );
+		$event_categories = get_terms( 'schedule_categories', array( 'orderby' => 'name', 'order' => 'ASC', 'hide_empty' => false ) );
+		$selected_event_categories = wp_get_object_terms( $post_id, 'schedule_categories', array( 'fields' => 'ids' ) );
 		$event_date = get_post_meta( $post_id, 'conf_sch_event_date', true ); // Y-m-d
 		$event_start_time = get_post_meta( $post_id, 'conf_sch_event_start_time', true );
 		$event_end_time = get_post_meta( $post_id, 'conf_sch_event_end_time', true );
@@ -310,12 +310,12 @@ class Conference_Schedule_Admin {
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="conf-sch-event-type">Event Type(s)</label></th>
+					<th scope="row"><label for="conf-sch-event-categories">Event Categories</label></th>
 					<td>
-						<select id="conf-sch-event-type" style="width:75%;" name="conf_schedule[event][event_type][]" multiple="multiple">
+						<select id="conf-sch-event-categories" style="width:75%;" name="conf_schedule[event][event_categories][]" multiple="multiple">
 							<option value="">Select an event type</option><?php
-							foreach( $event_types as $event_type ) {
-								?><option value="<?php echo $event_type->term_id; ?>"<?php selected( in_array( $event_type->term_id, $selected_event_types ) ); ?>><?php echo $event_type->name; ?></option><?php
+							foreach( $event_categories as $event_cat ) {
+								?><option value="<?php echo $event_cat->term_id; ?>"<?php selected( in_array( $event_cat->term_id, $selected_event_categories ) ); ?>><?php echo $event_cat->name; ?></option><?php
 							}
 						?></select>
 					</td>

@@ -31,7 +31,7 @@
 		$( '#conf-sch-end-time' ).timepicker( 'option', 'durationTime', function() { return $( '#conf-sch-start-time').val() } );
 
 		// Setup the select2
-		$( '#conf-sch-event-type').select2();
+		$( '#conf-sch-event-categories').select2();
 
 		// Get the event types for the select2
 		/*$.ajax( {
@@ -45,7 +45,7 @@
 
 				// Add the options
 				$.each( $categories, function( $index, $value ) {
-					$( '#conf-sch-event-type').append( '<option value="' + $value.id + '">' + $value.name + '</option>' );
+					$( '#conf-sch-event-categories').append( '<option value="' + $value.id + '">' + $value.name + '</option>' );
 				});
 
 				// See what is selected
@@ -60,7 +60,7 @@
 
 						// Mark the options selected
 						$.each( $selected_categories, function( $index, $value ) {
-							$( '#conf-sch-event-type option[value="' + $value.id + '"]').attr( 'selected', true ).trigger('change');
+							$( '#conf-sch-event-categories option[value="' + $value.id + '"]').attr( 'selected', true ).trigger('change');
 						});
 
 					},
