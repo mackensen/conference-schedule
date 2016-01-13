@@ -266,8 +266,8 @@ class Conference_Schedule {
 			'update_item'           => __( 'Update Speaker', 'conf-schedule' ),
 			'view_item'             => __( 'View Speaker', 'conf-schedule' ),
 			'search_items'          => __( 'Search Speakers', 'conf-schedule' ),
-			'not_found'             => __( 'No speakers found', 'conf-schedule' ),
-			'not_found_in_trash'    => __( 'No speakers found in Trash', 'conf-schedule' ),
+			'not_found'             => __( 'No speakers found.', 'conf-schedule' ),
+			'not_found_in_trash'    => __( 'No speakers found in the trash.', 'conf-schedule' ),
 		));
 
 		// Define the args for the speakers CPT
@@ -288,6 +288,43 @@ class Conference_Schedule {
 
 		// Register the speakers custom post type
 		register_post_type( 'speakers', $speakers_args );
+
+		// Define the labels for the locations CPT
+		$locations_labels = apply_filters( 'conf_schedule_locations_CPT_labels', array(
+			'name'                  => _x( 'Locations', 'Post Type General Name', 'conf-schedule' ),
+			'singular_name'         => _x( 'Location', 'Post Type Singular Name', 'conf-schedule' ),
+			'menu_name'             => __( 'Locations', 'conf-schedule' ),
+			'name_admin_bar'        => __( 'Locations', 'conf-schedule' ),
+			'archives'              => __( 'Locations', 'conf-schedule' ),
+			'all_items'             => __( 'All Locations', 'conf-schedule' ),
+			'add_new_item'          => __( 'Add New Location', 'conf-schedule' ),
+			'new_item'              => __( 'New Location', 'conf-schedule' ),
+			'edit_item'             => __( 'Edit Location', 'conf-schedule' ),
+			'update_item'           => __( 'Update Location', 'conf-schedule' ),
+			'view_item'             => __( 'View Location', 'conf-schedule' ),
+			'search_items'          => __( 'Search Locations', 'conf-schedule' ),
+			'not_found'             => __( 'No locations found.', 'conf-schedule' ),
+			'not_found_in_trash'    => __( 'No locations found in Trash', 'conf-schedule' ),
+		));
+
+		// Define the args for the locations CPT
+		$locations_args = apply_filters( 'conf_schedule_locations_CPT_args', array(
+			'label'                 => __( 'Locations', 'conf-schedule' ),
+			'description'           => __( 'The locations content for your conference.', 'conf-schedule' ),
+			'labels'                => $locations_labels,
+			'public'                => true,
+			'hierarchical'          => false,
+			'supports'              => array( 'title', 'editor', 'thumbnail', 'excerpt', 'revisions' ),
+			'has_archive'           => true,
+			'menu_icon'             => 'dashicons-location',
+			'can_export'            => true,
+			'capability_type'       => 'post',
+			'show_in_menu'			=> 'edit.php?post_type=schedule',
+			'show_in_rest'			=> true,
+		));
+
+		// Register the locations custom post type
+		register_post_type( 'locations', $locations_args );
 
 	}
 
@@ -315,8 +352,8 @@ class Conference_Schedule {
 			'choose_from_most_used'		=> __( 'Choose from the most used event categories', 'conf-schedule' ),
 			'popular_items'				=> __( 'Popular event categories', 'conf-schedule' ),
 			'search_items'				=> __( 'Search Event Categories', 'conf-schedule' ),
-			'not_found'					=> __( 'Not Found', 'conf-schedule' ),
-			'no_terms'					=> __( 'No categories', 'conf-schedule' ),
+			'not_found'					=> __( 'No event categories found.', 'conf-schedule' ),
+			'no_terms'					=> __( 'No event categories', 'conf-schedule' ),
 		));
 
 		// Define the arguments for the categories taxonomy
