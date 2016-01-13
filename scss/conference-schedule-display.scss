@@ -13,7 +13,7 @@ $heweb-blue: #0f5588;
 $schedule-border-color: rgba( #000, 0.1 );
 
 // For the different event types
-$event_types_with_bg: ('keynote' $keynote-bg) ('food' $food-bg) ('social', $social-bg) ('auditorium', $auditorium-bg) ('break', $break-bg);
+$event_categories: ('keynote': $keynote-bg) ('food': $food-bg) ('social': $social-bg) ('auditorium': $auditorium-bg) ('break': $break-bg);
 
 // Give color to a schedule row
 @mixin schedule_row_with_bg($bg_color) {
@@ -283,12 +283,6 @@ $event_types_with_bg: ('keynote' $keynote-bg) ('food' $food-bg) ('social', $soci
 
         }
 
-        @each $event_type, $event_type_color in $event_types_with_bg {
-            &.#{$event_type} {
-                @include schedule_row_with_bg($event_type_color);
-            }
-        }
-
         &.current {
             @include schedule_row_with_bg( rgba( #f9ff00, 0.2 ) );
         }
@@ -302,16 +296,6 @@ $event_types_with_bg: ('keynote' $keynote-bg) ('food' $food-bg) ('social', $soci
 
         }
 
-    }
-
-    @each $event_type, $event_type_color in $event_types_with_bg {
-        .schedule-row.#{$event_type} + .schedule-row {
-            border-top: 0;
-
-            &:before {
-                border-top: 0;
-            }
-        }
     }
 
     .schedule-row.current + .schedule-row {
@@ -503,19 +487,6 @@ body.page-template-schedule {
 
             &:last-child {
                 border-bottom: 1px solid $schedule-border-color !important;
-            }
-
-            @each $event_type, $event_type_color in $event_types_with_bg {
-
-                &.#{$event_type} {
-                    background: $event_type_color;
-
-                    &:before {
-                        display: none;
-                    }
-
-                }
-
             }
 
             &.current {

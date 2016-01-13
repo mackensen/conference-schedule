@@ -1,58 +1,418 @@
-/*
-Error: Undefined variable: "$event_type".
-        on line 491 of scss/conference-schedule-display.scss
+.clear {
+  clear: both;
+}
 
-486:     }
-487: 
-488: }*\/
-489: 
-490: // Medium and Larger
-491: /*@media not all and (min-width: 0) and (max-width: $screen-sm-max) {
-492: 
-493:     .single-schedule {
-494: 
-495:         .schedule-item-details {
-496:             float: right;
+/*.single-schedule {
 
-Backtrace:
-scss/conference-schedule-display.scss:491
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/script/tree/variable.rb:49:in `_perform'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/script/tree/node.rb:50:in `perform'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/script/tree/interpolation.rb:100:in `_perform'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/script/tree/node.rb:50:in `perform'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/tree/visitors/perform.rb:537:in `block in run_interp_no_strip'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/tree/visitors/perform.rb:535:in `map'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/tree/visitors/perform.rb:535:in `run_interp_no_strip'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/tree/visitors/perform.rb:195:in `visit_comment'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/tree/visitors/base.rb:36:in `visit'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/tree/visitors/perform.rb:158:in `block in visit'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/stack.rb:79:in `block in with_base'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/stack.rb:115:in `with_frame'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/stack.rb:79:in `with_base'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/tree/visitors/perform.rb:158:in `visit'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/tree/visitors/base.rb:52:in `block in visit_children'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/tree/visitors/base.rb:52:in `map'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/tree/visitors/base.rb:52:in `visit_children'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/tree/visitors/perform.rb:167:in `block in visit_children'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/tree/visitors/perform.rb:179:in `with_environment'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/tree/visitors/perform.rb:166:in `visit_children'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/tree/visitors/base.rb:36:in `block in visit'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/tree/visitors/perform.rb:186:in `visit_root'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/tree/visitors/base.rb:36:in `visit'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/tree/visitors/perform.rb:157:in `visit'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/tree/visitors/perform.rb:8:in `visit'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/tree/root_node.rb:36:in `css_tree'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/tree/root_node.rb:20:in `render'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/engine.rb:278:in `render'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/exec/sass_scss.rb:418:in `run'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/exec/sass_scss.rb:63:in `process_result'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/exec/base.rb:52:in `parse'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/lib/sass/exec/base.rb:19:in `parse!'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.18/bin/sass:13:in `<top (required)>'
-/usr/local/bin/sass:23:in `load'
-/usr/local/bin/sass:23:in `<main>'
-*/
-body:before {
-  white-space: pre;
-  font-family: monospace;
-  content: "Error: Undefined variable: \"$event_type\".\A         on line 491 of scss/conference-schedule-display.scss\A \A 486:     }\A 487: \A 488: }*/\A 489: \A 490: // Medium and Larger\A 491: /*@media not all and (min-width: 0) and (max-width: $screen-sm-max) {\A 492: \A 493:     .single-schedule {\A 494: \A 495:         .schedule-item-details {\A 496:             float: right;"; }
+    .schedule-item-details {
+
+        ul {
+            display: block;
+            margin-left: 0;
+            margin-right: 0;
+            padding: 0;
+            list-style: none;
+
+            li {
+                display: block;
+                margin-left: 0;
+                margin-right: 0;
+                list-style: none;
+            }
+
+        }
+    }
+
+    .speakers {
+
+        .speaker {
+            margin: 0 0 20px 0;
+
+            .speaker-thumb {
+                display: block;
+                width: 200px;
+                height: auto;
+                margin: 0 0 20px 0;
+            }
+
+            h4 {
+                mmargin-bottom: 16px;
+            }
+
+            h3 {
+                margin-top: 0;
+
+                & + h4 {
+                    margin-top: -8px;
+                }
+
+            }
+
+            .speaker-text {
+                overflow: auto;
+            }
+
+            .twitter {
+                display: inline-block;
+                background: url( '../images/twitter-bird-red.png' ) left center no-repeat;
+                background-size: auto 22px;
+                padding: 0 0 0 36px;
+                font-size: 22px;
+                line-height: 1.3;
+                margin: -5px 0 22px 0;
+            }
+
+        }
+
+    }
+
+}*/
+/*.schedule-header {
+    font-size: 25px;
+    text-transform: uppercase;
+    margin: 35px 0 0 0;
+
+    &:first-child {
+        margin-top: 0;
+    }
+
+}*/
+.schedule-table {
+  margin: 20px 0;
+    /*.panel {
+
+        &.panel-dark-red {
+            font-size: 20px;
+            line-height: 22px;
+        }
+
+        &.panel-check-in-parking {
+            margin: 12px 0 5px 0;
+
+            .panel-body {
+                padding: 10px;
+                font-size: 15px;
+                line-height: 1.5;
+            }
+
+        }
+
+    }*/
+}
+.schedule-table .schedule-row {
+  clear: both;
+  overflow: auto;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 15px 0;
+}
+.schedule-table .schedule-row:last-child {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.schedule-table .schedule-row .schedule-item {
+  display: block;
+  clear: both;
+  background: none;
+  position: relative;
+}
+.schedule-table .schedule-row .schedule-item.time {
+  font-size: 0.85em;
+  padding: 0;
+  color: rgba(0, 0, 0, 0.65);
+}
+.schedule-table .schedule-row .schedule-item.event {
+  overflow: auto;
+}
+.schedule-table .schedule-row .schedule-item.event .event-header {
+  font-weight: bold;
+  margin-top: 0;
+}
+.schedule-table .schedule-row .schedule-item.event .event-location {
+  display: block;
+  font-style: italic;
+}
+.schedule-table .schedule-row .schedule-item.event .session .event-header,
+.schedule-table .schedule-row .schedule-item.event .keynote .event-header,
+.schedule-table .schedule-row .schedule-item.event .social .event-header {
+  font-size: 1.2em;
+  line-height: 1.5;
+  margin: 0 0 8px 0;
+}
+.schedule-table .schedule-row .schedule-item.event .session .event-header + .event-location,
+.schedule-table .schedule-row .schedule-item.event .keynote .event-header + .event-location,
+.schedule-table .schedule-row .schedule-item.event .social .event-header + .event-location {
+  margin-top: -4px;
+}
+.schedule-table .schedule-row .schedule-item.event .keynote.has-event-image {
+  overflow: auto;
+}
+.schedule-table .schedule-row .schedule-item.event .keynote.has-event-image .event-image {
+  float: right;
+  width: 200px;
+  height: auto;
+  margin: 5px 10px 20px 20px;
+}
+.schedule-table .schedule-row .schedule-item.event .session + .session {
+  margin: 17px 0 0 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding-top: 15px;
+}
+.schedule-table .schedule-row .schedule-item.event .session *:last-child {
+  margin-bottom: 0;
+}
+.schedule-table .schedule-row .schedule-item.event .keynote .event-header {
+  margin-bottom: 4px;
+}
+.schedule-table .schedule-row .schedule-item.event .event-desc {
+  font-size: 16px;
+  line-height: 1.8;
+}
+.schedule-table .schedule-row .schedule-item.event .event-desc img.thumb {
+  float: left;
+  max-width: 20%;
+  margin: 0 20px 20px 0;
+}
+.schedule-table .schedule-row .schedule-item.event .event-desc img.small {
+  width: 100%;
+  max-width: 100%;
+  margin: -5px 0 20px 0;
+}
+.schedule-table .schedule-row .schedule-item.event .event-desc .twitter-to-left {
+  background-size: auto 20px;
+  padding: 0 0 0 30px;
+}
+.schedule-table .schedule-row .schedule-item.event .keynote .event-desc {
+  margin: 15px 0 0 0;
+}
+.schedule-table .schedule-row .schedule-item.event .social .event-desc {
+  margin: 20px 0 0 0;
+}
+.schedule-table .schedule-row.current {
+  background: none;
+  position: relative;
+  overflow: visible;
+  z-index: 0;
+  border-top: 0;
+}
+.schedule-table .schedule-row.current:before {
+  content: '';
+  background: rgba(249, 255, 0, 0.2);
+  position: absolute;
+  left: -100%;
+  top: 0;
+  width: 300%;
+  height: 100%;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  z-index: -1;
+}
+.schedule-table .schedule-row.current:last-child {
+  border-bottom: 0;
+}
+.schedule-table .schedule-row.break .event-header {
+  font-weight: normal;
+  font-style: italic;
+}
+.schedule-table .schedule-row.current + .schedule-row {
+  border-top: 0;
+}
+.schedule-table .schedule-row.current + .schedule-row:before {
+  border-top: 0;
+}
+
+.collapsible-schedule-block {
+  display: block;
+  clear: both;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  padding: 0;
+  margin: 0 -10px 30px -10px;
+  overflow: hidden;
+}
+.collapsible-schedule-block .schedule-header {
+  background: rgba(0, 0, 0, 0.04);
+  margin: 0;
+  padding: 10px;
+  position: relative;
+  z-index: 0;
+  cursor: pointer;
+}
+.collapsible-schedule-block .schedule-header:before {
+  content: 'View';
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  margin: -9px 0 0 0;
+  font-size: 15px;
+  line-height: 1.2;
+  font-weight: normal;
+  text-transform: uppercase;
+  cursor: pointer;
+  z-index: -1;
+}
+.collapsible-schedule-block .schedule-table {
+  display: none;
+}
+.collapsible-schedule-block.open .schedule-header:before {
+  content: 'Close';
+}
+.collapsible-schedule-block.open .schedule-table {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+body.page-template-schedule .schedule-main-buttons-wrapper {
+  margin: -10px 0 30px 0;
+}
+body.page-template-schedule .schedule-main-buttons-wrapper .btn {
+  font-size: 20px;
+  line-height: 1.7;
+  text-decoration: none;
+  margin: 0;
+}
+body.page-template-schedule .schedule-main-buttons-wrapper .btn.conference-eval {
+  display: block;
+  width: 100%;
+}
+body.page-template-schedule .schedule-main-buttons-wrapper .btn.go-to-current-event {
+  display: none;
+  background: #0f5588;
+  width: 100%;
+  border: 0;
+  text-transform: uppercase;
+}
+body.page-template-schedule .schedule-main-buttons-wrapper .btn.go-to-current-event:hover {
+  background: #0b3e63;
+}
+body.page-template-schedule .schedule-main-buttons-wrapper .btn.go-to-current-event + .schedule-header {
+  margin-top: 0 !important;
+}
+body.page-template-schedule .schedule-main-buttons-wrapper.has-go-to-event .btn + .btn {
+  margin-top: 10px;
+}
+
+/*@media not all and (min-width: 0) and (max-width: $screen-xs-max) {
+
+    // Tweak the schedule page
+    body.page-template-schedule {
+
+        .schedule-main-buttons-wrapper {
+            margin: -10px 0 15px 0;
+            font-size: 16px;
+            line-height: 1.7;
+            overflow: auto;
+
+            .btn {
+                margin: 0 !important;
+
+                &.go-to-current-event {
+                    width: auto;
+                    float: right;
+                    margin-left: 20px !important;
+                }
+
+            }
+
+            &.has-go-to-event {
+
+                .btn.conference-eval {
+                    width: auto;
+                    float: left;
+                }
+
+            }
+
+        }
+
+    }
+
+}*/
+/*@media not all and (min-width: 0) and (max-width: $screen-sm-max) {
+
+    .single-schedule {
+
+        .schedule-item-details {
+            float: right;
+            margin: 0 20px 30px;
+            min-width: 300px;
+        }
+
+        .speakers {
+
+            .speaker {
+
+                .speaker-thumb {
+                    float: left;
+                    width: 200px;
+                    height: auto;
+                    margin: 0 20px 20px 0;
+                }
+
+            }
+
+        }
+
+    }
+
+    .schedule-table {
+
+        .schedule-row {
+            border-top: 1px solid $schedule-border-color !important;
+
+            &:last-child {
+                border-bottom: 1px solid $schedule-border-color !important;
+            }
+
+            &.current {
+                background: rgba( #f9ff00, 0.2 );
+
+                &:before {
+                    display: none;
+                }
+
+            }
+
+            .schedule-item {
+                display: block;
+                clear: none;
+                float: left;
+
+                &.time {
+                    width: 15%;
+                    padding: 0 10px;
+                    line-height: 2;
+                }
+
+                &.event {
+                    width: 85%;
+                    padding: 0 10px;
+
+                    .session {
+                        float: left;
+                        width: 50%;
+                        padding: 0 13px 0 0;
+                        margin: 0 !important;
+                        border: 0 !important;
+
+                        & + .session {
+                            padding: 0 0 0 13px;
+                        }
+
+                        &.keynote {
+                            float: none;
+                            width: 100%;
+                            padding: 0;
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+}*/
