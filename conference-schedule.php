@@ -4,7 +4,7 @@
  * Plugin Name:       Conference Schedule
  * Plugin URI:        @TODO
  * Description:       @TODO
- * Version:           0.5
+ * Version:           1.0 // @TODO Change to 0.5 after name is changed
  * Author:            Rachel Carden
  * Author URI:        https://bamadesigner.com
  * License:           GPL-2.0+
