@@ -245,6 +245,17 @@ class Conference_Schedule_Admin {
 
 				}
 
+				// Make sure location is set
+				if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'location' ] ) ) {
+
+					// Sanitize the value
+					$event_location = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ 'location'] );
+
+					// Update/save value
+					update_post_meta( $post_id, 'conf_sch_event_location', $event_location );
+
+				}
+
 				break;
 
 		}
@@ -270,6 +281,10 @@ class Conference_Schedule_Admin {
 		$event_start_time = get_post_meta( $post_id, 'conf_sch_event_start_time', true );
 		$event_end_time = get_post_meta( $post_id, 'conf_sch_event_end_time', true );
 
+		// Get location info
+		$event_locations = get_posts( array( 'post_type' => 'locations', 'orderby' => 'title', 'order' => 'ASC', 'posts_per_page' => -1 ) );
+		$selected_event_location = get_post_meta( $post_id, 'conf_sch_event_location', true );
+
 		// Convert event date to m/d/Y
 		$event_date_mdy = $event_date ? date( 'm/d/Y', strtotime( $event_date ) ) : null;
 
@@ -283,17 +298,6 @@ class Conference_Schedule_Admin {
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="conf-sch-event-type">Event Type(s)</label></th>
-					<td>
-						<select id="conf-sch-event-type" style="width:25em;" name="conf_schedule[event][event_type][]" multiple="multiple">
-							<option value="">Select an event type</option><?php
-							foreach( $event_types as $event_type ) {
-								?><option value="<?php echo $event_type->term_id; ?>"<?php selected( in_array( $event_type->term_id, $selected_event_types ) ); ?>><?php echo $event_type->name; ?></option><?php
-							}
-						?></select>
-					</td>
-				</tr>
-				<tr>
 					<th scope="row"><label for="conf-sch-start-time">Start Time</label></th>
 					<td>
 						<input name="conf_schedule[event][start_time]" type="text" id="conf-sch-start-time" value="<?php echo esc_attr( $event_start_time ); ?>" class="regular-text conf-sch-time-field" />
@@ -303,6 +307,31 @@ class Conference_Schedule_Admin {
 					<th scope="row"><label for="conf-sch-end-time">End Time</label></th>
 					<td>
 						<input name="conf_schedule[event][end_time]" type="text" id="conf-sch-end-time" value="<?php echo esc_attr( $event_end_time ); ?>" class="regular-text conf-sch-time-field" />
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="conf-sch-event-type">Event Type(s)</label></th>
+					<td>
+						<select id="conf-sch-event-type" style="width:75%;" name="conf_schedule[event][event_type][]" multiple="multiple">
+							<option value="">Select an event type</option><?php
+							foreach( $event_types as $event_type ) {
+								?><option value="<?php echo $event_type->term_id; ?>"<?php selected( in_array( $event_type->term_id, $selected_event_types ) ); ?>><?php echo $event_type->name; ?></option><?php
+							}
+						?></select>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="conf-sch-location">Location</label></th>
+					<td>
+						<select id="conf-sch-location" style="width:75%;" name="conf_schedule[event][location]">
+							<option value="">Select a location</option><?php
+
+							// @TODO Setup to work with API like the others
+							foreach( $event_locations as $location ) {
+								?><option value="<?php echo $location->ID; ?>"<?php selected( $location->ID, $selected_event_location ); ?>><?php echo get_the_title( $location->ID ); ?></option><?php
+							}
+							
+						?></select>
 					</td>
 				</tr>
 			</tbody>
