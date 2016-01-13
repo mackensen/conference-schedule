@@ -43,11 +43,11 @@
 			success: function ( $schedule_items, $text_status, $xhr ) {
 
 				// Add some functionality
-				$schedule_items.display_content = function() {
+				/*$schedule_items.display_content = function() {
 					return 'rachel';
-				}
+				}*/
 
-				console.log($schedule_items);
+				//console.log($schedule_items);
 
 				// Render the templates
 				var $rendered_list = Mustache.render( $conf_sch_templ, $schedule_items );
