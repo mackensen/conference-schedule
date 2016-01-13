@@ -230,8 +230,8 @@ class Conference_Schedule {
 			'update_item'           => __( 'Update Event', 'conf-schedule' ),
 			'view_item'             => __( 'View Event', 'conf-schedule' ),
 			'search_items'          => __( 'Search Events', 'conf-schedule' ),
-			'not_found'             => __( 'No events found', 'conf-schedule' ),
-			'not_found_in_trash'    => __( 'No events found in Trash', 'conf-schedule' ),
+			'not_found'             => __( 'No events found.', 'conf-schedule' ),
+			'not_found_in_trash'    => __( 'No events found in the trash.', 'conf-schedule' ),
 		));
 
 		// Define the args for the schedule CPT
@@ -330,6 +330,8 @@ class Conference_Schedule {
 			'show_tagcloud'				=> false,
 			'meta_box_cb'				=> 'post_categories_meta_box',
 		);
+
+		// Register the event categories taxonomy
 		register_taxonomy( 'schedule_categories', array( 'schedule' ), $categories_args );
 
 	}
