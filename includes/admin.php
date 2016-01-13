@@ -86,8 +86,12 @@ class Conference_Schedule_Admin {
 			wp_enqueue_style( 'timepicker', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'css' ) . 'timepicker.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
 			wp_register_script( 'timepicker', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'js' ) . 'timepicker.min.js', array( 'jquery' ), CONFERENCE_SCHEDULE_VERSION, true );
 
+			// Enqueue select2
+			wp_enqueue_style( 'select2', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'css' ) . 'select2.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
+			wp_register_script( 'select2', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'js' ) . 'select2.min.js', array( 'jquery' ), CONFERENCE_SCHEDULE_VERSION, true );
+
 			// Enqueue the post script
-			wp_enqueue_script( 'conf-schedule-admin-post', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'js' ) . 'admin-post.min.js', array( 'jquery', 'jquery-ui-datepicker', 'timepicker' ), CONFERENCE_SCHEDULE_VERSION, true );
+			wp_enqueue_script( 'conf-schedule-admin-post', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'js' ) . 'admin-post.min.js', array( 'jquery', 'jquery-ui-datepicker', 'timepicker', 'select2' ), CONFERENCE_SCHEDULE_VERSION, true );
 
 		}
 
@@ -195,6 +199,26 @@ class Conference_Schedule_Admin {
 					return;
 				}
 
+				// Make sure type is set
+				if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'event_type' ] ) ) {
+					$event_types = $_POST[ 'conf_schedule' ][ 'event' ][ 'event_type' ];
+
+					// Make sure its an array
+					if ( ! is_array( $event_types ) ) {
+						$event_types = explode( ',', $event_types );
+					}
+
+					// Make sure it has only IDs
+					$event_types = array_filter( $event_types, 'is_numeric' );
+
+					// Convert to integer
+					$event_types = array_map( 'intval', $event_types );
+
+					// Set the terms
+					wp_set_object_terms( $post_id, $event_types, 'schedule_categories', false );
+
+				}
+
 				// Make sure date is set
 				if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'date' ] ) ) {
 
@@ -252,8 +276,16 @@ class Conference_Schedule_Admin {
 				<tr>
 					<th scope="row"><label for="conf-sch-date">Date</label></th>
 					<td>
-						<input type="text" id="conf-sch-date" value="<?php echo esc_attr( $event_date_mdy ); ?>" class="regular-text conf-sch-date-field" />
+						<input type="text" id="conf-sch-date" value="<?php echo esc_attr( $event_date_mdy ); ?>" class="conf-sch-date-field" />
 						<input name="conf_schedule[event][date]" type="hidden" id="conf-sch-date-alt" value="<?php echo esc_attr( $event_date ); ?>" />
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="conf-sch-event-type">Event Type(s)</label></th>
+					<td>
+						<select id="conf-sch-event-type" style="width:25em;" name="conf_schedule[event][event_type][]" multiple="multiple">
+							<option value="">Select an event type</option>
+						</select>
 					</td>
 				</tr>
 				<tr>
