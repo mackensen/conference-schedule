@@ -74,9 +74,10 @@ class Conference_Schedule_Admin {
 	 * @param	string - $hook_suffix - the ID of the current page
 	 */
 	public function enqueue_styles_scripts( $hook_suffix ) {
+		global $post_type;
 
 		// Only for the post pages
-		if ( in_array( $hook_suffix, array( 'post.php', 'post-new.php' ) ) ) {
+		if ( 'schedule' == $post_type && in_array( $hook_suffix, array( 'post.php', 'post-new.php' ) ) ) {
 
 			// Enqueue the UI style
 			wp_enqueue_style( 'jquery-ui', '//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', array(), CONFERENCE_SCHEDULE_VERSION );
