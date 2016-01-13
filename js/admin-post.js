@@ -34,7 +34,7 @@
 		$( '#conf-sch-event-type').select2();
 
 		// Get the event types for the select2
-		$.ajax( {
+		/*$.ajax( {
 			url: '/wp-json/wp/v2/schedule_categories',
 			success: function ( $categories ) {
 
@@ -69,7 +69,7 @@
 
 			},
 			cache: false // @TODO set to true
-		} );
+		} );*/
 
 	});
 
