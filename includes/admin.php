@@ -318,6 +318,7 @@ class Conference_Schedule_Admin {
 								?><option value="<?php echo $event_cat->term_id; ?>"<?php selected( in_array( $event_cat->term_id, $selected_event_categories ) ); ?>><?php echo $event_cat->name; ?></option><?php
 							}
 						?></select>
+						<p class="description"><a href="<?php echo admin_url( 'edit-tags.php?taxonomy=schedule_categories&post_type=schedule' ); ?>" target="_blank">Manage the event categories</a></p>
 					</td>
 				</tr>
 				<tr>
@@ -332,6 +333,7 @@ class Conference_Schedule_Admin {
 							}
 							
 						?></select>
+						<p class="description"><a href="<?php echo admin_url( 'edit.php?post_type=locations' ); ?>" target="_blank">Manage the locations</a></p>
 					</td>
 				</tr>
 			</tbody>
