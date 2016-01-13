@@ -40,6 +40,9 @@ class Conference_Schedule_Admin {
 		// Add meta boxes
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 1, 2 );
 
+		// Remove meta boxes
+		add_action( 'admin_menu', array( $this, 'remove_meta_boxes' ), 100 );
+
 		// Save meta box data
 		add_action( 'save_post', array( $this, 'save_meta_box_data' ), 20, 3 );
 
@@ -113,6 +116,19 @@ class Conference_Schedule_Admin {
 				break;
 
 		}
+
+	}
+
+	/**
+	 * Removes meta boxes we don't need
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 */
+	public function remove_meta_boxes() {
+
+		// Remove the schedule event categories taxonomy meta box
+		remove_meta_box( 'tagsdiv-schedule_categories', 'schedule', 'side' );
 
 	}
 
