@@ -317,6 +317,15 @@ class Conference_Schedule_Admin {
 					</td>
 				</tr>
 				<tr>
+					<th scope="row"><label for="conf-sch-session-categories">Session Categories</label></th>
+					<td>
+						<select id="conf-sch-session-categories" style="width:75%;" name="conf_schedule[event][session_categories][]" multiple="multiple">
+							<option value="">Select a session category</option>
+						</select>
+						<p class="description"><a href="<?php echo admin_url( 'edit-tags.php?taxonomy=session_categories&post_type=schedule' ); ?>" target="_blank">Manage the session categories</a></p>
+					</td>
+				</tr>
+				<tr>
 					<th scope="row"><label for="conf-sch-location">Location</label></th>
 					<td>
 						<select id="conf-sch-location" style="width:75%;" name="conf_schedule[event][location]">
