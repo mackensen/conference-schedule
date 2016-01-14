@@ -34,13 +34,28 @@
 		$( '#conf-sch-event-types').select2();
 		conf_sch_set_event_types();
 
+		// Reload event types when you click
+		$('.conf-sch-reload-event-types').on('click', function() {
+			conf_sch_set_event_types();
+		});
+
 		// Setup session categories select2
 		$( '#conf-sch-session-categories').select2();
 		conf_sch_set_session_categories();
 
+		// Reload session categories when you click
+		$('.conf-sch-reload-session-categories').on('click', function() {
+			conf_sch_set_session_categories();
+		});
+
 		// Setup location select2
 		$( '#conf-sch-location').select2();
 		conf_sch_set_location();
+
+		// Reload locations when you click
+		$('.conf-sch-reload-locations').on('click', function() {
+			conf_sch_set_location();
+		});
 
 	});
 
@@ -57,9 +72,15 @@
 					return false;
 				}
 
+				// Set the <select>
+				var $event_types_select = $( '#conf-sch-event-types');
+
+				// Reset the <select>
+				$event_types_select.empty();
+
 				// Add the options
 				$.each( $types, function( $index, $value ) {
-					$( '#conf-sch-event-types' ).append( '<option value="' + $value.id + '">' + $value.name + '</option>' );
+					$event_types_select.append( '<option value="' + $value.id + '">' + $value.name + '</option>' );
 				});
 
 				// See what event types are selected for this particular post
@@ -75,7 +96,7 @@
 
 							// Mark the options selected
 							$.each( $selected_event_types, function ($index, $value) {
-								$( '#conf-sch-event-types option[value="' + $value.id + '"]' ).attr( 'selected', true).trigger('change');
+								$event_types_select.find( 'option[value="' + $value.id + '"]' ).attr( 'selected', true).trigger('change');
 							});
 
 						},
@@ -102,9 +123,15 @@
 					return false;
 				}
 
+				// Set the <select>
+				var $categories_select = $( '#conf-sch-session-categories');
+
+				// Reset the <select>
+				$categories_select.empty();
+
 				// Add the options
 				$.each( $categories, function( $index, $value ) {
-					$( '#conf-sch-session-categories' ).append( '<option value="' + $value.id + '">' + $value.name + '</option>' );
+					$categories_select.append( '<option value="' + $value.id + '">' + $value.name + '</option>' );
 				});
 
 				// See what session categories are selected for this particular post
@@ -120,7 +147,7 @@
 
 							// Mark the options selected
 							$.each( $selected_categories, function ($index, $value) {
-								$( '#conf-sch-session-categories option[value="' + $value.id + '"]' ).attr( 'selected', true).trigger('change');
+								$categories_select.find( 'option[value="' + $value.id + '"]' ).attr( 'selected', true).trigger('change');
 							});
 
 						},
@@ -147,9 +174,15 @@
 					return false;
 				}
 
+				// Set the <select>
+				var $location_select = $( '#conf-sch-location');
+
+				// Reset the <select>
+				$location_select.empty();
+
 				// Add the options
 				$.each( $locations, function( $index, $value ) {
-					$( '#conf-sch-location' ).append( '<option value="' + $value.id + '">' + $value.title.rendered + '</option>' );
+					$location_select.append( '<option value="' + $value.id + '">' + $value.title.rendered + '</option>' );
 				});
 
 				// See what is selected for this particular post
@@ -164,7 +197,7 @@
 							}
 
 							// Mark the location as selected
-							$( '#conf-sch-location option[value="' + $event.event_location + '"]').attr('selected', true).trigger('change');
+							$location_select.find( 'option[value="' + $event.event_location + '"]').attr('selected', true).trigger('change');
 
 						},
 						cache: false // @TODO set to true?

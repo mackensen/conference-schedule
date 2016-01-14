@@ -333,7 +333,7 @@ class Conference_Schedule_Admin {
 						<select id="conf-sch-event-types" style="width:75%;" name="conf_schedule[event][event_types][]" multiple="multiple">
 							<option value="">Select an event type</option>
 						</select>
-						<p class="description"><a href="<?php echo admin_url( 'edit-tags.php?taxonomy=event_types&post_type=schedule' ); ?>" target="_blank">Manage the event types</a></p>
+						<p class="description"><a class="conf-sch-reload-event-types" href="<?php echo admin_url( 'edit-tags.php?taxonomy=event_types&post_type=schedule' ); ?>" target="_blank">Manage the event types</a></p>
 					</td>
 				</tr>
 				<tr>
@@ -342,7 +342,7 @@ class Conference_Schedule_Admin {
 						<select id="conf-sch-session-categories" style="width:75%;" name="conf_schedule[event][session_categories][]" multiple="multiple">
 							<option value="">Select a session category</option>
 						</select>
-						<p class="description"><a href="<?php echo admin_url( 'edit-tags.php?taxonomy=session_categories&post_type=schedule' ); ?>" target="_blank">Manage the session categories</a></p>
+						<p class="description"><a class="conf-sch-reload-session-categories" href="<?php echo admin_url( 'edit-tags.php?taxonomy=session_categories&post_type=schedule' ); ?>" target="_blank">Manage the session categories</a></p>
 					</td>
 				</tr>
 				<tr>
@@ -351,7 +351,7 @@ class Conference_Schedule_Admin {
 						<select id="conf-sch-location" style="width:75%;" name="conf_schedule[event][location]">
 							<option value="">Select a location</option>
 						</select>
-						<p class="description"><a href="<?php echo admin_url( 'edit.php?post_type=locations' ); ?>" target="_blank">Manage the locations</a></p>
+						<p class="description"><a class="conf-sch-reload-locations" href="<?php echo admin_url( 'edit.php?post_type=locations' ); ?>" target="_blank">Manage the locations</a></p>
 					</td>
 				</tr>
 			</tbody>
