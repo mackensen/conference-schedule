@@ -280,6 +280,26 @@ class Conference_Schedule_Admin {
 
 				}
 
+				// Make sure speakers are set
+				if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'speakers' ] ) ) {
+					$event_speakers = $_POST[ 'conf_schedule' ][ 'event' ][ 'speakers'];
+
+					// Make sure its an array
+					if ( ! is_array( $event_speakers ) ) {
+						$event_speakers = explode( ',', $event_speakers );
+					}
+
+					// Make sure it has only IDs
+					$event_speakers = array_filter( $event_speakers, 'is_numeric' );
+
+					// Convert to integer
+					$event_speakers = array_map( 'intval', $event_speakers );
+
+					// Update/save value
+					update_post_meta( $post_id, 'conf_sch_event_speakers', $event_speakers );
+
+				}
+
 				break;
 
 		}
@@ -352,6 +372,15 @@ class Conference_Schedule_Admin {
 							<option value="">Select a location</option>
 						</select>
 						<p class="description"><a class="conf-sch-reload-locations" href="<?php echo admin_url( 'edit.php?post_type=locations' ); ?>" target="_blank">Manage the locations</a></p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="conf-sch-speakers">Speaker(s)</label></th>
+					<td>
+						<select id="conf-sch-speakers" style="width:75%;" name="conf_schedule[event][speakers][]" multiple="multiple">
+							<option value="">Select a speaker</option>
+						</select>
+						<p class="description"><a class="conf-sch-reload-speakers" href="<?php echo admin_url( 'edit.php?post_type=speakers' ); ?>" target="_blank">Manage the speakers</a></p>
 					</td>
 				</tr>
 			</tbody>

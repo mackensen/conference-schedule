@@ -57,6 +57,15 @@
 			conf_sch_set_location();
 		});
 
+		// Setup sepeakers select2
+		$( '#conf-sch-speakers' ).select2();
+		conf_sch_set_speakers();
+
+		// Reload speakers when you click
+		$('.conf-sch-reload-speakers').on('click', function() {
+			conf_sch_set_speakers();
+		});
+
 	});
 
 	// Set the event types for the select2
@@ -198,6 +207,55 @@
 
 							// Mark the location as selected
 							$location_select.find( 'option[value="' + $event.event_location + '"]').attr('selected', true).trigger('change');
+
+						},
+						cache: false // @TODO set to true?
+					});
+				}
+
+			},
+			cache: false // @TODO set to true?
+		} );
+
+	}
+
+	// Set the speakers for the select2
+	function conf_sch_set_speakers() {
+
+		// Get the speakers for the select2
+		$.ajax( {
+			url: '/wp-json/wp/v2/speakers',
+			success: function ( $speakers ) {
+
+				// Make sure we have info
+				if ( $speakers === undefined || $speakers == '' ) {
+					return false;
+				}
+
+				// Set the <select>
+				var $speakers_select = $( '#conf-sch-speakers');
+
+				// Reset the <select>
+				$speakers_select.empty();
+
+				// Add the options
+				$.each( $speakers, function( $index, $value ) {
+					$speakers_select.append( '<option value="' + $value.id + '">' + $value.title.rendered + '</option>' );
+				});
+
+				// See what is selected for this particular post
+				if ( $( '#post_ID' ).val() != '' ) {
+					$.ajax({
+						url: '/wp-json/wp/v2/schedule/' + $( '#post_ID' ).val(),
+						success: function ( $event ) {
+
+							// Make sure we have info
+							if ( $event.event_speakers === undefined || $event.event_speakers == '') {
+								return false;
+							}
+
+							// Mark the speaker as selected
+							$speakers_select.find( 'option[value="' + $event.event_speakers + '"]').attr('selected', true).trigger('change');
 
 						},
 						cache: false // @TODO set to true?

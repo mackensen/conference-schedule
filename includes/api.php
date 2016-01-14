@@ -68,6 +68,15 @@ class Conference_Schedule_API {
 			)
 		);
 
+		// Get the event speakers
+		register_rest_field( 'schedule', 'event_speakers',
+			array(
+				'get_callback'		=> array( $this, 'get_field_value' ),
+				'update_callback'	=> null,
+				'schema'			=> null,
+			)
+		);
+
 	}
 
 	/**
@@ -96,6 +105,9 @@ class Conference_Schedule_API {
 
 			case 'event_location':
 				return get_post_meta( $object[ 'id' ], 'conf_sch_event_location', true );
+
+			case 'event_speakers':
+				return get_post_meta( $object[ 'id' ], 'conf_sch_event_speakers', true );
 
 		}
 
