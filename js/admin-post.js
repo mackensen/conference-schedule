@@ -4,14 +4,14 @@
 	// When the document is ready...
 	$(document).ready(function() {
 
-		// Set our datepicker
+		// Set our date picker
 		$( '.conf-sch-date-field' ).datepicker();
 
-		// Setup alt field and format for event datepicker
+		// Setup alt field and format for event date picker
 		$( '#conf-sch-date' ).datepicker( 'option', 'altField', '#conf-sch-date-alt' );
 		$( '#conf-sch-date' ).datepicker( 'option', 'altFormat', 'yy-mm-dd' );
 
-		// Set our timepicker
+		// Set our time picker
 		$( '.conf-sch-time-field' ).timepicker({
 			step: 15,
 			timeFormat: 'g:i a',
@@ -34,7 +34,7 @@
 		$( '#conf-sch-event-categories').select2();
 
 		// Get the event types for the select2
-		/*$.ajax( {
+		$.ajax( {
 			url: '/wp-json/wp/v2/schedule_categories',
 			success: function ( $categories ) {
 
@@ -69,7 +69,7 @@
 
 			},
 			cache: false // @TODO set to true
-		} );*/
+		} );
 
 	});
 
