@@ -121,6 +121,20 @@ class Conference_Schedule_Admin {
 
 				break;
 
+			case 'speakers':
+
+				// Speaker Details
+				add_meta_box(
+					'conf-schedule-speaker-details',
+					__( 'Speaker Details', 'conf-schedule' ),
+					array( $this, 'print_meta_boxes' ),
+					$post_type,
+					'normal',
+					'high'
+				);
+
+				break;
+
 		}
 
 	}
@@ -155,6 +169,10 @@ class Conference_Schedule_Admin {
 				$this->print_event_details_form( $post->ID );
 				break;
 
+			case 'conf-schedule-speaker-details':
+				$this->print_speaker_details_form( $post->ID );
+				break;
+
 		}
 
 	}
@@ -169,16 +187,6 @@ class Conference_Schedule_Admin {
 	 * @param	bool - $update - whether this is an existing post being updated or not
 	 */
 	function save_meta_box_data( $post_id, $post, $update ) {
-
-		// Check if our nonce is set because the 'save_post' action can be triggered at other times
-		if ( ! isset( $_POST[ 'conf_schedule_save_event_details_nonce' ] ) ) {
-			return;
-		}
-
-		// Verify the nonce
-		if ( ! wp_verify_nonce( $_POST[ 'conf_schedule_save_event_details_nonce' ], 'conf_schedule_save_event_details' ) ) {
-			return;
-		}
 
 		// Disregard on autosave
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
@@ -197,6 +205,16 @@ class Conference_Schedule_Admin {
 		switch( $post->post_type ) {
 
 			case 'schedule':
+
+				// Check if our nonce is set because the 'save_post' action can be triggered at other times
+				if ( ! isset( $_POST[ 'conf_schedule_save_event_details_nonce' ] ) ) {
+					return;
+				}
+
+				// Verify the nonce
+				if ( ! wp_verify_nonce( $_POST[ 'conf_schedule_save_event_details_nonce' ], 'conf_schedule_save_event_details' ) ) {
+					return;
+				}
 
 				// Make sure fields are set
 				if ( ! ( isset( $_POST[ 'conf_schedule' ] ) && isset( $_POST[ 'conf_schedule' ][ 'event' ] ) ) ) {
@@ -302,6 +320,38 @@ class Conference_Schedule_Admin {
 
 				break;
 
+			case 'speakers':
+
+				// Check if our nonce is set because the 'save_post' action can be triggered at other times
+				if ( ! isset( $_POST[ 'conf_schedule_save_speaker_details_nonce' ] ) ) {
+					return;
+				}
+
+				// Verify the nonce
+				if ( ! wp_verify_nonce( $_POST[ 'conf_schedule_save_speaker_details_nonce' ], 'conf_schedule_save_speaker_details' ) ) {
+					return;
+				}
+
+				// Make sure fields are set
+				if ( ! ( isset( $_POST[ 'conf_schedule' ] ) && isset( $_POST[ 'conf_schedule' ][ 'speaker' ] ) ) ) {
+					return;
+				}
+
+				// Process each field
+				foreach( array( 'position', 'url', 'company', 'company_url' ) as $field_name ) {
+					if ( isset( $_POST[ 'conf_schedule' ][ 'speaker' ][ $field_name ] ) ) {
+
+						// Sanitize the value
+						$field_value = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'speaker' ][ $field_name ] );
+
+						// Update/save value
+						update_post_meta( $post_id, "conf_sch_speaker_{$field_name}", $field_value );
+
+					}
+				}
+
+				break;
+
 		}
 
 	}
@@ -383,6 +433,59 @@ class Conference_Schedule_Admin {
 						<p class="description"><a class="conf-sch-reload-speakers" href="<?php echo admin_url( 'edit.php?post_type=speakers' ); ?>" target="_blank">Manage the speakers</a></p>
 					</td>
 				</tr>
+			</tbody>
+		</table><?php
+
+	}
+
+	/**
+	 * Print the speaker details form for a particular event.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 * @param	int - $post_id - the ID of the speaker
+	 */
+	public function print_speaker_details_form( $post_id ) {
+
+		// Add a nonce field so we can check for it when saving the data
+		wp_nonce_field( 'conf_schedule_save_speaker_details', 'conf_schedule_save_speaker_details_nonce' );
+
+		// Get saved speaker details
+		$speaker_position = get_post_meta( $post_id, 'conf_sch_speaker_position', true );
+		$speaker_url = get_post_meta( $post_id, 'conf_sch_speaker_url', true );
+		$speaker_company = get_post_meta( $post_id, 'conf_sch_speaker_company', true );
+		$speaker_company_url = get_post_meta( $post_id, 'conf_sch_speaker_company_url', true );
+
+		?><table class="form-table">
+			<tbody>
+			<tr>
+				<th scope="row"><label for="conf-sch-position">Position</label></th>
+				<td>
+					<input type="text" id="conf-sch-position" name="conf_schedule[speaker][position]" value="<?php echo esc_attr( $speaker_position ); ?>" class="regular-text" />
+					<p class="description">Please provide the speaker's job title.</p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><label for="conf-sch-url">Website</label></th>
+				<td>
+					<input type="text" id="conf-sch-url" name="conf_schedule[speaker][url]" value="<?php echo esc_attr( $speaker_url ); ?>" class="regular-text" />
+					<p class="description">Please provide the URL for the speaker's website.</p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><label for="conf-sch-company">Company</label></th>
+				<td>
+					<input type="text" id="conf-sch-company" name="conf_schedule[speaker][company]" value="<?php echo esc_attr( $speaker_company ); ?>" class="regular-text" />
+					<p class="description">Where does the speaker work?</p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><label for="conf-sch-company-url">Company Website</label></th>
+				<td>
+					<input type="text" id="conf-sch-company-url" name="conf_schedule[speaker][company_url]" value="<?php echo esc_attr( $speaker_company_url ); ?>" class="regular-text" />
+					<p class="description">Please provide the URL for the speaker's company website.</p>
+				</td>
+			</tr>
 			</tbody>
 		</table><?php
 
