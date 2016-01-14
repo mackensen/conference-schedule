@@ -282,10 +282,6 @@ class Conference_Schedule_Admin {
 		$event_start_time = get_post_meta( $post_id, 'conf_sch_event_start_time', true );
 		$event_end_time = get_post_meta( $post_id, 'conf_sch_event_end_time', true );
 
-		// Get location info
-		$event_locations = get_posts( array( 'post_type' => 'locations', 'orderby' => 'title', 'order' => 'ASC', 'posts_per_page' => -1 ) );
-		$selected_event_location = get_post_meta( $post_id, 'conf_sch_event_location', true );
-
 		// Convert event date to m/d/Y
 		$event_date_mdy = $event_date ? date( 'm/d/Y', strtotime( $event_date ) ) : null;
 
@@ -323,14 +319,8 @@ class Conference_Schedule_Admin {
 					<th scope="row"><label for="conf-sch-location">Location</label></th>
 					<td>
 						<select id="conf-sch-location" style="width:75%;" name="conf_schedule[event][location]">
-							<option value="">Select a location</option><?php
-
-							// @TODO Setup to work with API like the others
-							foreach( $event_locations as $location ) {
-								?><option value="<?php echo $location->ID; ?>"<?php selected( $location->ID, $selected_event_location ); ?>><?php echo get_the_title( $location->ID ); ?></option><?php
-							}
-							
-						?></select>
+							<option value="">Select a location</option>
+						</select>
 						<p class="description"><a href="<?php echo admin_url( 'edit.php?post_type=locations' ); ?>" target="_blank">Manage the locations</a></p>
 					</td>
 				</tr>
