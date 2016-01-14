@@ -30,10 +30,22 @@
 		$( '#conf-sch-end-time' ).timepicker( 'option', 'showDuration', true );
 		$( '#conf-sch-end-time' ).timepicker( 'option', 'durationTime', function() { return $( '#conf-sch-start-time').val() } );
 
-		// Setup the select2
+		// Setup the event types select2
 		$( '#conf-sch-event-types').select2();
-		$( '#conf-sch-location').select2();
+		conf_sch_set_event_types();
+
+		// Setup session categories select2
 		$( '#conf-sch-session-categories').select2();
+		conf_sch_set_session_categories();
+
+		// Setup location select2
+		$( '#conf-sch-location').select2();
+		conf_sch_set_location();
+
+	});
+
+	// Set the event types for the select2
+	function conf_sch_set_event_types() {
 
 		// Get the event types for the select2
 		$.ajax( {
@@ -75,6 +87,11 @@
 			cache: false // @TODO set to true?
 		} );
 
+	}
+
+	// Set the session categories for the select2
+	function conf_sch_set_session_categories() {
+
 		// Get the session categories for the select2
 		$.ajax( {
 			url: '/wp-json/wp/v2/session_categories',
@@ -115,6 +132,11 @@
 			cache: false // @TODO set to true?
 		} );
 
+	}
+
+	// Set the location for the select2
+	function conf_sch_set_location() {
+
 		// Get the location for the select2
 		$.ajax( {
 			url: '/wp-json/wp/v2/locations',
@@ -153,6 +175,6 @@
 			cache: false // @TODO set to true?
 		} );
 
-	});
+	}
 
 })( jQuery );
