@@ -336,29 +336,29 @@ class Conference_Schedule {
 	 */
 	public function register_taxonomies() {
 
-		// Define the labels for the event categories taxonomy
-		$categories_labels = apply_filters( 'conf_schedule_categories_labels', array(
-			'name'						=> _x( 'Event Categories', 'Taxonomy General Name', 'conf-schedule' ),
-			'singular_name'				=> _x( 'Event Category', 'Taxonomy Singular Name', 'conf-schedule' ),
-			'menu_name'					=> __( 'Event Categories', 'conf-schedule' ),
-			'all_items'					=> __( 'All Event Categories', 'conf-schedule' ),
-			'new_item_name'				=> __( 'New Event Category', 'conf-schedule' ),
-			'add_new_item'				=> __( 'Add New Event Category', 'conf-schedule' ),
-			'edit_item'					=> __( 'Edit Event Category', 'conf-schedule' ),
-			'update_item'				=> __( 'Update Event Category', 'conf-schedule' ),
-			'view_item'					=> __( 'View Event Category', 'conf-schedule' ),
-			'separate_items_with_commas'=> __( 'Separate event categories with commas', 'conf-schedule' ),
-			'add_or_remove_items'		=> __( 'Add or remove event categories', 'conf-schedule' ),
-			'choose_from_most_used'		=> __( 'Choose from the most used event categories', 'conf-schedule' ),
-			'popular_items'				=> __( 'Popular event categories', 'conf-schedule' ),
-			'search_items'				=> __( 'Search Event Categories', 'conf-schedule' ),
-			'not_found'					=> __( 'No event categories found.', 'conf-schedule' ),
-			'no_terms'					=> __( 'No event categories', 'conf-schedule' ),
+		// Define the labels for the event types taxonomy
+		$types_labels = apply_filters( 'conf_schedule_event_types_labels', array(
+			'name'						=> _x( 'Event Types', 'Taxonomy General Name', 'conf-schedule' ),
+			'singular_name'				=> _x( 'Event Type', 'Taxonomy Singular Name', 'conf-schedule' ),
+			'menu_name'					=> __( 'Event Types', 'conf-schedule' ),
+			'all_items'					=> __( 'All Event Types', 'conf-schedule' ),
+			'new_item_name'				=> __( 'New Event Type', 'conf-schedule' ),
+			'add_new_item'				=> __( 'Add New Event Type', 'conf-schedule' ),
+			'edit_item'					=> __( 'Edit Event Type', 'conf-schedule' ),
+			'update_item'				=> __( 'Update Event Type', 'conf-schedule' ),
+			'view_item'					=> __( 'View Event Type', 'conf-schedule' ),
+			'separate_items_with_commas'=> __( 'Separate event types with commas', 'conf-schedule' ),
+			'add_or_remove_items'		=> __( 'Add or remove event types', 'conf-schedule' ),
+			'choose_from_most_used'		=> __( 'Choose from the most used event types', 'conf-schedule' ),
+			'popular_items'				=> __( 'Popular event types', 'conf-schedule' ),
+			'search_items'				=> __( 'Search Event Types', 'conf-schedule' ),
+			'not_found'					=> __( 'No event types found.', 'conf-schedule' ),
+			'no_terms'					=> __( 'No event types', 'conf-schedule' ),
 		));
 
-		// Define the arguments for the event categories taxonomy
-		$categories_args = apply_filters( 'conf_schedule_categories_args', array(
-			'labels'					=> $categories_labels,
+		// Define the arguments for the event types taxonomy
+		$types_args = apply_filters( 'conf_schedule_event_types_args', array(
+			'labels'					=> $types_labels,
 			'hierarchical'				=> false,
 			'public'					=> true,
 			'show_ui'					=> true,
@@ -369,8 +369,8 @@ class Conference_Schedule {
 			'show_in_rest'				=> true,
 		));
 
-		// Register the event categories taxonomy
-		register_taxonomy( 'schedule_categories', array( 'schedule' ), $categories_args );
+		// Register the event types taxonomy
+		register_taxonomy( 'event_types', array( 'schedule' ), $types_args );
 
 		// Define the labels for the session categories taxonomy
 		$session_categories_labels = apply_filters( 'conf_schedule_session_categories_labels', array(

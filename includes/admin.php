@@ -109,6 +109,7 @@ class Conference_Schedule_Admin {
 
 			case 'schedule':
 
+				// Event Details
 				add_meta_box(
 					'conf-schedule-event-details',
 					__( 'Event Details', 'conf-schedule' ),
@@ -132,10 +133,10 @@ class Conference_Schedule_Admin {
 	 */
 	public function remove_meta_boxes() {
 
-		// Remove the schedule event categories taxonomy meta box
-		remove_meta_box( 'tagsdiv-schedule_categories', 'schedule', 'side' );
+		// Remove the event types taxonomy meta box
+		remove_meta_box( 'tagsdiv-event_types', 'schedule', 'side' );
 
-		// Remove the schedule event categories taxonomy meta box
+		// Remove the session categories taxonomy meta box
 		remove_meta_box( 'tagsdiv-session_categories', 'schedule', 'side' );
 
 	}
@@ -203,22 +204,22 @@ class Conference_Schedule_Admin {
 				}
 
 				// Make sure type is set
-				if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'event_categories' ] ) ) {
-					$event_categories = $_POST[ 'conf_schedule' ][ 'event' ][ 'event_categories' ];
+				if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'event_types' ] ) ) {
+					$event_types = $_POST[ 'conf_schedule' ][ 'event' ][ 'event_types' ];
 
 					// Make sure its an array
-					if ( ! is_array( $event_categories ) ) {
-						$event_categories = explode( ',', $event_categories );
+					if ( ! is_array( $event_types ) ) {
+						$event_types = explode( ',', $event_types );
 					}
 
 					// Make sure it has only IDs
-					$event_categories = array_filter( $event_categories, 'is_numeric' );
+					$event_types = array_filter( $event_types, 'is_numeric' );
 
 					// Convert to integer
-					$event_categories = array_map( 'intval', $event_categories );
+					$event_types = array_map( 'intval', $event_types );
 
 					// Set the terms
-					wp_set_object_terms( $post_id, $event_categories, 'schedule_categories', false );
+					wp_set_object_terms( $post_id, $event_types, 'event_types', false );
 
 				}
 
@@ -307,12 +308,12 @@ class Conference_Schedule_Admin {
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="conf-sch-event-categories">Event Categories</label></th>
+					<th scope="row"><label for="conf-sch-event-types">Event Type(s)</label></th>
 					<td>
-						<select id="conf-sch-event-categories" style="width:75%;" name="conf_schedule[event][event_categories][]" multiple="multiple">
+						<select id="conf-sch-event-types" style="width:75%;" name="conf_schedule[event][event_types][]" multiple="multiple">
 							<option value="">Select an event type</option>
 						</select>
-						<p class="description"><a href="<?php echo admin_url( 'edit-tags.php?taxonomy=schedule_categories&post_type=schedule' ); ?>" target="_blank">Manage the event categories</a></p>
+						<p class="description"><a href="<?php echo admin_url( 'edit-tags.php?taxonomy=event_types&post_type=schedule' ); ?>" target="_blank">Manage the event types</a></p>
 					</td>
 				</tr>
 				<tr>

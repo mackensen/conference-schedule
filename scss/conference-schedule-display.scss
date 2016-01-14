@@ -13,7 +13,7 @@ $heweb-blue: #0f5588;
 $schedule-border-color: rgba( #000, 0.1 );
 
 // For the different event types
-$event_categories: ('keynote': $keynote-bg) ('food': $food-bg) ('social': $social-bg) ('auditorium': $auditorium-bg) ('break': $break-bg);
+$event_types: ('keynote': $keynote-bg) ('food': $food-bg) ('social': $social-bg) ('auditorium': $auditorium-bg) ('break': $break-bg);
 
 // Give color to a schedule row
 @mixin schedule_row_with_bg($bg_color) {

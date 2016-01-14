@@ -69,7 +69,7 @@ class Conference_Schedule_Shortcodes {
 		// Add the template
 		$content .= '<script id="conference-schedule-display" type="x-tmpl-mustache">
 			{{#.}}
-				<div class="schedule-event{{#event_categories}} {{.}}{{/event_categories}}">
+				<div class="schedule-event{{#event_types}} {{.}}{{/event_types}}">
 					{{#title}}<h3 class="event-title">{{{rendered}}}</h3>{{/title}}
 					{{#excerpt}}<div class="event-desc">{{{rendered}}}</div>{{/excerpt}}
 				</div>

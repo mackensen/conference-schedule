@@ -31,38 +31,38 @@
 		$( '#conf-sch-end-time' ).timepicker( 'option', 'durationTime', function() { return $( '#conf-sch-start-time').val() } );
 
 		// Setup the select2
-		$( '#conf-sch-event-categories').select2();
+		$( '#conf-sch-event-types').select2();
 		$( '#conf-sch-location').select2();
 
-		// Get the event categories for the select2
+		// Get the event types for the select2
 		$.ajax( {
-			url: '/wp-json/wp/v2/schedule_categories',
-			success: function ( $categories ) {
+			url: '/wp-json/wp/v2/event_types',
+			success: function ( $types ) {
 
 				// Make sure we have info
-				if ( $categories === undefined || $categories == '' ) {
+				if ( $types === undefined || $types == '' ) {
 					return false;
 				}
 
 				// Add the options
-				$.each( $categories, function( $index, $value ) {
-					$( '#conf-sch-event-categories' ).append( '<option value="' + $value.id + '">' + $value.name + '</option>' );
+				$.each( $types, function( $index, $value ) {
+					$( '#conf-sch-event-types' ).append( '<option value="' + $value.id + '">' + $value.name + '</option>' );
 				});
 
-				// See what schedule categories are selected for this particular post
+				// See what event types are selected for this particular post
 				if ( $( '#post_ID' ).val() != '' ) {
 					$.ajax({
-						url: '/wp-json/wp/v2/schedule/' + $( '#post_ID' ).val() + '/schedule_categories',
-						success: function ($selected_categories) {
+						url: '/wp-json/wp/v2/schedule/' + $( '#post_ID' ).val() + '/event_types',
+						success: function ( $selected_event_types ) {
 
 							// Make sure we have info
-							if ( $selected_categories === undefined || $selected_categories == '' ) {
+							if ( $selected_event_types === undefined || $selected_event_types == '' ) {
 								return false;
 							}
 
 							// Mark the options selected
-							$.each( $selected_categories, function ($index, $value) {
-								$( '#conf-sch-event-categories option[value="' + $value.id + '"]' ).attr( 'selected', true).trigger('change');
+							$.each( $selected_event_types, function ($index, $value) {
+								$( '#conf-sch-event-types option[value="' + $value.id + '"]' ).attr( 'selected', true).trigger('change');
 							});
 
 						},
