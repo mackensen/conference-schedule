@@ -336,7 +336,7 @@ class Conference_Schedule {
 	 */
 	public function register_taxonomies() {
 
-		// Define the labels for the categories taxonomy
+		// Define the labels for the event categories taxonomy
 		$categories_labels = apply_filters( 'conf_schedule_categories_labels', array(
 			'name'						=> _x( 'Event Categories', 'Taxonomy General Name', 'conf-schedule' ),
 			'singular_name'				=> _x( 'Event Category', 'Taxonomy Singular Name', 'conf-schedule' ),
@@ -356,8 +356,8 @@ class Conference_Schedule {
 			'no_terms'					=> __( 'No event categories', 'conf-schedule' ),
 		));
 
-		// Define the arguments for the categories taxonomy
-		$categories_args = array(
+		// Define the arguments for the event categories taxonomy
+		$categories_args = apply_filters( 'conf_schedule_categories_args', array(
 			'labels'					=> $categories_labels,
 			'hierarchical'				=> false,
 			'public'					=> true,
@@ -367,7 +367,7 @@ class Conference_Schedule {
 			'show_tagcloud'				=> false,
 			'meta_box_cb'				=> 'post_categories_meta_box',
 			'show_in_rest'				=> true,
-		);
+		));
 
 		// Register the event categories taxonomy
 		register_taxonomy( 'schedule_categories', array( 'schedule' ), $categories_args );
