@@ -59,6 +59,15 @@ class Conference_Schedule_API {
 			)
 		);
 
+		// Get the event location
+		register_rest_field( 'schedule', 'event_location',
+			array(
+				'get_callback'		=> array( $this, 'get_field_value' ),
+				'update_callback'	=> null,
+				'schema'			=> null,
+			)
+		);
+
 	}
 
 	/**
@@ -84,6 +93,9 @@ class Conference_Schedule_API {
 
 			case 'event_categories':
 				return ( $categories = wp_get_object_terms( $object[ 'id' ], 'schedule_categories', array( 'fields' => 'slugs' ) ) ) ? $categories : false;
+
+			case 'event_location':
+				return get_post_meta( $object[ 'id' ], 'conf_sch_event_location', true );
 
 		}
 
