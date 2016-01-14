@@ -372,6 +372,42 @@ class Conference_Schedule {
 		// Register the event categories taxonomy
 		register_taxonomy( 'schedule_categories', array( 'schedule' ), $categories_args );
 
+		// Define the labels for the session categories taxonomy
+		$session_categories_labels = apply_filters( 'conf_schedule_session_categories_labels', array(
+			'name'						=> _x( 'Session Categories', 'Taxonomy General Name', 'conf-schedule' ),
+			'singular_name'				=> _x( 'Session Category', 'Taxonomy Singular Name', 'conf-schedule' ),
+			'menu_name'					=> __( 'Session Categories', 'conf-schedule' ),
+			'all_items'					=> __( 'All Session Categories', 'conf-schedule' ),
+			'new_item_name'				=> __( 'New Session Category', 'conf-schedule' ),
+			'add_new_item'				=> __( 'Add New Session Category', 'conf-schedule' ),
+			'edit_item'					=> __( 'Edit Session Category', 'conf-schedule' ),
+			'update_item'				=> __( 'Update Session Category', 'conf-schedule' ),
+			'view_item'					=> __( 'View Session Category', 'conf-schedule' ),
+			'separate_items_with_commas'=> __( 'Separate session categories with commas', 'conf-schedule' ),
+			'add_or_remove_items'		=> __( 'Add or remove session categories', 'conf-schedule' ),
+			'choose_from_most_used'		=> __( 'Choose from the most used session categories', 'conf-schedule' ),
+			'popular_items'				=> __( 'Popular session categories', 'conf-schedule' ),
+			'search_items'				=> __( 'Search Session Categories', 'conf-schedule' ),
+			'not_found'					=> __( 'No session categories found.', 'conf-schedule' ),
+			'no_terms'					=> __( 'No session categories', 'conf-schedule' ),
+		));
+
+		// Define the arguments for the session categories taxonomy
+		$session_categories_args = apply_filters( 'conf_schedule_session_categories_args', array(
+			'labels'					=> $session_categories_labels,
+			'hierarchical'				=> false,
+			'public'					=> true,
+			'show_ui'					=> true,
+			'show_admin_column'			=> true,
+			'show_in_nav_menus'			=> true,
+			'show_tagcloud'				=> false,
+			'meta_box_cb'				=> 'post_categories_meta_box',
+			'show_in_rest'				=> true,
+		));
+
+		// Register the session categories taxonomy
+		register_taxonomy( 'session_categories', array( 'schedule' ), $session_categories_args );
+
 	}
 
 }

@@ -135,6 +135,9 @@ class Conference_Schedule_Admin {
 		// Remove the schedule event categories taxonomy meta box
 		remove_meta_box( 'tagsdiv-schedule_categories', 'schedule', 'side' );
 
+		// Remove the schedule event categories taxonomy meta box
+		remove_meta_box( 'tagsdiv-session_categories', 'schedule', 'side' );
+
 	}
 
 	/**
