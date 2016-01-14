@@ -223,6 +223,26 @@ class Conference_Schedule_Admin {
 
 				}
 
+				// Make sure session categories are set
+				if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'session_categories' ] ) ) {
+					$session_categories = $_POST[ 'conf_schedule' ][ 'event' ][ 'session_categories' ];
+
+					// Make sure its an array
+					if ( ! is_array( $session_categories ) ) {
+						$session_categories = explode( ',', $session_categories );
+					}
+
+					// Make sure it has only IDs
+					$session_categories = array_filter( $session_categories, 'is_numeric' );
+
+					// Convert to integer
+					$session_categories = array_map( 'intval', $session_categories );
+
+					// Set the terms
+					wp_set_object_terms( $post_id, $session_categories, 'session_categories', false );
+
+				}
+
 				// Make sure date is set
 				if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'date' ] ) ) {
 
