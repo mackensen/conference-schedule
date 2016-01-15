@@ -416,7 +416,7 @@ class Conference_Schedule_Admin {
 							&& $_POST[ 'conf_schedule_event_delete_slides_file' ] > 0 ) {
 
 							// Clear out the meta
-							delete_post_meta( $post_id, 'conf_sch_event_slides_file' );
+							update_post_meta( $post_id, 'conf_sch_event_slides_file', null );
 
 						}
 
