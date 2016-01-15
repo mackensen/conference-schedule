@@ -618,19 +618,29 @@ class Conference_Schedule_Admin {
 						// Should we hide the input?
 						$slides_file_hide_input = false;
 
-						// If selected (and confirmed) file...
-						if ( $slides_file > 0 && ( $slides_file_post = get_post( $slides_file ) ) ) {
+						// If selected file...
+						if ( $slides_file > 0 ) {
 
-							// Get URL
-							$attached_slides_url = wp_get_attachment_url( $slides_file );
+							// Confirm the file still exists
+							if ( $slides_file_post = get_post( $slides_file ) ) {
 
-							// Hide the file input
-							$slides_file_hide_input = true;
+								// Get URL
+								$attached_slides_url = wp_get_attachment_url( $slides_file );
 
-							?><div id="conf-sch-slides-file-info" style="margin:0 0 10px 0;">
-								<a style="display:block;margin:0 0 10px 0;" href="<?php echo $attached_slides_url; ?>" target="_blank"><?php echo $attached_slides_url; ?></a>
-								<span class="button conf-sch-slides-file-remove" style="clear:both;padding-left:5px;"><span class="dashicons dashicons-no" style="line-height:inherit"></span> Remove the file</span>
-							</div><?php
+								// Hide the file input
+								$slides_file_hide_input = true;
+
+								?><div id="conf-sch-slides-file-info" style="margin:0 0 10px 0;">
+									<a style="display:block;margin:0 0 10px 0;" href="<?php echo $attached_slides_url; ?>" target="_blank"><?php echo $attached_slides_url; ?></a>
+									<span class="button conf-sch-slides-file-remove" style="clear:both;padding-left:5px;"><span class="dashicons dashicons-no" style="line-height:inherit"></span> Remove the file</span>
+								</div><?php
+
+							}
+
+							// Otherwise clear the meta
+							else {
+								update_post_meta( $post_id, 'conf_sch_event_slides_file', null );
+							}
 
 						}
 
