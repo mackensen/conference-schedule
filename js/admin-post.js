@@ -201,6 +201,11 @@
 				// Reset the <select>
 				$location_select.empty();
 
+				// Add default <option>
+				if ( $location_select.data( 'default' ) != '' ) {
+					$location_select.append( '<option value="">' + $location_select.data( 'default' ) + '</option>' );
+				}
+
 				// Add the options
 				$.each( $locations, function( $index, $value ) {
 					$location_select.append( '<option value="' + $value.id + '">' + $value.title.rendered + '</option>' );

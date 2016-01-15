@@ -535,7 +535,7 @@ class Conference_Schedule_Admin {
 					<th scope="row"><label for="conf-sch-event-types">Event Type(s)</label></th>
 					<td>
 						<select id="conf-sch-event-types" style="width:75%;" name="conf_schedule[event][event_types][]" multiple="multiple">
-							<option value="">Select an event type</option>
+							<option value="">No event types</option>
 						</select>
 						<p class="description"><a class="conf-sch-reload-event-types" href="<?php echo admin_url( 'edit-tags.php?taxonomy=event_types&post_type=schedule' ); ?>" target="_blank">Manage the event types</a></p>
 					</td>
@@ -544,7 +544,7 @@ class Conference_Schedule_Admin {
 					<th scope="row"><label for="conf-sch-session-categories">Session Categories</label></th>
 					<td>
 						<select id="conf-sch-session-categories" style="width:75%;" name="conf_schedule[event][session_categories][]" multiple="multiple">
-							<option value="">Select a session category</option>
+							<option value="">No session categories</option>
 						</select>
 						<p class="description"><a class="conf-sch-reload-session-categories" href="<?php echo admin_url( 'edit-tags.php?taxonomy=session_categories&post_type=schedule' ); ?>" target="_blank">Manage the session categories</a></p>
 					</td>
@@ -552,8 +552,8 @@ class Conference_Schedule_Admin {
 				<tr>
 					<th scope="row"><label for="conf-sch-location">Location</label></th>
 					<td>
-						<select id="conf-sch-location" style="width:75%;" name="conf_schedule[event][location]">
-							<option value="">Select a location</option>
+						<select id="conf-sch-location" style="width:75%;" name="conf_schedule[event][location]" data-default="No location">
+							<option value="">No location</option>
 						</select>
 						<p class="description"><a class="conf-sch-reload-locations" href="<?php echo admin_url( 'edit.php?post_type=locations' ); ?>" target="_blank">Manage the locations</a></p>
 					</td>
@@ -562,7 +562,7 @@ class Conference_Schedule_Admin {
 					<th scope="row"><label for="conf-sch-speakers">Speaker(s)</label></th>
 					<td>
 						<select id="conf-sch-speakers" style="width:75%;" name="conf_schedule[event][speakers][]" multiple="multiple">
-							<option value="">Select a speaker</option>
+							<option value="">No speakers</option>
 						</select>
 						<p class="description"><a class="conf-sch-reload-speakers" href="<?php echo admin_url( 'edit.php?post_type=speakers' ); ?>" target="_blank">Manage the speakers</a></p>
 					</td>
