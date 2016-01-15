@@ -49,7 +49,7 @@ module.exports = function(grunt) {
         },
         watch: {
             sass: {
-                files: [ 'css/*.scss' ],
+                files: [ 'scss/*.scss' ],
                 tasks: [ 'sass:expanded', 'sass:compressed' ]
             },
             js: {
