@@ -81,7 +81,12 @@ class Conference_Schedule_API {
 				return ( $categories = wp_get_object_terms( $object[ 'id' ], 'session_categories', array( 'fields' => 'slugs' ) ) ) ? $categories : false;
 
 			case 'event_location':
-				return get_post_meta( $object[ 'id' ], 'conf_sch_event_location', true );
+				if ( $event_location_id = get_post_meta( $object[ 'id' ], 'conf_sch_event_location', true ) ) {
+					if ( $event_post = get_post( $event_location_id ) ) {
+						return $event_post;
+					}
+				}
+				return false;
 
 			case 'event_speakers':
 				return get_post_meta( $object[ 'id' ], 'conf_sch_event_speakers', true );

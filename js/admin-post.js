@@ -225,12 +225,12 @@
 						success: function ( $event ) {
 
 							// Make sure we have info
-							if ( $event.event_location === undefined || $event.event_location == '') {
+							if ( $event.event_location === undefined || $event.event_location == '' ) {
 								return false;
 							}
 
 							// Mark the location as selected
-							$location_select.find( 'option[value="' + $event.event_location + '"]').attr('selected', true).trigger('change');
+							$location_select.find( 'option[value="' + $event.event_location.ID + '"]').attr('selected', true).trigger('change');
 
 						},
 						cache: false // @TODO set to true?
