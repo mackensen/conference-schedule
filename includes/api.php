@@ -23,68 +23,33 @@ class Conference_Schedule_API {
 	 */
 	public function register_rest_fields() {
 
-		// Get the event date
-		register_rest_field( 'schedule', 'event_date',
-			array(
-				'get_callback'		=> array( $this, 'get_field_value' ),
-				'update_callback'	=> null,
-				'schema'			=> null,
-			)
+		// The args are the same for each field
+		$rest_field_args = array(
+			'get_callback'		=> array( $this, 'get_field_value' ),
+			'update_callback'	=> null,
+			'schema'			=> null,
 		);
+
+		// Get the event date
+		register_rest_field( 'schedule', 'event_date', $rest_field_args );
 
 		// Get the event start time
-		register_rest_field( 'schedule', 'event_start_time',
-			array(
-				'get_callback'		=> array( $this, 'get_field_value' ),
-				'update_callback'	=> null,
-				'schema'			=> null,
-			)
-		);
+		register_rest_field( 'schedule', 'event_start_time', $rest_field_args );
 
 		// Get the event end time
-		register_rest_field( 'schedule', 'event_end_time',
-			array(
-				'get_callback'		=> array( $this, 'get_field_value' ),
-				'update_callback'	=> null,
-				'schema'			=> null,
-			)
-		);
+		register_rest_field( 'schedule', 'event_end_time', $rest_field_args );
 
 		// Get the event types
-		register_rest_field( 'schedule', 'event_types',
-			array(
-				'get_callback'		=> array( $this, 'get_field_value' ),
-				'update_callback'	=> null,
-				'schema'			=> null,
-			)
-		);
+		register_rest_field( 'schedule', 'event_types', $rest_field_args );
 
 		// Get the session categories
-		register_rest_field( 'schedule', 'session_categories',
-			array(
-				'get_callback'		=> array( $this, 'get_field_value' ),
-				'update_callback'	=> null,
-				'schema'			=> null,
-			)
-		);
+		register_rest_field( 'schedule', 'session_categories', $rest_field_args );
 
 		// Get the event location
-		register_rest_field( 'schedule', 'event_location',
-			array(
-				'get_callback'		=> array( $this, 'get_field_value' ),
-				'update_callback'	=> null,
-				'schema'			=> null,
-			)
-		);
+		register_rest_field( 'schedule', 'event_location', $rest_field_args );
 
 		// Get the event speakers
-		register_rest_field( 'schedule', 'event_speakers',
-			array(
-				'get_callback'		=> array( $this, 'get_field_value' ),
-				'update_callback'	=> null,
-				'schema'			=> null,
-			)
-		);
+		register_rest_field( 'schedule', 'event_speakers', $rest_field_args );
 
 	}
 
