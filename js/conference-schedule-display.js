@@ -17,11 +17,11 @@
 		if ( $conf_schedule.data( 'template' ) ) {
 
 			// Get the templates
-			$conf_sch_templ = $('#' + $conf_schedule.data('template')).html();
-			if ( $conf_sch_templ !== undefined && $conf_sch_templ != '' ) {
+			var $conf_sch_templ_content = $('#' + $conf_schedule.data('template')).html();
+			if ( $conf_sch_templ_content !== undefined && $conf_sch_templ_content != '' ) {
 
 				// Parse the template
-				Mustache.parse( $conf_sch_templ );// optional, speeds up future uses
+				$conf_sch_templ = Handlebars.compile( $conf_sch_templ_content );
 
 				// Render the schedule
 				render_conference_schedule();
@@ -50,7 +50,7 @@
 				//console.log($schedule_items);
 
 				// Render the templates
-				var $rendered_list = Mustache.render( $conf_sch_templ, $schedule_items );
+				var $rendered_list = $conf_sch_templ( $schedule_items );
 
 				// Add to the list
 				$conf_schedule.html( $rendered_list );

@@ -31,15 +31,15 @@ class Conference_Schedule_Shortcodes {
 		// Enqueue the schedule script when needed
 		if ( isset( $post ) && has_shortcode( $post->post_content, 'print_conference_schedule' ) ) {
 
-			// Register mustache
-			wp_register_script( 'mustache', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'js' ) . 'mustache.min.js', array( 'jquery' ) );
+			// Register handlebars
+			wp_register_script( 'handlebars', '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js' );
 
 			// Register unveil and viewport
 			//wp_register_script( 'viewport', $sa_framework_dir . 'js/viewport.min.js', array( 'jquery' ) );
 			//wp_register_script( 'unveil', $sa_framework_dir . 'js/unveil.min.js', array( 'jquery', 'viewport' ) );
 
 			// Enqueue the schedule script
-			wp_enqueue_script( 'conf-schedule-display', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'js' ) . 'conference-schedule-display.min.js', array( 'jquery', 'mustache' ), CONFERENCE_SCHEDULE_VERSION, true );
+			wp_enqueue_script( 'conf-schedule-display', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'js' ) . 'conference-schedule-display.min.js', array( 'jquery', 'handlebars' ), CONFERENCE_SCHEDULE_VERSION, true );
 
 			// Pass some data
 			wp_localize_script( 'conf-schedule-display', 'conf_schedule', array(
@@ -67,7 +67,7 @@ class Conference_Schedule_Shortcodes {
 		$content = null;
 
 		// Add the template
-		$content .= '<script id="conference-schedule-display" type="x-tmpl-mustache">
+		$content .= '<script id="conference-schedule-display" type="text/x-handlebars-template">
 			{{#.}}
 				<div class="schedule-event{{#event_types}} {{.}}{{/event_types}}">
 					{{#title}}<h3 class="event-title">{{{rendered}}}</h3>{{/title}}
