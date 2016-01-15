@@ -627,8 +627,9 @@ class Conference_Schedule_Admin {
 							// Hide the file input
 							$slides_file_hide_input = true;
 
-							?><div id="conf-sch-slides-file-info" style="margin:0 0 8px 0;">
-								<span class="button conf-sch-slides-file-remove" style="padding-left:5px;"><span class="dashicons dashicons-no" style="line-height:inherit"></span> Remove the file</span> <a style="display:inline-block;line-height:26px;margin:0 0 0 5px;" href="<?php echo $attached_slides_url; ?>" target="_blank"><?php echo $attached_slides_url; ?></a>
+							?><div id="conf-sch-slides-file-info" style="margin:0 0 10px 0;">
+								<a style="display:block;margin:0 0 10px 0;" href="<?php echo $attached_slides_url; ?>" target="_blank"><?php echo $attached_slides_url; ?></a>
+								<span class="button conf-sch-slides-file-remove" style="clear:both;padding-left:5px;"><span class="dashicons dashicons-no" style="line-height:inherit"></span> Remove the file</span>
 							</div><?php
 
 						}
