@@ -349,6 +349,11 @@ class Conference_Schedule_Admin {
 
 				}
 
+				// Clear out speakers meta
+				else {
+					update_post_meta( $post_id, 'conf_sch_event_speakers', null );
+				}
+
 				// Check if our session details nonce is set because the 'save_post' action can be triggered at other times
 				if ( isset( $_POST[ 'conf_schedule_save_session_details_nonce' ] ) ) {
 
