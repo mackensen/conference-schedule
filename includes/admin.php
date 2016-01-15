@@ -46,6 +46,9 @@ class Conference_Schedule_Admin {
 		// Save meta box data
 		add_action( 'save_post', array( $this, 'save_meta_box_data' ), 20, 3 );
 
+		// Set it up so we can do file uploads
+		add_action( 'post_edit_form_tag' , array( $this, 'post_edit_form_tag' ) );
+
 	}
 
 	/**
@@ -119,6 +122,16 @@ class Conference_Schedule_Admin {
 					'high'
 				);
 
+				// Session Details
+				add_meta_box(
+					'conf-schedule-session-details',
+					__( 'Session Details', 'conf-schedule' ),
+					array( $this, 'print_meta_boxes' ),
+					$post_type,
+					'normal',
+					'high'
+				);
+
 				break;
 
 			case 'speakers':
@@ -177,6 +190,10 @@ class Conference_Schedule_Admin {
 
 			case 'conf-schedule-event-details':
 				$this->print_event_details_form( $post->ID );
+				break;
+
+			case 'conf-schedule-session-details':
+				$this->print_session_details_form( $post->ID );
 				break;
 
 			case 'conf-schedule-speaker-details':
@@ -332,11 +349,86 @@ class Conference_Schedule_Admin {
 
 				}
 
+				// Check if our session details nonce is set because the 'save_post' action can be triggered at other times
+				if ( isset( $_POST[ 'conf_schedule_save_session_details_nonce' ] ) ) {
+
+					// Verify the nonce
+					if ( wp_verify_nonce( $_POST[ 'conf_schedule_save_session_details_nonce' ], 'conf_schedule_save_session_details' ) ) {
+
+						// Process each field
+						foreach ( array( 'slides_url', 'feedback_url' ) as $field_name ) {
+							if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ $field_name ] ) ) {
+
+								// Sanitize the value
+								$field_value = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ $field_name ] );
+
+								// Update/save value
+								update_post_meta( $post_id, "conf_sch_event_{$field_name}", $field_value );
+
+							}
+						}
+
+						// Process the session file
+						if( ! empty( $_FILES )
+							&& isset( $_FILES[ 'conf_schedule_event_slides_file' ] )
+							&& ! empty( $_FILES[ 'conf_schedule_event_slides_file' ][ 'name' ] ) ) {
+
+							// Upload the file to the server
+							$upload_file = wp_handle_upload( $_FILES[ 'conf_schedule_event_slides_file' ], array( 'test_form' => false ) );
+
+							// If the upload was successful...
+							if ( $upload_file && ! isset( $upload_file[ 'error'] ) ) {
+
+								// Should be the path to a file in the upload directory
+								$file_name = $upload_file[ 'file' ];
+
+								// Get the file type
+								$file_type = wp_check_filetype( $file_name );
+
+								// Prepare an array of post data for the attachment.
+								$attachment = array(
+									'guid'           => $upload_file[ 'url' ],
+									'post_mime_type' => $file_type['type'],
+									'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $file_name ) ),
+									'post_content'   => '',
+									'post_status'    => 'inherit'
+								);
+
+								// Insert the attachment
+								if ( $attachment_id = wp_insert_attachment( $attachment, $file_name, $post_id ) ) {
+
+									// Generate the metadata for the attachment and update the database record
+									if ( $attach_data = wp_generate_attachment_metadata( $attachment_id, $file_name ) ) {
+										wp_update_attachment_metadata( $attachment_id, $attach_data );
+									}
+
+									// Update/save value
+									update_post_meta( $post_id, 'conf_sch_event_slides_file', $attachment_id );
+
+								}
+
+							}
+
+						}
+
+						// Check to see if our 'conf_schedule_event_delete_slides_file' hidden input is included
+						else if ( isset( $_POST[ 'conf_schedule_event_delete_slides_file' ] )
+							&& $_POST[ 'conf_schedule_event_delete_slides_file' ] > 0 ) {
+
+							// Clear out the meta
+							delete_post_meta( $post_id, 'conf_sch_event_slides_file' );
+
+						}
+
+					}
+
+				}
+
 				break;
 
-			case 'speakers':
+			case 'events':
 
-				// Make sure speaker fields are set
+				// Make sure event fields are set
 				if ( isset( $_POST[ 'conf_schedule' ] ) && isset( $_POST[ 'conf_schedule' ][ 'speaker' ] ) ) {
 
 					// Check if our speaker details nonce is set because the 'save_post' action can be triggered at other times
@@ -476,6 +568,70 @@ class Conference_Schedule_Admin {
 	}
 
 	/**
+	 * Print the session details form for a particular event.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 * @param	int - $post_id - the ID of the event
+	 */
+	public function print_session_details_form( $post_id ) {
+
+		// Add a session details nonce field so we can check for it when saving the data
+		wp_nonce_field( 'conf_schedule_save_session_details', 'conf_schedule_save_session_details_nonce' );
+
+		// Get saved event details
+		$slides_url = get_post_meta( $post_id, 'conf_sch_event_slides_url', true );
+		$slides_file = get_post_meta( $post_id, 'conf_sch_event_slides_file', true );
+		$feedback_url = get_post_meta( $post_id, 'conf_sch_event_feedback_url', true );
+
+		?><table class="form-table">
+			<tbody>
+				<tr>
+					<th scope="row"><label for="conf-sch-slides-url">Slides URL</label></th>
+					<td>
+						<input type="text" id="conf-sch-slides-url" style="width:75%;" name="conf_schedule[event][slides_url]" value="<?php echo esc_attr( $slides_url ); ?>" />
+						<p class="description">Please provide the URL (or file below) for users to download or view this session's slides.</p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="conf-sch-slides-file-input">Slides File</label></th>
+					<td><?php
+
+						// Should we hide the input?
+						$slides_file_hide_input = false;
+
+						// If selected (and confirmed) file...
+						if ( $slides_file > 0 && ( $slides_file_post = get_post( $slides_file ) ) ) {
+
+							// Get URL
+							$attached_slides_url = wp_get_attachment_url( $slides_file );
+
+							// Hide the file input
+							$slides_file_hide_input = true;
+
+							?><div id="conf-sch-slides-file-info" style="margin:0 0 8px 0;">
+								<span class="button conf-sch-slides-file-remove" style="padding-left:5px;"><span class="dashicons dashicons-no" style="line-height:inherit"></span> Remove the file</span> <a style="display:inline-block;line-height:26px;margin:0 0 0 5px;" href="<?php echo $attached_slides_url; ?>" target="_blank"><?php echo $attached_slides_url; ?></a>
+							</div><?php
+
+						}
+
+						?><input type="file" accept="application/pdf" id="conf-sch-slides-file-input" style="width:75%;<?php echo $slides_file_hide_input ? 'display:none;' : null; ?>" size="25" name="conf_schedule_event_slides_file" value="" />
+						<p class="description">You may also upload a file if you wish to host the session's slides for users to download or view. <strong>Only PDF files are allowed.</strong></p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="conf-sch-feedback-url">Feedback URL</label></th>
+					<td>
+						<input type="text" id="conf-sch-feedback-url" style="width:75%;" name="conf_schedule[event][feedback_url]" value="<?php echo esc_attr( $feedback_url ); ?>" />
+						<p class="description">Please provide the URL you wish to provide to gather session feedback. <strong>It will display 30 minutes after the session has started.</strong></p>
+					</td>
+				</tr>
+			</tbody>
+		</table><?php
+
+	}
+
+	/**
 	 * Print the speaker details form for a particular speaker.
 	 *
 	 * @access  public
@@ -570,6 +726,22 @@ class Conference_Schedule_Admin {
 				</tr>
 			</tbody>
 		</table><?php
+
+	}
+
+	/**
+	 * Setup the edit form for file upload.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 * @param	WP_Post - $post - the post object
+	 */
+	public function post_edit_form_tag( $post ) {
+
+		// Only include when editing the schedule
+		if ( 'schedule' == $post->post_type ) {
+			echo ' enctype="multipart/form-data"';
+		}
 
 	}
 

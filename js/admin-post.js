@@ -66,6 +66,18 @@
 			conf_sch_set_speakers();
 		});
 
+		// Remove the slides file
+		$('.conf-sch-slides-file-remove').on('click', function($event) {
+			$event.preventDefault();
+
+			// Hide the info
+			$('#conf-sch-slides-file-info').hide();
+
+			// Show the file input, clear it out, and add a hidden input to let the admin know to clear the DB
+			$('#conf-sch-slides-file-input').show().val('').after( '<input type="hidden" name="conf_schedule_event_delete_slides_file" value="1" />');
+
+		});
+
 	});
 
 	// Set the event types for the select2
