@@ -11,6 +11,13 @@
 		$( '#conf-sch-date' ).datepicker( 'option', 'altField', '#conf-sch-date-alt' );
 		$( '#conf-sch-date' ).datepicker( 'option', 'altFormat', 'yy-mm-dd' );
 
+		// When date is cleared, be sure to clear the altField
+		$( '#conf-sch-date' ).on( 'change', function() {
+			if ( '' == $(this).val() ) {
+				$('#conf-sch-date-alt').val('');
+			}
+		});
+
 		// Set our time picker
 		$( '.conf-sch-time-field' ).timepicker({
 			step: 15,

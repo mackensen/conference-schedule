@@ -252,6 +252,35 @@ class Conference_Schedule_Admin {
 					return;
 				}
 
+				// Make sure date is set
+				if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'date' ] ) ) {
+
+					// Sanitize the value
+					$event_date = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ 'date'] );
+
+					// Update/save value
+					update_post_meta( $post_id, 'conf_sch_event_date', $event_date );
+
+				}
+
+				// Make sure times are set
+				foreach( array( 'start_time', 'end_time' ) as $time_key ) {
+					if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ $time_key ] ) ) {
+
+						// Sanitize the value
+						$time_value = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ $time_key ] );
+
+						// If we have a time, format it
+						if ( ! empty( $time_value ) ) {
+							$time_value = date( 'H:i', strtotime( $time_value ) );
+						}
+
+						// Update/save value
+						update_post_meta( $post_id, "conf_sch_event_{$time_key}", $time_value );
+
+					}
+				}
+
 				// Make sure type is set
 				if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'event_types' ] ) ) {
 					$event_types = $_POST[ 'conf_schedule' ][ 'event' ][ 'event_types' ];
@@ -270,6 +299,11 @@ class Conference_Schedule_Admin {
 					// Set the terms
 					wp_set_object_terms( $post_id, $event_types, 'event_types', false );
 
+				}
+
+				// Clear out event types meta
+				else {
+					wp_delete_object_term_relationships( $post_id, 'event_types' );
 				}
 
 				// Make sure session categories are set
@@ -292,30 +326,9 @@ class Conference_Schedule_Admin {
 
 				}
 
-				// Make sure date is set
-				if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'date' ] ) ) {
-
-					// Sanitize the value
-					$event_date = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ 'date'] );
-
-					// Update/save value
-					update_post_meta( $post_id, 'conf_sch_event_date', $event_date );
-
-				}
-
-				// Make sure times are set
-				foreach( array( 'start_time', 'end_time' ) as $time_key ) {
-
-					if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ $time_key ] ) ) {
-
-						// Sanitize the value
-						$time_value = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ $time_key ] );
-
-						// Update/save value
-						update_post_meta( $post_id, "conf_sch_event_{$time_key}", date( 'H:i', strtotime( $time_value ) ) );
-
-					}
-
+				// Clear out session categories meta
+				else {
+					wp_delete_object_term_relationships( $post_id, 'session_categories' );
 				}
 
 				// Make sure location is set
