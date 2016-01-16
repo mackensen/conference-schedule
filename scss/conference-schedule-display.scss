@@ -156,12 +156,16 @@ $schedule-border-color: rgba( #000, 0.1 );
                 .event-title {
                     font-weight: bold;
                     margin: 0 0 10px 0;
+                    font-size: 24px;
+                    line-height: 28px;
                 }
 
                 .event-location {
                     display: block;
                     font-style: italic;
                     margin: -4px 0 10px 0;
+                    font-size: 20px;
+                    line-height: 23px;
                 }
 
                 /*.keynote {
@@ -478,24 +482,37 @@ $schedule-border-color: rgba( #000, 0.1 );
                         width: 85%;
                         padding: 0 10px;
 
-                        /*.session {
-                            float: left;
-                            width: 50%;
-                            padding: 0 13px 0 0;
-                            margin: 0 !important;
-                            border: 0 !important;
+                        .session {
+                            padding: 0 10px;
+                            -moz-box-sizing: border-box;
+                            -webkit-box-sizing: border-box;
+                            box-sizing: border-box;
 
-                            & + .session {
-                                padding: 0 0 0 13px;
+                            // Two and four items
+                            &:first-child:nth-last-child(2),
+                            &:first-child:nth-last-child(2) ~ .session,
+                            &:first-child:nth-last-child(4),
+                            &:first-child:nth-last-child(4) ~ .session {
+                                float: left;
+                                width: 50%;
                             }
 
-                            &.keynote {
-                                float: none;
-                                width: 100%;
-                                padding: 0;
+                            // Three items
+                            &:first-child:nth-last-child(3),
+                            &:first-child:nth-last-child(3) ~ .session {
+                                float: left;
+                                width: 33.3333%;
                             }
 
-                        }*/
+                            &:first-child {
+                                padding-left: 0;
+                            }
+
+                            &:last-child {
+                                padding-right: 0;
+                            }
+
+                        }
 
                     }
 

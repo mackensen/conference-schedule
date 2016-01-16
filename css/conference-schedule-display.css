@@ -197,11 +197,15 @@
 #conference-schedule .schedule-table .schedule-row .schedule-event .event-title {
   font-weight: bold;
   margin: 0 0 10px 0;
+  font-size: 24px;
+  line-height: 28px;
 }
 #conference-schedule .schedule-table .schedule-row .schedule-event .event-location {
   display: block;
   font-style: italic;
   margin: -4px 0 10px 0;
+  font-size: 20px;
+  line-height: 23px;
 }
 #conference-schedule .schedule-table .schedule-row .schedule-event:last-child {
   margin-bottom: 0;
@@ -415,23 +419,25 @@
   #conference-schedule .schedule-table .schedule-row .schedule-row-item.events {
     width: 85%;
     padding: 0 10px;
-                        /*.session {
-                            float: left;
-                            width: 50%;
-                            padding: 0 13px 0 0;
-                            margin: 0 !important;
-                            border: 0 !important;
-
-                            & + .session {
-                                padding: 0 0 0 13px;
-                            }
-
-                            &.keynote {
-                                float: none;
-                                width: 100%;
-                                padding: 0;
-                            }
-
-                        }*/
+  }
+  #conference-schedule .schedule-table .schedule-row .schedule-row-item.events .session {
+    padding: 0 10px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  #conference-schedule .schedule-table .schedule-row .schedule-row-item.events .session:first-child:nth-last-child(2), #conference-schedule .schedule-table .schedule-row .schedule-row-item.events .session:first-child:nth-last-child(2) ~ .session, #conference-schedule .schedule-table .schedule-row .schedule-row-item.events .session:first-child:nth-last-child(4), #conference-schedule .schedule-table .schedule-row .schedule-row-item.events .session:first-child:nth-last-child(4) ~ .session {
+    float: left;
+    width: 50%;
+  }
+  #conference-schedule .schedule-table .schedule-row .schedule-row-item.events .session:first-child:nth-last-child(3), #conference-schedule .schedule-table .schedule-row .schedule-row-item.events .session:first-child:nth-last-child(3) ~ .session {
+    float: left;
+    width: 33.3333%;
+  }
+  #conference-schedule .schedule-table .schedule-row .schedule-row-item.events .session:first-child {
+    padding-left: 0;
+  }
+  #conference-schedule .schedule-table .schedule-row .schedule-row-item.events .session:last-child {
+    padding-right: 0;
   }
 }
