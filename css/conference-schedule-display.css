@@ -92,44 +92,14 @@
     }
 
 }*/
-#conference-schedule .schedule-table {
-        /*.panel {
-
-            &.panel-dark-red {
-                font-size: 20px;
-                line-height: 22px;
-            }
-
-            &.panel-check-in-parking {
-                margin: 12px 0 5px 0;
-
-                .panel-body {
-                    padding: 10px;
-                    font-size: 15px;
-                    line-height: 1.5;
-                }
-
-            }
-
-        }*/
-}
 #conference-schedule .schedule-table .schedule-row {
   clear: both;
   overflow: auto;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   padding: 20px 0;
-            /*&.current {
-                @include schedule_row_with_bg( rgba( #f9ff00, 0.2 ) );
-            }
-
-            &.break {
-
-                .event-title {
-                    font-weight: normal;
-                    font-style: italic;
-                }
-
-            }*/
+  /*&.current {
+      @include schedule_row_with_bg( rgba( #f9ff00, 0.2 ) );
+  }*/
 }
 #conference-schedule .schedule-table .schedule-row:last-child {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -194,18 +164,21 @@
 
                 }*/
 }
+#conference-schedule .schedule-table .schedule-row .schedule-event .event-time {
+  display: block;
+}
 #conference-schedule .schedule-table .schedule-row .schedule-event .event-title {
   font-weight: bold;
   margin: 0 0 10px 0;
-  font-size: 24px;
-  line-height: 28px;
+  font-size: 22px;
+  line-height: 26px;
 }
 #conference-schedule .schedule-table .schedule-row .schedule-event .event-location {
   display: block;
   font-style: italic;
   margin: -4px 0 10px 0;
-  font-size: 20px;
-  line-height: 23px;
+  font-size: 19px;
+  line-height: 22px;
 }
 #conference-schedule .schedule-table .schedule-row .schedule-event:last-child {
   margin-bottom: 0;
@@ -220,8 +193,7 @@
   box-sizing: border-box;
 }
 #conference-schedule .schedule-table .schedule-row .schedule-row-item.time {
-  font-size: 0.85em;
-  padding: 0;
+  display: none;
 }
 #conference-schedule .schedule-table .schedule-row.current + .schedule-row {
   border-top: 0;
@@ -407,18 +379,25 @@
   #conference-schedule .schedule-table .schedule-row:last-child {
     border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
   }
+  #conference-schedule .schedule-table .schedule-row .schedule-event .event-time {
+    display: none;
+  }
   #conference-schedule .schedule-table .schedule-row .schedule-row-item {
     display: block;
     clear: none;
     float: left;
   }
   #conference-schedule .schedule-table .schedule-row .schedule-row-item.time {
+    display: block;
     width: 15%;
-    padding: 0 10px;
+    padding: 0 10px 0 0;
+    font-size: 15px;
+    line-height: 18px;
+    margin: 0 0 8px 0;
+    opacity: 0.9;
   }
   #conference-schedule .schedule-table .schedule-row .schedule-row-item.events {
     width: 85%;
-    padding: 0 10px;
   }
   #conference-schedule .schedule-table .schedule-row .schedule-row-item.events .session {
     padding: 0 10px;

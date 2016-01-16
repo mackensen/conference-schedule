@@ -3,7 +3,7 @@
 /**
  * Plugin Name:       Conference Schedule
  * Plugin URI:        @TODO
- * Description:       @TODO
+ * Description:       Helps you build a simple schedule for your conference website.
  * Version:           1.0 // @TODO Change to 0.5 after name is changed
  * Author:            Rachel Carden
  * Author URI:        https://bamadesigner.com

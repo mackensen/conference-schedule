@@ -119,26 +119,6 @@ $schedule-border-color: rgba( #000, 0.1 );
 
     .schedule-table {
 
-        /*.panel {
-
-            &.panel-dark-red {
-                font-size: 20px;
-                line-height: 22px;
-            }
-
-            &.panel-check-in-parking {
-                margin: 12px 0 5px 0;
-
-                .panel-body {
-                    padding: 10px;
-                    font-size: 15px;
-                    line-height: 1.5;
-                }
-
-            }
-
-        }*/
-
         .schedule-row {
             clear: both;
             overflow: auto;
@@ -153,19 +133,23 @@ $schedule-border-color: rgba( #000, 0.1 );
                 overflow: auto;
                 margin: 0 0 15px 0;
 
+                .event-time {
+                    display: block;
+                }
+
                 .event-title {
                     font-weight: bold;
                     margin: 0 0 10px 0;
-                    font-size: 24px;
-                    line-height: 28px;
+                    font-size: 22px;
+                    line-height: 26px;
                 }
 
                 .event-location {
                     display: block;
                     font-style: italic;
                     margin: -4px 0 10px 0;
-                    font-size: 20px;
-                    line-height: 23px;
+                    font-size: 19px;
+                    line-height: 22px;
                 }
 
                 /*.keynote {
@@ -241,24 +225,13 @@ $schedule-border-color: rgba( #000, 0.1 );
                 box-sizing: border-box;
 
                 &.time {
-                    font-size: 0.85em;
-                    padding: 0;
-                    //color: rgba( #000, 0.65 );
+                    display: none;
                 }
 
             }
 
             /*&.current {
                 @include schedule_row_with_bg( rgba( #f9ff00, 0.2 ) );
-            }
-
-            &.break {
-
-                .event-title {
-                    font-weight: normal;
-                    font-style: italic;
-                }
-
             }*/
 
         }
@@ -467,20 +440,31 @@ $schedule-border-color: rgba( #000, 0.1 );
 
                 }*/
 
+                .schedule-event {
+
+                    .event-time {
+                        display: none;
+                    }
+
+                }
+
                 .schedule-row-item {
                     display: block;
                     clear: none;
                     float: left;
 
                     &.time {
+                        display: block;
                         width: 15%;
-                        padding: 0 10px;
-                        //line-height: 2;
+                        padding: 0 10px 0 0;
+                        font-size: 15px;
+                        line-height: 18px;
+                        margin: 0 0 8px 0;
+                        opacity: 0.9;
                     }
 
                     &.events {
                         width: 85%;
-                        padding: 0 10px;
 
                         .session {
                             padding: 0 10px;
