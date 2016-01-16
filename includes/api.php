@@ -33,6 +33,9 @@ class Conference_Schedule_API {
 		// Get the event date
 		register_rest_field( 'schedule', 'event_date', $rest_field_args );
 
+		// Get the event date
+		register_rest_field( 'schedule', 'event_date_display', $rest_field_args );
+
 		// Get the event start time
 		register_rest_field( 'schedule', 'event_start_time', $rest_field_args );
 
@@ -67,6 +70,12 @@ class Conference_Schedule_API {
 
 			case 'event_date':
 				return get_post_meta( $object[ 'id' ], 'conf_sch_event_date', true );
+
+			case 'event_date_display':
+				if ( $event_date = get_post_meta( $object[ 'id' ], 'conf_sch_event_date', true ) ) {
+					return date( 'l, F j', strtotime( $event_date ) );
+				}
+				break;
 
 			case 'event_start_time':
 				return get_post_meta( $object[ 'id' ], 'conf_sch_event_start_time', true );
