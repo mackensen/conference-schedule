@@ -73,7 +73,7 @@ class Conference_Schedule_API {
 
 			case 'event_date_display':
 				if ( $event_date = get_post_meta( $object[ 'id' ], 'conf_sch_event_date', true ) ) {
-					return date( 'l, F j', strtotime( $event_date ) );
+					return date( 'l, F j, Y', strtotime( $event_date ) );
 				}
 				break;
 
