@@ -79,7 +79,7 @@ class Conference_Schedule_Shortcodes {
 		</script>';
 
 		// Add the schedule holder
-		$content .= '<div id="conference-schedule" data-template="conference-schedule-display"></div>';
+		$content .= '<div id="conference-schedule"></div>';
 
 		/*// Get the schedule data
 		if ( $schedule_data = get_hewebal_schedule_data() ) {
