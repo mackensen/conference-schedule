@@ -77,14 +77,12 @@
 					// Sort through events by the time
 					$.each( $day_by_time, function( $time, $day_items ) {
 
-						// Will hold the event display
+						// Will hold the event date and time for display
 						var $date_display = '';
+						var $time_display = '';
 
 						// Build row HTML
 						var $schedule_row_html = '';
-
-						// Add the time
-						$schedule_row_html += '<div class="schedule-row-item time">' + $time + '</div>';
 
 						// Build events HTML
 						var $row_events = '';
@@ -97,10 +95,18 @@
 								$date_display = $item.event_date_display;
 							}
 
+							// Get the time
+							if ($time_display == '' && $item.event_time_display !== undefined) {
+								$time_display = $item.event_time_display;
+							}
+
 							// Render the templates
 							$row_events += $conf_sch_templ($item);
 
 						});
+
+						// Add the time
+						$schedule_row_html += '<div class="schedule-row-item time">' + $time_display + '</div>';
 
 						// Wrap all events in a row item
 						$schedule_row_html += '<div class="schedule-row-item events">' + $row_events + '</div>';
