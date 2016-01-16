@@ -33,7 +33,7 @@ class Conference_Schedule_API {
 		// Get the event date
 		register_rest_field( 'schedule', 'event_date', $rest_field_args );
 
-		// Get the event date
+		// Get the event display string
 		register_rest_field( 'schedule', 'event_date_display', $rest_field_args );
 
 		// Get the event start time
@@ -41,6 +41,9 @@ class Conference_Schedule_API {
 
 		// Get the event end time
 		register_rest_field( 'schedule', 'event_end_time', $rest_field_args );
+
+		// Get the event time display
+		register_rest_field( 'schedule', 'event_time_display', $rest_field_args );
 
 		// Get the event types
 		register_rest_field( 'schedule', 'event_types', $rest_field_args );
@@ -82,6 +85,45 @@ class Conference_Schedule_API {
 
 			case 'event_end_time':
 				return get_post_meta( $object[ 'id' ], 'conf_sch_event_end_time', true );
+
+			case 'event_time_display':
+
+				// Get start and end time
+				$event_start_time = get_post_meta( $object[ 'id' ], 'conf_sch_event_start_time', true );
+				$event_end_time = get_post_meta( $object[ 'id' ], 'conf_sch_event_end_time', true );
+
+				// Build display string
+				$event_time_display = '';
+
+				// Start with start time
+				if ( $event_start_time ) {
+
+					// Convert start time
+					$event_start_time = strtotime( $event_start_time );
+
+					// Build the start time
+					$event_time_display = date( 'g:i', $event_start_time );
+
+					// If we don't have an end time...
+					if ( ! $event_end_time ) {
+						$event_time_display = date( ' a', $event_start_time );
+					}
+
+					// If we have an end time...
+					else {
+
+						// Convert end time
+						$event_end_time = strtotime( $event_end_time );
+
+						// Figure out if the meridian is different
+						if ( date( 'a', $event_start_time ) != date( 'g:i a', $event_end_time ) ) {
+							$event_time_display .= date( ' a', $event_start_time ) . ' - ' . date( 'g:i a', $event_end_time );
+						}
+
+					}
+
+				}
+				return preg_replace( '/(a|p)m/', '$1.m.', $event_time_display );
 
 			case 'event_types':
 				return ( $types = wp_get_object_terms( $object[ 'id' ], 'event_types', array( 'fields' => 'slugs' ) ) ) ? $types : false;
