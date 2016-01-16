@@ -124,17 +124,6 @@
 				// Add the html
 				$conf_schedule.html( $schedule_html );
 
-				/*// Unveil the images
-				$conf_schedule.find( 'img' ).unveil( 0, function() {
-					$(this).load(function() {
-						$(this).closest('.list-item').css({'opacity':'1'});
-					});
-				});
-				$conf_schedule.find( 'img:in-viewport' ).trigger( 'unveil' );
-
-				// Load those without an image
-				$conf_schedule.find( "img[data-src='']" ).closest('.list-item').css({'opacity':'1'});*/
-
 			},
 			cache: false // @TODO set to true
 		} );

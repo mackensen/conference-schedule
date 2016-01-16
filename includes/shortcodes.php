@@ -37,10 +37,6 @@ class Conference_Schedule_Shortcodes {
 			// Register handlebars
 			wp_register_script( 'handlebars', '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js' );
 
-			// Register unveil and viewport
-			//wp_register_script( 'viewport', $sa_framework_dir . 'js/viewport.min.js', array( 'jquery' ) );
-			//wp_register_script( 'unveil', $sa_framework_dir . 'js/unveil.min.js', array( 'jquery', 'viewport' ) );
-
 			// Enqueue the schedule script
 			wp_enqueue_script( 'conf-schedule-display', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'js' ) . 'conference-schedule-display.min.js', array( 'jquery', 'handlebars' ), CONFERENCE_SCHEDULE_VERSION, true );
 
