@@ -116,7 +116,7 @@ class Conference_Schedule_API {
 						$event_end_time = strtotime( $event_end_time );
 
 						// Figure out if the meridian is different
-						if ( date( 'a', $event_start_time ) != date( 'g:i a', $event_end_time ) ) {
+						if ( date( 'a', $event_start_time ) != date( 'a', $event_end_time ) ) {
 							$event_time_display .= date( ' a', $event_start_time ) . ' - ' . date( 'g:i a', $event_end_time );
 						}
 
