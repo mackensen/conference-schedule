@@ -3,6 +3,9 @@
 // we display the conference schedule.
 //
 
+// Make sure the charset is set appropriately
+@charset "UTF-8";
+
 // Define our colors
 $keynote-bg: rgba( #7a181f, 0.08 );
 $food-bg: rgba( #409b40, 0.06 );
@@ -13,10 +16,10 @@ $heweb-blue: #0f5588;
 $schedule-border-color: rgba( #000, 0.1 );
 
 // For the different event types
-$event_types: ('keynote': $keynote-bg) ('food': $food-bg) ('social': $social-bg) ('auditorium': $auditorium-bg) ('break': $break-bg);
+//$event_types: ('keynote': $keynote-bg) ('food': $food-bg) ('social': $social-bg) ('auditorium': $auditorium-bg) ('break': $break-bg);
 
 // Give color to a schedule row
-@mixin schedule_row_with_bg($bg_color) {
+/*@mixin schedule_row_with_bg($bg_color) {
     background: none;
     position: relative;
     overflow: visible;
@@ -40,7 +43,7 @@ $event_types: ('keynote': $keynote-bg) ('food': $food-bg) ('social': $social-bg)
         border-bottom: 0;
     }
 
-}
+}*/
 
 .clear {
     clear: both;
@@ -112,93 +115,56 @@ $event_types: ('keynote': $keynote-bg) ('food': $food-bg) ('social': $social-bg)
 
 }*/
 
-/*.schedule-header {
-    font-size: 25px;
-    text-transform: uppercase;
-    margin: 35px 0 0 0;
+#conference-schedule {
 
-    &:first-child {
-        margin-top: 0;
-    }
+    .schedule-table {
 
-}*/
+        /*.panel {
 
-.schedule-table {
-    margin: 20px 0;
-
-    /*.panel {
-
-        &.panel-dark-red {
-            font-size: 20px;
-            line-height: 22px;
-        }
-
-        &.panel-check-in-parking {
-            margin: 12px 0 5px 0;
-
-            .panel-body {
-                padding: 10px;
-                font-size: 15px;
-                line-height: 1.5;
+            &.panel-dark-red {
+                font-size: 20px;
+                line-height: 22px;
             }
 
-        }
+            &.panel-check-in-parking {
+                margin: 12px 0 5px 0;
 
-    }*/
+                .panel-body {
+                    padding: 10px;
+                    font-size: 15px;
+                    line-height: 1.5;
+                }
 
-    .schedule-row {
-        clear: both;
-        overflow: auto;
-        border-top: 1px solid $schedule-border-color;
-        padding: 15px 0;
+            }
 
-        &:last-child {
-            border-bottom: 1px solid $schedule-border-color;
-        }
+        }*/
 
-        .schedule-item {
-            display: block;
+        .schedule-row {
             clear: both;
-            background: none;
-            position: relative;
+            overflow: auto;
+            border-top: 1px solid $schedule-border-color;
+            padding: 20px 0;
 
-            &.time {
-                font-size: 0.85em;
-                padding: 0;
-                color: rgba( #000, 0.65 );
+            &:last-child {
+                border-bottom: 1px solid $schedule-border-color;
             }
 
-            &.event {
+            .schedule-event {
                 overflow: auto;
+                margin: 0 0 15px 0;
 
-                .event-header {
+                .event-title {
                     font-weight: bold;
-                    margin-top: 0;
+                    margin: 0 0 10px 0;
                 }
 
                 .event-location {
                     display: block;
                     font-style: italic;
+                    margin: -4px 0 10px 0;
                 }
 
-                .session,
-                .keynote,
-                .social {
-
-                    .event-header {
-                        font-size: 1.2em;
-                        line-height: 1.5;
-                        margin: 0 0 8px 0;
-
-                        & + .event-location {
-                            margin-top: -4px;
-                        }
-
-                    }
-
-                }
-
-                .keynote {
+                /*.keynote {
 
                     &.has-event-image {
                         overflow: auto;
@@ -228,14 +194,6 @@ $event_types: ('keynote': $keynote-bg) ('food': $food-bg) ('social': $social-bg)
 
                 }
 
-                .keynote {
-
-                    .event-header {
-                        margin-bottom: 4px;
-                    }
-
-                }
-
                 .event-desc {
                     font-size: 16px;
                     line-height: 1.8;
@@ -261,55 +219,60 @@ $event_types: ('keynote': $keynote-bg) ('food': $food-bg) ('social': $social-bg)
                         padding: 0 0 0 30px;
                     }
 
-                }
+                }*/
 
-                .keynote {
-
-                    .event-desc{
-                        margin: 15px 0 0 0;
-                    }
-
-                }
-
-                .social {
-
-                    .event-desc{
-                        margin: 20px 0 0 0;
-                    }
-
+                &:last-child {
+                    margin-bottom: 0;
                 }
 
             }
 
-        }
+            .schedule-row-item {
+                display: block;
+                clear: both;
+                background: none;
+                position: relative;
+                -moz-box-sizing: border-box;
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
 
-        &.current {
-            @include schedule_row_with_bg( rgba( #f9ff00, 0.2 ) );
-        }
+                &.time {
+                    font-size: 0.85em;
+                    padding: 0;
+                    //color: rgba( #000, 0.65 );
+                }
 
-        &.break {
-
-            .event-header {
-                font-weight: normal;
-                font-style: italic;
             }
 
+            /*&.current {
+                @include schedule_row_with_bg( rgba( #f9ff00, 0.2 ) );
+            }
+
+            &.break {
+
+                .event-title {
+                    font-weight: normal;
+                    font-style: italic;
+                }
+
+            }*/
+
         }
 
-    }
-
-    .schedule-row.current + .schedule-row {
-        border-top: 0;
-
-        &:before {
+        .schedule-row.current + .schedule-row {
             border-top: 0;
+
+            &:before {
+                border-top: 0;
+            }
+
         }
 
     }
 
 }
 
-.collapsible-schedule-block {
+/*.collapsible-schedule-block {
     display : block;
     clear: both;
     -webkit-border-radius: 5px;
@@ -365,10 +328,10 @@ $event_types: ('keynote': $keynote-bg) ('food': $food-bg) ('social': $social-bg)
 
     }
 
-}
+}*/
 
 // Tweak the schedule page
-body.page-template-schedule {
+/*body.page-template-schedule {
 
     .schedule-main-buttons-wrapper {
         margin: -10px 0 30px 0;
@@ -412,7 +375,7 @@ body.page-template-schedule {
 
     }
 
-}
+}*/
 
 // Small and Larger
 /*@media not all and (min-width: 0) and (max-width: $screen-xs-max) {
@@ -453,9 +416,9 @@ body.page-template-schedule {
 }*/
 
 // Medium and Larger
-/*@media not all and (min-width: 0) and (max-width: $screen-sm-max) {
+@media not all and (min-width: 0) and (max-width: 990px) {
 
-    .single-schedule {
+    /*.single-schedule {
 
         .schedule-item-details {
             float: right;
@@ -478,57 +441,61 @@ body.page-template-schedule {
 
         }
 
-    }
+    }*/
 
-    .schedule-table {
+    #conference-schedule {
 
-        .schedule-row {
-            border-top: 1px solid $schedule-border-color !important;
+        .schedule-table {
 
-            &:last-child {
-                border-bottom: 1px solid $schedule-border-color !important;
-            }
+            .schedule-row {
+                border-top: 1px solid $schedule-border-color !important;
 
-            &.current {
-                background: rgba( #f9ff00, 0.2 );
-
-                &:before {
-                    display: none;
+                &:last-child {
+                    border-bottom: 1px solid $schedule-border-color !important;
                 }
 
-            }
+                /*&.current {
+                    background: rgba( #f9ff00, 0.2 );
 
-            .schedule-item {
-                display: block;
-                clear: none;
-                float: left;
+                    &:before {
+                        display: none;
+                    }
 
-                &.time {
-                    width: 15%;
-                    padding: 0 10px;
-                    line-height: 2;
-                }
+                }*/
 
-                &.event {
-                    width: 85%;
-                    padding: 0 10px;
+                .schedule-row-item {
+                    display: block;
+                    clear: none;
+                    float: left;
 
-                    .session {
-                        float: left;
-                        width: 50%;
-                        padding: 0 13px 0 0;
-                        margin: 0 !important;
-                        border: 0 !important;
+                    &.time {
+                        width: 15%;
+                        padding: 0 10px;
+                        //line-height: 2;
+                    }
 
-                        & + .session {
-                            padding: 0 0 0 13px;
-                        }
+                    &.events {
+                        width: 85%;
+                        padding: 0 10px;
 
-                        &.keynote {
-                            float: none;
-                            width: 100%;
-                            padding: 0;
-                        }
+                        /*.session {
+                            float: left;
+                            width: 50%;
+                            padding: 0 13px 0 0;
+                            margin: 0 !important;
+                            border: 0 !important;
+
+                            & + .session {
+                                padding: 0 0 0 13px;
+                            }
+
+                            &.keynote {
+                                float: none;
+                                width: 100%;
+                                padding: 0;
+                            }
+
+                        }*/
 
                     }
 
@@ -540,4 +507,4 @@ body.page-template-schedule {
 
     }
 
-}*/
+}

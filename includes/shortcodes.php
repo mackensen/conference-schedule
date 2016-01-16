@@ -31,6 +31,9 @@ class Conference_Schedule_Shortcodes {
 		// Enqueue the schedule script when needed
 		if ( isset( $post ) && has_shortcode( $post->post_content, 'print_conference_schedule' ) ) {
 
+			// Register out schedule styles
+			wp_enqueue_style( 'conf-schedule-display', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'css' ) . 'conference-schedule-display.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
+
 			// Register handlebars
 			wp_register_script( 'handlebars', '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js' );
 
@@ -68,12 +71,11 @@ class Conference_Schedule_Shortcodes {
 
 		// Add the template
 		$content .= '<script id="conference-schedule-display" type="text/x-handlebars-template">
-			{{#.}}
-				<div class="schedule-event{{#event_types}} {{.}}{{/event_types}}">
-					{{#title}}<h3 class="event-title">{{{rendered}}}</h3>{{/title}}
-					{{#excerpt}}<div class="event-desc">{{{rendered}}}</div>{{/excerpt}}
-				</div>
-			{{/.}}
+			<div class="schedule-event{{#event_types}} {{.}}{{/event_types}}">
+				{{#title}}{{body}}{{/title}}
+				{{#event_location}}<div class="event-location">{{post_title}}</div>{{/event_location}}
+				{{#excerpt}}<div class="event-desc">{{{rendered}}}</div>{{/excerpt}}
+			</div>
 		</script>';
 
 		// Add the schedule holder
