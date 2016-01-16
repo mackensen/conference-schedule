@@ -74,15 +74,17 @@
 				// Print out the schedule by date
 				$.each( $schedule_by_dates, function( $date, $day_by_time ) {
 
+					// Will hold the day HTML
+					var $schedule_day_html = '';
+
+					// Will hold the event day for display
+					var $day_display = '';
+
 					// Sort through events by the time
 					$.each( $day_by_time, function( $time, $day_items ) {
 
-						// Will hold the event date and time for display
-						var $date_display = '';
+						// Will hold the time for display
 						var $time_display = '';
-
-						// Build row HTML
-						var $schedule_row_html = '';
 
 						// Build events HTML
 						var $row_events = '';
@@ -91,8 +93,8 @@
 						$.each( $day_items, function ($index, $item) {
 
 							// Get the date
-							if ($date_display == '' && $item.event_date_display !== undefined) {
-								$date_display = $item.event_date_display;
+							if ($day_display == '' && $item.event_date_display !== undefined) {
+								$day_display = $item.event_date_display;
 							}
 
 							// Get the time
@@ -105,25 +107,28 @@
 
 						});
 
-						// Add the time
-						$schedule_row_html += '<div class="schedule-row-item time">' + $time_display + '</div>';
+						// Will hold the row HTML - start with the time
+						var $schedule_row_html = '<div class="schedule-row-item time">' + $time_display + '</div>';
 
-						// Wrap all events in a row item
+						// Add the events
 						$schedule_row_html += '<div class="schedule-row-item events">' + $row_events + '</div>';
 
-						// Wrap the day in a row
+						// Wrap the row
 						$schedule_row_html = '<div class="schedule-row">' + $schedule_row_html + '</div>';
 
-						// Wrap the day in the table
-						$schedule_row_html = '<div class="schedule-table">' + $schedule_row_html + '</div>';
-
-						// Prefix the date header
-						$schedule_row_html = '<h2 class="schedule-header">' + $date_display + '</h2>' + $schedule_row_html;
-
-						// Add to schedule
-						$schedule_html += $schedule_row_html;
+						// Add to the day
+						$schedule_day_html += $schedule_row_html;
 
 					});
+
+					// Wrap the day in the table
+					$schedule_day_html = '<div class="schedule-table">' + $schedule_day_html + '</div>';
+
+					// Prefix the date header
+					$schedule_day_html = '<h2 class="schedule-header">' + $day_display + '</h2>' + $schedule_day_html;
+
+					// Add to schedule
+					$schedule_html += $schedule_day_html;
 
 				});
 

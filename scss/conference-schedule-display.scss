@@ -118,12 +118,13 @@ $schedule-border-color: rgba( #000, 0.1 );
 #conference-schedule {
 
     .schedule-table {
+        margin: 0 0 30px 0;
 
         .schedule-row {
             clear: both;
             overflow: auto;
             border-top: 1px solid $schedule-border-color;
-            padding: 20px 0;
+            padding: 25px 0;
 
             &:last-child {
                 border-bottom: 1px solid $schedule-border-color;
@@ -131,7 +132,7 @@ $schedule-border-color: rgba( #000, 0.1 );
 
             .schedule-event {
                 overflow: auto;
-                margin: 0 0 15px 0;
+                margin: 0 0 25px 0;
 
                 .event-time {
                     display: block;
@@ -152,21 +153,7 @@ $schedule-border-color: rgba( #000, 0.1 );
                     line-height: 22px;
                 }
 
-                /*.keynote {
-
-                    &.has-event-image {
-                        overflow: auto;
-
-                        .event-image {
-                            float: right;
-                            width: 200px;
-                            height: auto;
-                            margin: 5px 10px 20px 20px;
-                        }
-
-                    }
-
-                }
+                /*
 
                 .session {
 
@@ -180,36 +167,22 @@ $schedule-border-color: rgba( #000, 0.1 );
                         margin-bottom: 0;
                     }
 
-                }
-
-                .event-desc {
-                    font-size: 16px;
-                    line-height: 1.8;
-
-                    img {
-
-                        &.thumb {
-                            float: left;
-                            max-width: 20%;
-                            margin: 0 20px 20px 0;
-                        }
-
-                        &.small {
-                            width: 100%;
-                            max-width: 100%;
-                            margin: -5px 0 20px 0;
-                        }
-
-                    }
-
-                    .twitter-to-left {
-                        background-size: auto 20px;
-                        padding: 0 0 0 30px;
-                    }
-
                 }*/
 
-                &:last-child {
+                .event-desc {
+
+                    /*.twitter-to-left {
+                        background-size: auto 20px;
+                        padding: 0 0 0 30px;
+                    }*/
+
+                    & > *:last-child {
+                        margin-bottom: 0;
+                    }
+
+                }
+
+                & > *:last-child {
                     margin-bottom: 0;
                 }
 
@@ -441,6 +414,7 @@ $schedule-border-color: rgba( #000, 0.1 );
                 }*/
 
                 .schedule-event {
+                    margin-bottom: 0;
 
                     .event-time {
                         display: none;

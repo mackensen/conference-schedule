@@ -92,11 +92,14 @@
     }
 
 }*/
+#conference-schedule .schedule-table {
+  margin: 0 0 30px 0;
+}
 #conference-schedule .schedule-table .schedule-row {
   clear: both;
   overflow: auto;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 20px 0;
+  padding: 25px 0;
   /*&.current {
       @include schedule_row_with_bg( rgba( #f9ff00, 0.2 ) );
   }*/
@@ -106,22 +109,8 @@
 }
 #conference-schedule .schedule-table .schedule-row .schedule-event {
   overflow: auto;
-  margin: 0 0 15px 0;
-                /*.keynote {
-
-                    &.has-event-image {
-                        overflow: auto;
-
-                        .event-image {
-                            float: right;
-                            width: 200px;
-                            height: auto;
-                            margin: 5px 10px 20px 20px;
-                        }
-
-                    }
-
-                }
+  margin: 0 0 25px 0;
+                /*
 
                 .session {
 
@@ -133,33 +122,6 @@
 
                     *:last-child {
                         margin-bottom: 0;
-                    }
-
-                }
-
-                .event-desc {
-                    font-size: 16px;
-                    line-height: 1.8;
-
-                    img {
-
-                        &.thumb {
-                            float: left;
-                            max-width: 20%;
-                            margin: 0 20px 20px 0;
-                        }
-
-                        &.small {
-                            width: 100%;
-                            max-width: 100%;
-                            margin: -5px 0 20px 0;
-                        }
-
-                    }
-
-                    .twitter-to-left {
-                        background-size: auto 20px;
-                        padding: 0 0 0 30px;
                     }
 
                 }*/
@@ -180,7 +142,16 @@
   font-size: 19px;
   line-height: 22px;
 }
-#conference-schedule .schedule-table .schedule-row .schedule-event:last-child {
+#conference-schedule .schedule-table .schedule-row .schedule-event .event-desc {
+  /*.twitter-to-left {
+      background-size: auto 20px;
+      padding: 0 0 0 30px;
+  }*/
+}
+#conference-schedule .schedule-table .schedule-row .schedule-event .event-desc > *:last-child {
+  margin-bottom: 0;
+}
+#conference-schedule .schedule-table .schedule-row .schedule-event > *:last-child {
   margin-bottom: 0;
 }
 #conference-schedule .schedule-table .schedule-row .schedule-row-item {
@@ -378,6 +349,9 @@
   }
   #conference-schedule .schedule-table .schedule-row:last-child {
     border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+  }
+  #conference-schedule .schedule-table .schedule-row .schedule-event {
+    margin-bottom: 0;
   }
   #conference-schedule .schedule-table .schedule-row .schedule-event .event-time {
     display: none;
