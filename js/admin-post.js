@@ -92,7 +92,7 @@
 
 		// Get the event types for the select2
 		$.ajax( {
-			url: '/wp-json/wp/v2/event_types',
+			url: '/wp-json/wp/v2/event_types?per_page=0',
 			success: function ( $types ) {
 
 				// Make sure we have info
@@ -114,7 +114,7 @@
 				// See what event types are selected for this particular post
 				if ( $( '#post_ID' ).val() != '' ) {
 					$.ajax({
-						url: '/wp-json/wp/v2/schedule/' + $( '#post_ID' ).val() + '/event_types',
+						url: '/wp-json/wp/v2/schedule/' + $( '#post_ID' ).val() + '/event_types?per_page=0',
 						success: function ( $selected_event_types ) {
 
 							// Make sure we have info
@@ -165,7 +165,7 @@
 				// See what session categories are selected for this particular post
 				if ( $( '#post_ID' ).val() != '' ) {
 					$.ajax({
-						url: '/wp-json/wp/v2/schedule/' + $( '#post_ID' ).val() + '/session_categories',
+						url: '/wp-json/wp/v2/schedule/' + $( '#post_ID' ).val() + '/session_categories?per_page=0',
 						success: function ( $selected_categories ) {
 
 							// Make sure we have info
@@ -194,7 +194,7 @@
 
 		// Get the location for the select2
 		$.ajax( {
-			url: '/wp-json/wp/v2/locations',
+			url: '/wp-json/wp/v2/locations?filter[posts_per_page]=-1',
 			success: function ( $locations ) {
 
 				// Make sure we have info
@@ -248,7 +248,7 @@
 
 		// Get the speakers for the select2
 		$.ajax( {
-			url: '/wp-json/wp/v2/speakers',
+			url: '/wp-json/wp/v2/speakers?filter[posts_per_page]=-1',
 			success: function ( $speakers ) {
 
 				// Make sure we have info
