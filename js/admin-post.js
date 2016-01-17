@@ -278,8 +278,10 @@
 								return false;
 							}
 
-							// Mark the speaker as selected
-							$speakers_select.find( 'option[value="' + $event.event_speakers + '"]').attr('selected', true).trigger('change');
+							// Mark the speaker(s) as selected
+							$.each( $event.event_speakers, function ($index, $value) {
+								$speakers_select.find( 'option[value="' + $value + '"]' ).attr( 'selected', true).trigger('change');
+							});
 
 						},
 						cache: false // @TODO set to true?

@@ -120,7 +120,6 @@ class Conference_Schedule_API {
 							$event_time_display .= date( ' a', $event_start_time );
 						}
 
-						// Add the end time
 						$event_time_display .= ' - ' . date( 'g:i a', $event_end_time );
 
 					}
