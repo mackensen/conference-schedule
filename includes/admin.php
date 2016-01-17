@@ -444,7 +444,7 @@ class Conference_Schedule_Admin {
 
 				break;
 
-			case 'events':
+			case 'speakers':
 
 				// Make sure event fields are set
 				if ( isset( $_POST[ 'conf_schedule' ] ) && isset( $_POST[ 'conf_schedule' ][ 'speaker' ] ) ) {
