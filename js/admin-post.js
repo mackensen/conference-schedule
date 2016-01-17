@@ -143,7 +143,7 @@
 
 		// Get the session categories for the select2
 		$.ajax( {
-			url: '/wp-json/wp/v2/session_categories',
+			url: '/wp-json/wp/v2/session_categories?per_page=0',
 			success: function ( $categories ) {
 
 				// Make sure we have info
