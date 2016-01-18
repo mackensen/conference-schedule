@@ -92,6 +92,12 @@ class Conference_Schedule {
 		add_action( 'pre_get_posts', array( $this, 'filter_pre_get_posts' ), 20 );
 		add_filter( 'posts_clauses', array( $this, 'filter_posts_clauses' ), 20, 2 );
 
+		// Add needed styles and scripts
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ), 20 );
+
+		// Tweak the event pages
+		add_filter( 'the_content', array( $this, 'the_content' ), 1000 );
+
 		// Register custom post types
 		add_action( 'init', array( $this, 'register_custom_post_types' ), 0 );
 
@@ -206,6 +212,84 @@ class Conference_Schedule {
 		}
 
 		return $pieces;
+	}
+
+	/**
+	 * Add styles and scripts for our shortcodes.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 * @param	string - $hook_suffix - the ID of the current page
+	 */
+	public function enqueue_styles_scripts() {
+		global $post;
+
+		// Enqueue the schedule script when needed
+		if ( is_singular( 'schedule' ) ) {
+
+			// Register out schedule styles
+			wp_enqueue_style( 'conf-schedule', trailingslashit( plugin_dir_url( __FILE__ ) . 'css' ) . 'conf-schedule.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
+
+			// Register handlebars
+			wp_register_script( 'handlebars', '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js' );
+
+			// Enqueue the schedule script
+			wp_enqueue_script( 'conf-schedule-single', trailingslashit( plugin_dir_url( __FILE__ ) . 'js' ) . 'conf-schedule-single.min.js', array( 'jquery', 'handlebars' ), CONFERENCE_SCHEDULE_VERSION, true );
+
+			// Pass some data
+			wp_localize_script( 'conf-schedule-single', 'conf_schedule', array(
+				'post_id' => $post->ID,
+			));
+
+		}
+
+	}
+
+	/**
+	 * Filter the content.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 * @param	string - $the_content - the content
+	 * @return	string - the filtered content
+	 */
+	public function the_content( $the_content ) {
+		global $post;
+
+		// For tweaking the single schedule pages
+		if ( 'schedule' == $post->post_type ) {
+
+			// Add the info holders
+			$the_content = '<div id="conf-sch-single-before"></div>' . $the_content;
+			$the_content .= '<div id="conf-sch-single-after"></div>';
+
+			// Add the before template
+			$the_content .= '<script id="conf-sch-single-before-template" type="text/x-handlebars-template">
+				{{#event_location}}<div class="event-location">{{post_title}}</div>{{/event_location}}
+				{{#event_dt}}{{body}}{{/event_dt}}
+			</script>';
+
+			// Add the after template
+			$the_content .= '<script id="conf-sch-single-after-template" type="text/x-handlebars-template">
+				{{#speakers}}{{body}}{{/speakers}}
+			</script>';
+
+			// Add speaker info
+			/*$the_content .= '<div class="speakers">
+				<div class="speaker has-image">
+					<img class="speaker-thumb" src="https://hewebal.com/wp-content/uploads/rachel-thompson-300x300.jpg" />
+					<div class="speaker-text">
+						<h3>Rachel Thompson</h3>
+						<h4 class="speaker-position">Director of Emerging Technology and Accessibility, <a href="http://ua.edu/">The University of Alabama</a></h4>
+						<a class="twitter" href="https://twitter.com/rshuttle">@rshuttle</a>
+						<p>Rachel is Director of Emerging Technology and Accessibility in the University of Alabama Center for Instructional Technology, where she is leading a new campus-wide web and instructional technology accessibility initiative. She has been with the Center for Instructional Technology since 2007. Rachel received a Ph.D. in English-Applied Linguistics in 2004 with an emphasis on Southern American English dialects and their depiction in pop culture and fiction. Rachel also teaches linguistics and TESOL courses when possible. Rachel enjoys drawing, playing with her cats, listening to her husband make music, and assisting in his recording studio.</p>
+					</div>
+				</div>
+			</div>';*/
+
+		}
+
+		return $the_content;
 	}
 
 	/**
