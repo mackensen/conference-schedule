@@ -132,6 +132,16 @@ class Conference_Schedule_Admin {
 					'high'
 				);
 
+				// Social Media
+				add_meta_box(
+					'conf-schedule-social-media',
+					__( 'Social Media', 'conf-schedule' ),
+					array( $this, 'print_meta_boxes' ),
+					$post_type,
+					'normal',
+					'high'
+				);
+
 				break;
 
 			case 'speakers':
@@ -196,6 +206,10 @@ class Conference_Schedule_Admin {
 				$this->print_session_details_form( $post->ID );
 				break;
 
+			case 'conf-schedule-social-media':
+				$this->print_event_social_media_form( $post->ID );
+				break;
+
 			case 'conf-schedule-speaker-details':
 				$this->print_speaker_details_form( $post->ID );
 				break;
@@ -237,204 +251,211 @@ class Conference_Schedule_Admin {
 
 			case 'schedule':
 
-				// Check if our nonce is set because the 'save_post' action can be triggered at other times
-				if ( ! isset( $_POST[ 'conf_schedule_save_event_details_nonce' ] ) ) {
-					return;
-				}
-
-				// Verify the nonce
-				if ( ! wp_verify_nonce( $_POST[ 'conf_schedule_save_event_details_nonce' ], 'conf_schedule_save_event_details' ) ) {
-					return;
-				}
-
 				// Make sure fields are set
-				if ( ! ( isset( $_POST[ 'conf_schedule' ] ) && isset( $_POST[ 'conf_schedule' ][ 'event' ] ) ) ) {
-					return;
-				}
+				if ( isset( $_POST[ 'conf_schedule' ] ) && isset( $_POST[ 'conf_schedule' ][ 'event' ] ) ) {
 
-				// Make sure date is set
-				if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'date' ] ) ) {
+					// Check if our nonce is set because the 'save_post' action can be triggered at other times
+					if ( isset( $_POST[ 'conf_schedule_save_event_details_nonce' ] ) ) {
 
-					// Sanitize the value
-					$event_date = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ 'date'] );
+						// Verify the nonce
+						if ( wp_verify_nonce( $_POST[ 'conf_schedule_save_event_details_nonce' ], 'conf_schedule_save_event_details' ) ) {
 
-					// Update/save value
-					update_post_meta( $post_id, 'conf_sch_event_date', $event_date );
-
-				}
-
-				// Make sure times are set
-				foreach( array( 'start_time', 'end_time' ) as $time_key ) {
-					if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ $time_key ] ) ) {
-
-						// Sanitize the value
-						$time_value = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ $time_key ] );
-
-						// If we have a time, format it
-						if ( ! empty( $time_value ) ) {
-							$time_value = date( 'H:i', strtotime( $time_value ) );
-						}
-
-						// Update/save value
-						update_post_meta( $post_id, "conf_sch_event_{$time_key}", $time_value );
-
-					}
-				}
-
-				// Make sure type is set
-				if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'event_types' ] ) ) {
-					$event_types = $_POST[ 'conf_schedule' ][ 'event' ][ 'event_types' ];
-
-					// Make sure its an array
-					if ( ! is_array( $event_types ) ) {
-						$event_types = explode( ',', $event_types );
-					}
-
-					// Make sure it has only IDs
-					$event_types = array_filter( $event_types, 'is_numeric' );
-
-					// Convert to integer
-					$event_types = array_map( 'intval', $event_types );
-
-					// Set the terms
-					wp_set_object_terms( $post_id, $event_types, 'event_types', false );
-
-				}
-
-				// Clear out event types meta
-				else {
-					wp_delete_object_term_relationships( $post_id, 'event_types' );
-				}
-
-				// Make sure session categories are set
-				if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'session_categories' ] ) ) {
-					$session_categories = $_POST[ 'conf_schedule' ][ 'event' ][ 'session_categories' ];
-
-					// Make sure its an array
-					if ( ! is_array( $session_categories ) ) {
-						$session_categories = explode( ',', $session_categories );
-					}
-
-					// Make sure it has only IDs
-					$session_categories = array_filter( $session_categories, 'is_numeric' );
-
-					// Convert to integer
-					$session_categories = array_map( 'intval', $session_categories );
-
-					// Set the terms
-					wp_set_object_terms( $post_id, $session_categories, 'session_categories', false );
-
-				}
-
-				// Clear out session categories meta
-				else {
-					wp_delete_object_term_relationships( $post_id, 'session_categories' );
-				}
-
-				// Make sure location is set
-				if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'location' ] ) ) {
-
-					// Sanitize the value
-					$event_location = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ 'location'] );
-
-					// Update/save value
-					update_post_meta( $post_id, 'conf_sch_event_location', $event_location );
-
-				}
-
-				// Make sure speakers are set
-				if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'speakers' ] ) ) {
-					$event_speakers = $_POST[ 'conf_schedule' ][ 'event' ][ 'speakers'];
-
-					// Make sure its an array
-					if ( ! is_array( $event_speakers ) ) {
-						$event_speakers = explode( ',', $event_speakers );
-					}
-
-					// Make sure it has only IDs
-					$event_speakers = array_filter( $event_speakers, 'is_numeric' );
-
-					// Convert to integer
-					$event_speakers = array_map( 'intval', $event_speakers );
-
-					// Update/save value
-					update_post_meta( $post_id, 'conf_sch_event_speakers', $event_speakers );
-
-				}
-
-				// Clear out speakers meta
-				else {
-					update_post_meta( $post_id, 'conf_sch_event_speakers', null );
-				}
-
-				// Check if our session details nonce is set because the 'save_post' action can be triggered at other times
-				if ( isset( $_POST[ 'conf_schedule_save_session_details_nonce' ] ) ) {
-
-					// Verify the nonce
-					if ( wp_verify_nonce( $_POST[ 'conf_schedule_save_session_details_nonce' ], 'conf_schedule_save_session_details' ) ) {
-
-						// Process each field
-						foreach ( array( 'slides_url', 'feedback_url' ) as $field_name ) {
-							if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ $field_name ] ) ) {
+							// Make sure date is set
+							if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'date' ] ) ) {
 
 								// Sanitize the value
-								$field_value = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ $field_name ] );
+								$event_date = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ 'date' ] );
 
 								// Update/save value
-								update_post_meta( $post_id, "conf_sch_event_{$field_name}", $field_value );
+								update_post_meta( $post_id, 'conf_sch_event_date', $event_date );
 
 							}
-						}
 
-						// Process the session file
-						if( ! empty( $_FILES )
-							&& isset( $_FILES[ 'conf_schedule_event_slides_file' ] )
-							&& ! empty( $_FILES[ 'conf_schedule_event_slides_file' ][ 'name' ] ) ) {
+							// Make sure times are set
+							foreach ( array( 'start_time', 'end_time' ) as $time_key ) {
+								if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ $time_key ] ) ) {
 
-							// Upload the file to the server
-							$upload_file = wp_handle_upload( $_FILES[ 'conf_schedule_event_slides_file' ], array( 'test_form' => false ) );
+									// Sanitize the value
+									$time_value = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ $time_key ] );
 
-							// If the upload was successful...
-							if ( $upload_file && ! isset( $upload_file[ 'error'] ) ) {
-
-								// Should be the path to a file in the upload directory
-								$file_name = $upload_file[ 'file' ];
-
-								// Get the file type
-								$file_type = wp_check_filetype( $file_name );
-
-								// Prepare an array of post data for the attachment.
-								$attachment = array(
-									'guid'           => $upload_file[ 'url' ],
-									'post_mime_type' => $file_type['type'],
-									'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $file_name ) ),
-									'post_content'   => '',
-									'post_status'    => 'inherit'
-								);
-
-								// Insert the attachment
-								if ( $attachment_id = wp_insert_attachment( $attachment, $file_name, $post_id ) ) {
-
-									// Generate the metadata for the attachment and update the database record
-									if ( $attach_data = wp_generate_attachment_metadata( $attachment_id, $file_name ) ) {
-										wp_update_attachment_metadata( $attachment_id, $attach_data );
+									// If we have a time, format it
+									if ( ! empty( $time_value ) ) {
+										$time_value = date( 'H:i', strtotime( $time_value ) );
 									}
 
 									// Update/save value
-									update_post_meta( $post_id, 'conf_sch_event_slides_file', $attachment_id );
+									update_post_meta( $post_id, "conf_sch_event_{$time_key}", $time_value );
+
+								}
+							}
+
+							// Make sure type is set
+							if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'event_types' ] ) ) {
+								$event_types = $_POST[ 'conf_schedule' ][ 'event' ][ 'event_types' ];
+
+								// Make sure its an array
+								if ( ! is_array( $event_types ) ) {
+									$event_types = explode( ',', $event_types );
+								}
+
+								// Make sure it has only IDs
+								$event_types = array_filter( $event_types, 'is_numeric' );
+
+								// Convert to integer
+								$event_types = array_map( 'intval', $event_types );
+
+								// Set the terms
+								wp_set_object_terms( $post_id, $event_types, 'event_types', false );
+
+							} // Clear out event types meta
+							else {
+								wp_delete_object_term_relationships( $post_id, 'event_types' );
+							}
+
+							// Make sure session categories are set
+							if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'session_categories' ] ) ) {
+								$session_categories = $_POST[ 'conf_schedule' ][ 'event' ][ 'session_categories' ];
+
+								// Make sure its an array
+								if ( ! is_array( $session_categories ) ) {
+									$session_categories = explode( ',', $session_categories );
+								}
+
+								// Make sure it has only IDs
+								$session_categories = array_filter( $session_categories, 'is_numeric' );
+
+								// Convert to integer
+								$session_categories = array_map( 'intval', $session_categories );
+
+								// Set the terms
+								wp_set_object_terms( $post_id, $session_categories, 'session_categories', false );
+
+							} // Clear out session categories meta
+							else {
+								wp_delete_object_term_relationships( $post_id, 'session_categories' );
+							}
+
+							// Make sure location is set
+							if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'location' ] ) ) {
+
+								// Sanitize the value
+								$event_location = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ 'location' ] );
+
+								// Update/save value
+								update_post_meta( $post_id, 'conf_sch_event_location', $event_location );
+
+							}
+
+							// Make sure speakers are set
+							if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'speakers' ] ) ) {
+								$event_speakers = $_POST[ 'conf_schedule' ][ 'event' ][ 'speakers' ];
+
+								// Make sure its an array
+								if ( ! is_array( $event_speakers ) ) {
+									$event_speakers = explode( ',', $event_speakers );
+								}
+
+								// Make sure it has only IDs
+								$event_speakers = array_filter( $event_speakers, 'is_numeric' );
+
+								// Convert to integer
+								$event_speakers = array_map( 'intval', $event_speakers );
+
+								// Update/save value
+								update_post_meta( $post_id, 'conf_sch_event_speakers', $event_speakers );
+
+							} // Clear out speakers meta
+							else {
+								update_post_meta( $post_id, 'conf_sch_event_speakers', null );
+							}
+
+						}
+
+					}
+
+					// Check if our session details nonce is set because the 'save_post' action can be triggered at other times
+					if ( isset( $_POST[ 'conf_schedule_save_session_details_nonce' ] ) ) {
+
+						// Verify the nonce
+						if ( wp_verify_nonce( $_POST[ 'conf_schedule_save_session_details_nonce' ], 'conf_schedule_save_session_details' ) ) {
+
+							// Process each field
+							foreach ( array( 'slides_url', 'feedback_url' ) as $field_name ) {
+								if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ $field_name ] ) ) {
+
+									// Sanitize the value
+									$field_value = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ $field_name ] );
+
+									// Update/save value
+									update_post_meta( $post_id, "conf_sch_event_{$field_name}", $field_value );
+
+								}
+							}
+
+							// Process the session file
+							if ( ! empty( $_FILES ) && isset( $_FILES[ 'conf_schedule_event_slides_file' ] ) && ! empty( $_FILES[ 'conf_schedule_event_slides_file' ][ 'name' ] ) ) {
+
+								// Upload the file to the server
+								$upload_file = wp_handle_upload( $_FILES[ 'conf_schedule_event_slides_file' ], array( 'test_form' => false ) );
+
+								// If the upload was successful...
+								if ( $upload_file && ! isset( $upload_file[ 'error' ] ) ) {
+
+									// Should be the path to a file in the upload directory
+									$file_name = $upload_file[ 'file' ];
+
+									// Get the file type
+									$file_type = wp_check_filetype( $file_name );
+
+									// Prepare an array of post data for the attachment.
+									$attachment = array( 'guid' => $upload_file[ 'url' ], 'post_mime_type' => $file_type[ 'type' ], 'post_title' => preg_replace( '/\.[^.]+$/', '', basename( $file_name ) ), 'post_content' => '', 'post_status' => 'inherit' );
+
+									// Insert the attachment
+									if ( $attachment_id = wp_insert_attachment( $attachment, $file_name, $post_id ) ) {
+
+										// Generate the metadata for the attachment and update the database record
+										if ( $attach_data = wp_generate_attachment_metadata( $attachment_id, $file_name ) ) {
+											wp_update_attachment_metadata( $attachment_id, $attach_data );
+										}
+
+										// Update/save value
+										update_post_meta( $post_id, 'conf_sch_event_slides_file', $attachment_id );
+
+									}
+
+								}
+
+							} // Check to see if our 'conf_schedule_event_delete_slides_file' hidden input is included
+							else if ( isset( $_POST[ 'conf_schedule_event_delete_slides_file' ] ) && $_POST[ 'conf_schedule_event_delete_slides_file' ] > 0 ) {
+
+								// Clear out the meta
+								update_post_meta( $post_id, 'conf_sch_event_slides_file', null );
+
+							}
+
+						}
+
+					}
+
+					// Check if our social media nonce is set because the 'save_post' action can be triggered at other times
+					if ( isset( $_POST[ 'conf_schedule_save_event_social_media_nonce' ] ) ) {
+
+						// Verify the nonce
+						if ( wp_verify_nonce( $_POST[ 'conf_schedule_save_event_social_media_nonce' ], 'conf_schedule_save_event_social_media' ) ) {
+
+							// Process each field
+							foreach ( array( 'hashtag' ) as $field_name ) {
+								if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ $field_name ] ) ) {
+
+									// Sanitize the value
+									$field_value = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ $field_name ] );
+
+									// Update/save value
+									update_post_meta( $post_id, "conf_sch_event_{$field_name}", $field_value );
 
 								}
 
 							}
-
-						}
-
-						// Check to see if our 'conf_schedule_event_delete_slides_file' hidden input is included
-						else if ( isset( $_POST[ 'conf_schedule_event_delete_slides_file' ] )
-							&& $_POST[ 'conf_schedule_event_delete_slides_file' ] > 0 ) {
-
-							// Clear out the meta
-							update_post_meta( $post_id, 'conf_sch_event_slides_file', null );
 
 						}
 
@@ -653,6 +674,35 @@ class Conference_Schedule_Admin {
 					<td>
 						<input type="text" id="conf-sch-feedback-url" style="width:75%;" name="conf_schedule[event][feedback_url]" value="<?php echo esc_attr( $feedback_url ); ?>" />
 						<p class="description">Please provide the URL you wish to provide to gather session feedback. <strong>It will display 30 minutes after the session has started.</strong></p>
+					</td>
+				</tr>
+			</tbody>
+		</table><?php
+
+	}
+
+	/**
+	 * Print the social media form for a particular event.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 * @param	int - $post_id - the ID of the event
+	 */
+	public function print_event_social_media_form( $post_id ) {
+
+		// Add a nonce field so we can check for it when saving the data
+		wp_nonce_field( 'conf_schedule_save_event_social_media', 'conf_schedule_save_event_social_media_nonce' );
+
+		// Get saved social media
+		$event_hashtag = get_post_meta( $post_id, 'conf_sch_event_hashtag', true );
+
+		?><table class="form-table">
+			<tbody>
+				<tr>
+					<th scope="row"><label for="conf-sch-event-hashtag">Hashtag</label></th>
+					<td>
+						<input type="text" id="conf-sch-event-hashtag" name="conf_schedule[event][hashtag]" value="<?php echo esc_attr( $event_hashtag ); ?>" class="regular-text" />
+						<p class="description">Please provide the hashtag you wish attendees to use for this event.</p>
 					</td>
 				</tr>
 			</tbody>
