@@ -66,7 +66,7 @@ class Conference_Schedule_Shortcodes {
 		$content = null;
 
 		// Remove the "continue reading" button
-		remove_filter( 'get_the_excerpt', 'nirvana_custom_excerpt_more', 10 );
+		//remove_filter( 'get_the_excerpt', 'nirvana_custom_excerpt_more', 10 );
 
 		// Add the template
 		$content .= '<script id="conference-schedule-display" type="text/x-handlebars-template">
@@ -75,7 +75,6 @@ class Conference_Schedule_Shortcodes {
 				{{#title}}{{body}}{{/title}}
 				{{#event_location}}<div class="event-location">{{post_title}}</div>{{/event_location}}
 				{{#speakers}}{{body}}{{/speakers}}
-				{{#excerpt}}{{body}}{{/excerpt}}
 			</div>
 		</script>';
 
