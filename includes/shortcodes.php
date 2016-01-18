@@ -11,7 +11,7 @@ class Conference_Schedule_Shortcodes {
 	public function __construct() {
 
 		// Add needed styles and scripts
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ), 20 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ), 30 );
 
 		// Add our [print_conference_schedule] shortcode
 		add_shortcode( 'print_conference_schedule', array( $this, 'print_conference_schedule' ) );
@@ -32,18 +32,13 @@ class Conference_Schedule_Shortcodes {
 		if ( isset( $post ) && has_shortcode( $post->post_content, 'print_conference_schedule' ) ) {
 
 			// Register out schedule styles
-			wp_enqueue_style( 'conf-schedule-display', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'css' ) . 'conference-schedule-display.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
+			wp_enqueue_style( 'conf-schedule', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'css' ) . 'conf-schedule.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
 
 			// Register handlebars
 			wp_register_script( 'handlebars', '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js' );
 
 			// Enqueue the schedule script
-			wp_enqueue_script( 'conf-schedule-display', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'js' ) . 'conference-schedule-display.min.js', array( 'jquery', 'handlebars' ), CONFERENCE_SCHEDULE_VERSION, true );
-
-			// Pass some data
-			wp_localize_script( 'conf-schedule-display', 'conf_schedule', array(
-				'plugin_path' => trailingslashit( plugin_dir_path( dirname( __FILE__ ) ) ),
-			));
+			wp_enqueue_script( 'conf-schedule', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'js' ) . 'conf-schedule.min.js', array( 'jquery', 'handlebars' ), CONFERENCE_SCHEDULE_VERSION, true );
 
 		}
 
@@ -69,7 +64,7 @@ class Conference_Schedule_Shortcodes {
 		//remove_filter( 'get_the_excerpt', 'nirvana_custom_excerpt_more', 10 );
 
 		// Add the template
-		$content .= '<script id="conference-schedule-display" type="text/x-handlebars-template">
+		$content .= '<script id="conference-schedule-template" type="text/x-handlebars-template">
 			<div class="schedule-event{{#event_types}} {{.}}{{/event_types}}">
 				{{#event_time_display}}<div class="event-time">{{.}}</div>{{/event_time_display}}
 				{{#title}}{{body}}{{/title}}

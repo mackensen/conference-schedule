@@ -14,7 +14,7 @@
 		$conf_schedule = $( '#conference-schedule' );
 
 		// Get the templates
-		var $conf_sch_templ_content = $('#conference-schedule-display').html();
+		var $conf_sch_templ_content = $('#conference-schedule-template').html();
 		if ( $conf_sch_templ_content !== undefined && $conf_sch_templ_content != '' ) {
 
 			// Parse the template
