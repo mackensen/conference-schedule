@@ -65,6 +65,14 @@ class Conference_Schedule_Shortcodes {
 		// Build the content
 		$content = null;
 
+		global $wp_filter;
+		echo "the_excerpt:<pre>";
+		print_r( $wp_filter['the_excerpt'] );
+		echo "</pre>";
+		echo "<br />get_the_excerpt:<pre>";
+		print_r( $wp_filter['get_the_excerpt'] );
+		echo "</pre>";
+
 		// Add the template
 		$content .= '<script id="conference-schedule-display" type="text/x-handlebars-template">
 			<div class="schedule-event{{#event_types}} {{.}}{{/event_types}}">
