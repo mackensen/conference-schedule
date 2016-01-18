@@ -30,32 +30,17 @@ class Conference_Schedule_API {
 			'schema'			=> null,
 		);
 
-		// Get the event date
-		register_rest_field( 'schedule', 'event_date', $rest_field_args );
+		// Add event info
+		$event_fields = array( 'event_date', 'event_date_display', 'event_start_time', 'event_end_time', 'event_time_display', 'event_types', 'session_categories', 'event_location', 'event_speakers' );
+		foreach( $event_fields as $field_name ) {
+			register_rest_field( 'schedule', $field_name, $rest_field_args );
+		}
 
-		// Get the event display string
-		register_rest_field( 'schedule', 'event_date_display', $rest_field_args );
-
-		// Get the event start time
-		register_rest_field( 'schedule', 'event_start_time', $rest_field_args );
-
-		// Get the event end time
-		register_rest_field( 'schedule', 'event_end_time', $rest_field_args );
-
-		// Get the event time display
-		register_rest_field( 'schedule', 'event_time_display', $rest_field_args );
-
-		// Get the event types
-		register_rest_field( 'schedule', 'event_types', $rest_field_args );
-
-		// Get the session categories
-		register_rest_field( 'schedule', 'session_categories', $rest_field_args );
-
-		// Get the event location
-		register_rest_field( 'schedule', 'event_location', $rest_field_args );
-
-		// Get the event speakers
-		register_rest_field( 'schedule', 'event_speakers', $rest_field_args );
+		// Add speaker info
+		$speaker_fields = array( 'speaker_position', 'speaker_url', 'speaker_company', 'speaker_company_url', 'speaker_facebook', 'speaker_instagram', 'speaker_twitter' );
+		foreach( $speaker_fields as $field_name ) {
+			register_rest_field( 'speakers', $field_name, $rest_field_args );
+		}
 
 	}
 
@@ -72,19 +57,15 @@ class Conference_Schedule_API {
 		switch( $field_name ) {
 
 			case 'event_date':
-				return get_post_meta( $object[ 'id' ], 'conf_sch_event_date', true );
+			case 'event_start_time':
+			case 'event_end_time':
+				return get_post_meta( $object[ 'id' ], "conf_sch_{$field_name}", true );
 
 			case 'event_date_display':
 				if ( $event_date = get_post_meta( $object[ 'id' ], 'conf_sch_event_date', true ) ) {
 					return date( 'l, F j, Y', strtotime( $event_date ) );
 				}
 				break;
-
-			case 'event_start_time':
-				return get_post_meta( $object[ 'id' ], 'conf_sch_event_start_time', true );
-
-			case 'event_end_time':
-				return get_post_meta( $object[ 'id' ], 'conf_sch_event_end_time', true );
 
 			case 'event_time_display':
 
@@ -107,9 +88,7 @@ class Conference_Schedule_API {
 					// If we don't have an end time...
 					if ( ! $event_end_time ) {
 						$event_time_display = date( ' a', $event_start_time );
-					}
-
-					// If we have an end time...
+					} // If we have an end time...
 					else {
 
 						// Convert end time
@@ -160,6 +139,15 @@ class Conference_Schedule_API {
 					return $speakers;
 				}
 				return false;
+
+			case 'speaker_position':
+			case 'speaker_url':
+			case 'speaker_company':
+			case 'speaker_company_url':
+			case 'speaker_facebook':
+			case 'speaker_instagram':
+			case 'speaker_twitter':
+				return get_post_meta( $object[ 'id' ], "conf_sch_{$field_name}", true );
 
 		}
 
