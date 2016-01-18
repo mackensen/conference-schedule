@@ -138,9 +138,15 @@
 #conference-schedule .schedule-table .schedule-row .schedule-event .event-location {
   display: block;
   font-style: italic;
-  margin: -4px 0 10px 0;
+  margin: -4px 0 7px 0;
   font-size: 19px;
   line-height: 22px;
+}
+#conference-schedule .schedule-table .schedule-row .schedule-event .event-speakers {
+  font-size: 18px;
+  line-height: 22px;
+  color: #222;
+  font-weight: bold;
 }
 #conference-schedule .schedule-table .schedule-row .schedule-event .event-desc {
   /*.twitter-to-left {
