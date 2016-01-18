@@ -261,7 +261,9 @@ class Conference_Schedule {
 
 			// Add the info holders
 			$the_content = '<div id="conf-sch-single-before"></div>' . $the_content;
-			$the_content .= '<div id="conf-sch-single-after"></div>';
+			$the_content .= '<div id="conf-sch-single-speakers">
+				<h2>Speakers</h2>
+			</div>';
 
 			// Add the before template
 			$the_content .= '<script id="conf-sch-single-before-template" type="text/x-handlebars-template">
@@ -269,9 +271,13 @@ class Conference_Schedule {
 				{{#event_dt}}{{body}}{{/event_dt}}
 			</script>';
 
-			// Add the after template
-			$the_content .= '<script id="conf-sch-single-after-template" type="text/x-handlebars-template">
-				{{#speakers}}{{body}}{{/speakers}}
+			// Add the speakers template
+			$the_content .= '<script id="conf-sch-single-speakers-template" type="text/x-handlebars-template">
+				<div class="event-speaker">
+					{{#title}}<h3>{{{rendered}}}</h3>{{/title}}
+					{{#speaker_meta}}{{body}}{{/speaker_meta}}
+					{{#content}}{{{rendered}}}{{/content}}
+				</div>
 			</script>';
 
 			// Add speaker info

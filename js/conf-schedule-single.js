@@ -22,29 +22,26 @@
 			// Parse the template
 			$conf_sch_single_before_templ = Handlebars.compile( $conf_sch_single_before_templ_content );
 
-			// Render the before
-			render_conf_schedule_single_before();
-
 		}
 
-		// Take care of the after
-		var $conf_sch_single_after_templ_content = $('#conf-sch-single-after-template').html();
-		if ( $conf_sch_single_after_templ_content !== undefined && $conf_sch_single_after_templ_content != '' ) {
+		// Take care of the speakers
+		var $conf_sch_single_speakers_templ_content = $('#conf-sch-single-speakers-template').html();
+		if ( $conf_sch_single_speakers_templ_content !== undefined && $conf_sch_single_speakers_templ_content != '' ) {
 
 			// Parse the template
-			$conf_sch_single_after_templ = Handlebars.compile( $conf_sch_single_after_templ_content );
-
-			// Render the after
-			//render_conf_schedule_single_after();
+			$conf_sch_single_speakers_templ = Handlebars.compile( $conf_sch_single_speakers_templ_content );
 
 		}
+
+		// Render the content
+		render_conf_schedule_single();
 
 	});
 
 	///// FUNCTIONS /////
 
-	// Get/update the before
-	function render_conf_schedule_single_before() {
+	// Get/update the content
+	function render_conf_schedule_single() {
 
 		// Make sure we have an ID
 		if ( ! ( conf_schedule.post_id !== undefined && conf_schedule.post_id > 0 ) ) {
@@ -56,105 +53,34 @@
 			url: '/wp-json/wp/v2/schedule/' + conf_schedule.post_id,
 			success: function ( $schedule_item ) {
 
-				console.log($schedule_item);
+				// Build/add the html
+				$conf_sch_single_before.html( $conf_sch_single_before_templ($schedule_item) );
 
-				// Build the HTML
-				var $schedule_html = '';
+				// Get the speakers
+				if ( $schedule_item.event_speakers !== undefined ) {
+					$.each( $schedule_item.event_speakers, function($index, $value){
 
-				// Index by date
-				/*var $schedule_by_dates = {};
+						// Get the speaker information
+						$.ajax({
+							url: '/wp-json/wp/v2/speakers/' + $value.ID,
+							success: function ($speaker) {
 
-				// Go through each item
-				$.each( $schedule_items, function( $index, $item ) {
+								// Make sure is valid speaker
+								if ( ! ( $speaker.id !== undefined && $speaker.id > 0 ) ) {
+									return false;
+								}
 
-					// Make sure we have a date
-					if ( ! ( $item.event_date !== undefined && $item.event_date != '' ) ) {
-						return false;
-					}
+								// Create speaker
+								var $speaker_dom = $( $conf_sch_single_speakers_templ($speaker));
 
-					// Make sure we have a start time
-					if ( ! ( $item.event_start_time !== undefined && $item.event_start_time != '' ) ) {
-						return false;
-					}
+								// Render/add the speaker and fade in
+								$conf_sch_single_speakers.append( $speaker_dom ).fadeIn( 1000 );
 
-					// Make sure array exists
-					if ( $schedule_by_dates[$item.event_date] === undefined ) {
-						$schedule_by_dates[$item.event_date] = {};
-					}
-
-					// Make sure start time exists
-					if ( $schedule_by_dates[$item.event_date][$item.event_start_time] === undefined ) {
-						$schedule_by_dates[$item.event_date][$item.event_start_time] = [];
-					}
-
-					// Add this item by date
-					$schedule_by_dates[$item.event_date][$item.event_start_time].push( $item );
-
-				});*/
-
-				// Print out the schedule by date
-				/*$.each( $schedule_by_dates, function( $date, $day_by_time ) {
-
-					// Will hold the day HTML
-					var $schedule_day_html = '';
-
-					// Will hold the event day for display
-					var $day_display = '';
-
-					// Sort through events by the time
-					$.each( $day_by_time, function( $time, $day_items ) {
-
-						// Will hold the time for display
-						var $time_display = '';
-
-						// Build events HTML
-						var $row_events = '';
-
-						// Add the events
-						$.each( $day_items, function ($index, $item) {
-
-							// Get the date
-							if ($day_display == '' && $item.event_date_display !== undefined) {
-								$day_display = $item.event_date_display;
 							}
-
-							// Get the time
-							if ($time_display == '' && $item.event_time_display !== undefined) {
-								$time_display = $item.event_time_display;
-							}
-
 						});
 
-						// Will hold the row HTML - start with the time
-						var $schedule_row_html = '<div class="schedule-row-item time">' + $time_display + '</div>';
-
-						// Add the events
-						$schedule_row_html += '<div class="schedule-row-item events">' + $row_events + '</div>';
-
-						// Wrap the row
-						$schedule_row_html = '<div class="schedule-row">' + $schedule_row_html + '</div>';
-
-						// Add to the day
-						$schedule_day_html += $schedule_row_html;
-
 					});
-
-					// Wrap the day in the table
-					$schedule_day_html = '<div class="schedule-table">' + $schedule_day_html + '</div>';
-
-					// Prefix the date header
-					$schedule_day_html = '<h2 class="schedule-header">' + $day_display + '</h2>' + $schedule_day_html;
-
-					// Add to schedule
-					$schedule_html += $schedule_day_html;
-
-				});*/
-
-				// Render the templates
-				$schedule_html = $conf_sch_single_before_templ($schedule_item);
-
-				// Add the html
-				$conf_sch_single_before.html( $schedule_html );
+				}
 
 			},
 			cache: false // @TODO set to true
@@ -171,16 +97,38 @@
 		return null;
 	});
 
-	// Format the speaker(s)
-	Handlebars.registerHelper( 'speakers', function( $options ) {
-		// Build speakers
-		var $speakers = '';
-		if ( this.event_speakers !== undefined && this.event_speakers.length > 0 ) {
-			$.each( this.event_speakers, function($index, $value) {
-				$speakers += '<div class="event-speaker">' + $value.post_title + '</div>';
-			});
+	// Format the speaker position
+	Handlebars.registerHelper( 'speaker_meta', function( $options ) {
+
+		// Make sure we at least have a position
+		if ( this.speaker_position !== undefined && this.speaker_position != '' ) {
+
+			// Build string
+			var $speaker_pos_string = '<span class="speaker-position">' + this.speaker_position + '</span>';
+
+			// Get company
+			if ( this.speaker_company !== undefined && this.speaker_company != '' ) {
+
+				// Add company name
+				var $speaker_company = this.speaker_company;
+
+				// Get company URL
+				if ( this.speaker_company_url !== undefined && this.speaker_company_url != '' ) {
+					$speaker_company = '<a href="' + this.speaker_company_url + '">' + $speaker_company + '</a>';
+				}
+
+				// Add to main string
+				$speaker_pos_string += ', <span class="speaker-company">' + $speaker_company + '</span>';
+			}
+
+			return new Handlebars.SafeString('<div class="speaker-meta">' + $speaker_pos_string + '</div>');
 		}
-		return new Handlebars.SafeString( '<div class="event-speakers">' + $speakers + '</div>' );
+		return null;
 	});
+
+	/*speaker_url: "",
+	 speaker_facebook: "",
+	 speaker_instagram: "",
+	 speaker_twitter: "",*/
 
 })( jQuery );
