@@ -71,7 +71,8 @@ class Conference_Schedule_Shortcodes {
 				{{#event_time_display}}<div class="event-time">{{.}}</div>{{/event_time_display}}
 				{{#title}}{{body}}{{/title}}
 				{{#event_location}}<div class="event-location">{{post_title}}</div>{{/event_location}}
-				{{#excerpt}}<div class="event-desc">{{{rendered}}}</div>{{/excerpt}}
+				{{#speakers}}{{body}}{{/speakers}}
+				{{#excerpt}}{{body}}{{/excerpt}}
 			</div>
 		</script>';
 

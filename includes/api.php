@@ -142,7 +142,24 @@ class Conference_Schedule_API {
 				return false;
 
 			case 'event_speakers':
-				return get_post_meta( $object[ 'id' ], 'conf_sch_event_speakers', true );
+				if ( $event_speaker_ids = get_post_meta( $object[ 'id' ], 'conf_sch_event_speakers', true ) ) {
+
+					// Make sure its an array
+					if ( ! is_array( $event_speaker_ids ) ) {
+						$event_speaker_ids = implode( ',', $event_speaker_ids );
+					}
+
+					// Get speakers info
+					$speakers = array();
+					foreach( $event_speaker_ids as $speaker_id ) {
+						if ( $speaker_post = get_post( $speaker_id ) ) {
+							$speakers[] = $speaker_post;
+						}
+					}
+
+					return $speakers;
+				}
+				return false;
 
 		}
 

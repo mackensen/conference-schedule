@@ -141,13 +141,37 @@
 
 	}
 
-	// Add link to the title
+	// Format the title
 	Handlebars.registerHelper( 'title', function( $options ) {
 		var $new_title = this.title.rendered;
-		if ( this.link != '' ) {
-			$new_title = '<a href="' + this.link + '">' + $new_title + '</a>';
+		if ( $new_title !== undefined && $new_title != '' ) {
+			if (this.link != '') {
+				$new_title = '<a href="' + this.link + '">' + $new_title + '</a>';
+			}
+			return new Handlebars.SafeString('<h3 class="event-title">' + $new_title + '</h3>');
 		}
-		return new Handlebars.SafeString( '<h3 class="event-title">' + $new_title + '</h3>');
+		return null;
+	});
+
+	// Format the excerpt
+	Handlebars.registerHelper( 'excerpt', function( $options ) {
+		var $new_excerpt = this.excerpt.rendered;
+		if ( $new_excerpt !== undefined && $new_excerpt != '' ) {
+			return new Handlebars.SafeString('<div class="event-desc">' + $new_excerpt + '</div>');
+		}
+		return null;
+	});
+
+	// Format the speaker(s)
+	Handlebars.registerHelper( 'speakers', function( $options ) {
+		// Build speakers
+		var $speakers = '';
+		if ( this.event_speakers !== undefined && this.event_speakers.length > 0 ) {
+			$.each( this.event_speakers, function($index, $value) {
+				$speakers += '<div class="event-speaker">' + $value.post_title + '</div>';
+			});
+		}
+		return new Handlebars.SafeString( '<div class="event-speakers">' + $speakers + '</div>' );
 	});
 
 })( jQuery );

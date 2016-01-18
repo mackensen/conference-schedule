@@ -280,7 +280,7 @@
 
 							// Mark the speaker(s) as selected
 							$.each( $event.event_speakers, function ($index, $value) {
-								$speakers_select.find( 'option[value="' + $value + '"]' ).attr( 'selected', true).trigger('change');
+								$speakers_select.find( 'option[value="' + $value.ID + '"]' ).attr( 'selected', true).trigger('change');
 							});
 
 						},
