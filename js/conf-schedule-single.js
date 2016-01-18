@@ -5,15 +5,18 @@
 	var $conf_sch_single_before = null;
 	var $conf_sch_single_before_templ = false;
 
-	// Will hold the after and template
-	var $conf_sch_single_after = null;
-	var $conf_sch_single_after_templ = false;
+	// Will hold the speakers template
+	var $conf_sch_single_speakers = null;
+	var $conf_sch_single_speakers_templ = false;
 
 	// When the document is ready...
 	$(document).ready(function() {
 
-		// Set the schedule container
+		// Set the containers
 		$conf_sch_single_before = $( '#conf-sch-single-before' );
+
+		// Hide speakers so we can fade in
+		$conf_sch_single_speakers = $( '#conf-sch-single-speakers').hide();
 
 		// Take care of the before
 		var $conf_sch_single_before_templ_content = $('#conf-sch-single-before-template').html();
@@ -90,9 +93,19 @@
 
 	// Format the date and time
 	Handlebars.registerHelper( 'event_dt', function( $options ) {
-		var $date = this.event_date_display;
-		if ( $date !== undefined && $date != '' ) {
-			return new Handlebars.SafeString('<div class="event-dt">' + $date + '</div>');
+
+		// Make sure we at least have a date
+		if ( this.event_date_display !== undefined && this.event_date_display != '' ) {
+
+			// Build string
+			var $dt_string = this.event_date_display;
+
+			// Add the time
+			if ( this.event_time_display !== undefined && this.event_time_display != '' ) {
+				$dt_string += ', ' + this.event_time_display;
+			}
+
+			return new Handlebars.SafeString('<div class="event-dt">' + $dt_string + '</div>');
 		}
 		return null;
 	});
