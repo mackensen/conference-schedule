@@ -57,7 +57,7 @@
 			success: function ( $schedule_item ) {
 
 				// Build/add the html
-				$conf_sch_single_before.html( $conf_sch_single_before_templ($schedule_item) );
+				$conf_sch_single_before.hide().html( $conf_sch_single_before_templ($schedule_item)).fadeIn( 1000 );
 
 				// Get the speakers
 				if ( $schedule_item.event_speakers !== undefined ) {
@@ -98,14 +98,14 @@
 		if ( this.event_date_display !== undefined && this.event_date_display != '' ) {
 
 			// Build string
-			var $dt_string = this.event_date_display;
+			var $dt_string = '<span class="event-date">' + this.event_date_display + '</span>';
 
 			// Add the time
 			if ( this.event_time_display !== undefined && this.event_time_display != '' ) {
-				$dt_string += ', ' + this.event_time_display;
+				$dt_string += ', <span class="event-time">' + this.event_time_display + '</span>';
 			}
 
-			return new Handlebars.SafeString('<div class="event-dt">' + $dt_string + '</div>');
+			return new Handlebars.SafeString('<div class="event-date-time">' + $dt_string + '</div>');
 		}
 		return null;
 	});

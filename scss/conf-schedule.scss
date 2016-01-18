@@ -49,6 +49,20 @@ $schedule-border-color: rgba( #000, 0.1 );
     clear: both;
 }
 
+// Customize the single schedule pages
+#conf-sch-single-before {
+    margin: 0 0 30px 0;
+
+    .event-location {
+        display: block;
+        font-style: italic;
+        //margin: -4px 0 7px 0;
+        //font-size: 19px;
+        //line-height: 22px;
+    }
+
+}
+
 /*.single-schedule {
 
     .schedule-item-details {
@@ -80,19 +94,6 @@ $schedule-border-color: rgba( #000, 0.1 );
                 width: 200px;
                 height: auto;
                 margin: 0 0 20px 0;
-            }
-
-            h4 {
-                mmargin-bottom: 16px;
-            }
-
-            h3 {
-                margin-top: 0;
-
-                & + h4 {
-                    margin-top: -8px;
-                }
-
             }
 
             .speaker-text {
