@@ -31,7 +31,7 @@ class Conference_Schedule_API {
 		);
 
 		// Add event info
-		$event_fields = array( 'event_date', 'event_date_display', 'event_start_time', 'event_end_time', 'event_time_display', 'event_types', 'session_categories', 'event_location', 'event_speakers' );
+		$event_fields = array( 'event_date', 'event_date_display', 'event_start_time', 'event_end_time', 'event_time_display', 'event_types', 'session_categories', 'event_location', 'event_speakers', 'event_hashtag' );
 		foreach( $event_fields as $field_name ) {
 			register_rest_field( 'schedule', $field_name, $rest_field_args );
 		}
@@ -59,6 +59,7 @@ class Conference_Schedule_API {
 			case 'event_date':
 			case 'event_start_time':
 			case 'event_end_time':
+			case 'event_hashtag':
 				return get_post_meta( $object[ 'id' ], "conf_sch_{$field_name}", true );
 
 			case 'event_date_display':
