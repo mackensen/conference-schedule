@@ -2,8 +2,8 @@
 	'use strict';
 
 	// Will hold the before and template
-	var $conf_sch_single_before = null;
-	var $conf_sch_single_before_templ = false;
+	var $conf_sch_single_meta = null;
+	var $conf_sch_single_meta_templ = false;
 
 	// Will hold the speakers template
 	var $conf_sch_single_speakers = null;
@@ -13,17 +13,17 @@
 	$(document).ready(function() {
 
 		// Set the containers
-		$conf_sch_single_before = $( '#conf-sch-single-before' );
+		$conf_sch_single_meta = $( '#conf-sch-single-meta' );
 
 		// Hide speakers so we can fade in
 		$conf_sch_single_speakers = $( '#conf-sch-single-speakers').hide();
 
 		// Take care of the before
-		var $conf_sch_single_before_templ_content = $('#conf-sch-single-before-template').html();
-		if ( $conf_sch_single_before_templ_content !== undefined && $conf_sch_single_before_templ_content != '' ) {
+		var $conf_sch_single_meta_templ_content = $('#conf-sch-single-meta-template').html();
+		if ( $conf_sch_single_meta_templ_content !== undefined && $conf_sch_single_meta_templ_content != '' ) {
 
 			// Parse the template
-			$conf_sch_single_before_templ = Handlebars.compile( $conf_sch_single_before_templ_content );
+			$conf_sch_single_meta_templ = Handlebars.compile( $conf_sch_single_meta_templ_content );
 
 		}
 
@@ -57,7 +57,7 @@
 			success: function ( $schedule_item ) {
 
 				// Build/add the html
-				$conf_sch_single_before.hide().html( $conf_sch_single_before_templ($schedule_item)).fadeIn( 1000 );
+				$conf_sch_single_meta.hide().html( $conf_sch_single_meta_templ($schedule_item)).fadeIn( 1000 );
 
 				// Get the speakers
 				if ( $schedule_item.event_speakers !== undefined ) {
@@ -91,21 +91,19 @@
 
 	}
 
-	// Format the date and time
-	Handlebars.registerHelper( 'event_dt', function( $options ) {
+	// Format the event meta links
+	Handlebars.registerHelper( 'event_links', function( $options ) {
 
-		// Make sure we at least have a date
-		if ( this.event_date_display !== undefined && this.event_date_display != '' ) {
+		// Build the string
+		var $event_links_string = '';
 
-			// Build string
-			var $dt_string = '<span class="event-date">' + this.event_date_display + '</span>';
+		// Do we have a hashtag?
+		if ( this.event_hashtag !== undefined && this.event_hashtag != '' ) {
+			$event_links_string += '<li class="event-hashtag"><a href="https://twitter.com/search?q=%23' + this.event_hashtag + '"><i class="icon conf-sch-icon-twitter"></i> <span class="icon-label">#' + this.event_hashtag + '</span></a></li>';
+		}
 
-			// Add the time
-			if ( this.event_time_display !== undefined && this.event_time_display != '' ) {
-				$dt_string += ', <span class="event-time">' + this.event_time_display + '</span>';
-			}
-
-			return new Handlebars.SafeString('<div class="event-date-time">' + $dt_string + '</div>');
+		if ( $event_links_string != '' ) {
+			return new Handlebars.SafeString('<ul class="event-links">' + $event_links_string + '</ul>');
 		}
 		return null;
 	});
@@ -132,6 +130,12 @@
 
 				// Add to main string
 				$speaker_pos_string += ', <span class="speaker-company">' + $speaker_company + '</span>';
+
+				// Add speaker URL
+				/*if ( this.speaker_url !== undefined && this.speaker_url != '' ) {
+					$speaker_pos_string += ' <span class="speaker-url"><a href="' + this.speaker_url + '">' + this.speaker_url + '</a></span>';
+				}*/
+
 			}
 
 			return new Handlebars.SafeString('<div class="speaker-meta">' + $speaker_pos_string + '</div>');

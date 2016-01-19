@@ -27,12 +27,63 @@
   clear: both;
 }
 
-#conf-sch-single-before {
-  margin: 0 0 30px 0;
+#conf-sch-single-meta {
+  display: none;
+  border: 1px solid #e8e8e8;
+  border-radius: 5px;
+  margin: 15px 0 30px 0;
+  padding: 20px;
 }
-#conf-sch-single-before .event-location {
+#conf-sch-single-meta .event-meta {
+  display: block;
+}
+#conf-sch-single-meta .event-meta-label {
+  font-weight: bold;
+}
+#conf-sch-single-meta .event-links {
+  display: block;
+  list-style: none;
+  margin: 10px -20px -20px -20px;
+  border: 0;
+  padding: 0;
+}
+#conf-sch-single-meta .event-links li {
+  display: block;
+  list-style: none;
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+#conf-sch-single-meta .event-links li a {
+  display: block;
+  background: rgba(85, 172, 238, 0.1);
+  padding: 5px 20px;
+}
+#conf-sch-single-meta .event-links li.event-hashtag {
+  border-top: 1px solid rgba(85, 172, 238, 0.2);
+  color: #147bc9;
+}
+#conf-sch-single-meta .event-links li.event-hashtag a {
+  color: inherit;
+  text-decoration: none;
+}
+#conf-sch-single-meta .event-links li.event-hashtag a .icon-label {
+  text-decoration: underline;
+}
+
+@media not all and (min-width: 0) and (max-width: 620px) {
+  #conf-sch-single-meta {
+    float: right;
+    margin-left: 30px;
+    min-width: 300px;
+  }
+}
+#conf-sch-single-speakers .speaker-meta {
   display: block;
   font-style: italic;
+}
+#conf-sch-single-speakers .speaker-meta .speaker-url {
+  display: block;
 }
 
 /*.single-schedule {

@@ -14,6 +14,7 @@ $auditorium-bg: rgba( #c6dbf1, 0.3 );
 $break-bg: rgba( #000, 0.01 );
 $heweb-blue: #0f5588;
 $schedule-border-color: rgba( #000, 0.1 );
+$twitter-blue: #55acee;
 
 // For the different event types
 //$event_types: ('keynote': $keynote-bg) ('food': $food-bg) ('social': $social-bg) ('auditorium': $auditorium-bg) ('break': $break-bg);
@@ -50,15 +51,85 @@ $schedule-border-color: rgba( #000, 0.1 );
 }
 
 // Customize the single schedule pages
-#conf-sch-single-before {
-    margin: 0 0 30px 0;
+#conf-sch-single-meta {
+    display: none;
+    border: 1px solid #e8e8e8;
+    border-radius: 5px;
+    margin: 15px 0 30px 0;
+    padding: 20px;
 
-    .event-location {
+    .event-meta {
+        display: block;
+    }
+
+    .event-meta-label {
+        font-weight: bold;
+    }
+
+    .event-links {
+        display: block;
+        list-style: none;
+        margin: 10px -20px -20px -20px;
+        border: 0;
+        padding: 0;
+
+        li {
+            display: block;
+            list-style: none;
+            margin: 0;
+            border: 0;
+            padding: 0;
+
+            a {
+                display: block;
+                background: rgba( $twitter-blue, 0.1 );
+                padding: 5px 20px;
+            }
+
+            &.event-hashtag {
+                border-top: 1px solid rgba( $twitter-blue, 0.2 );
+                color: darken( $twitter-blue, 20% );
+
+                a {
+                    color: inherit;
+                    text-decoration: none;
+
+                    .icon-label {
+                        text-decoration: underline;
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+}
+
+// Move meta to the right when screen gets larger
+@media not all and (min-width: 0) and (max-width: 620px) {
+
+    #conf-sch-single-meta {
+        float: right;
+        margin-left: 30px;
+        min-width: 300px;
+    }
+
+}
+
+// Customize the speakers on single schedule pages
+#conf-sch-single-speakers {
+
+    .speaker-meta {
         display: block;
         font-style: italic;
-        //margin: -4px 0 7px 0;
-        //font-size: 19px;
-        //line-height: 22px;
+
+        .speaker-url {
+            display: block;
+        }
+
     }
 
 }

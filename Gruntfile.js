@@ -13,7 +13,7 @@ module.exports = function(grunt) {
                 },
                 files: [{
                     expand: true,
-                    src: '*.scss',
+                    src: [ '*.scss', '!conf-schedule-icons.scss' ],
                     cwd: 'scss',
                     dest: 'css',
                     ext: '.css'

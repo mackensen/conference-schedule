@@ -224,11 +224,14 @@ class Conference_Schedule {
 	public function enqueue_styles_scripts() {
 		global $post;
 
+		// Register our icons
+		wp_register_style( 'conf-schedule-icons', trailingslashit( plugin_dir_url( __FILE__ ) . 'css' ) . 'conf-schedule-icons.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
+
 		// Enqueue the schedule script when needed
 		if ( is_singular( 'schedule' ) ) {
 
-			// Register out schedule styles
-			wp_enqueue_style( 'conf-schedule', trailingslashit( plugin_dir_url( __FILE__ ) . 'css' ) . 'conf-schedule.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
+			// Register our schedule styles
+			wp_enqueue_style( 'conf-schedule', trailingslashit( plugin_dir_url( __FILE__ ) . 'css' ) . 'conf-schedule.min.css', array( 'conf-schedule-icons' ), CONFERENCE_SCHEDULE_VERSION );
 
 			// Register handlebars
 			wp_register_script( 'handlebars', '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js' );
@@ -260,15 +263,17 @@ class Conference_Schedule {
 		if ( 'schedule' == $post->post_type ) {
 
 			// Add the info holders
-			$the_content = '<div id="conf-sch-single-before"></div>' . $the_content;
+			$the_content = '<div id="conf-sch-single-meta"></div>' . $the_content;
 			$the_content .= '<div id="conf-sch-single-speakers">
 				<h2>Speakers</h2>
 			</div>';
 
 			// Add the before template
-			$the_content .= '<script id="conf-sch-single-before-template" type="text/x-handlebars-template">
-				{{#event_location}}<div class="event-location">{{post_title}}</div>{{/event_location}}
-				{{#event_dt}}{{body}}{{/event_dt}}
+			$the_content .= '<script id="conf-sch-single-meta-template" type="text/x-handlebars-template">
+				{{#event_date_display}}<span class="event-meta event-date"><span class="event-meta-label">Date:</span> {{.}}</span>{{/event_date_display}}
+				{{#event_time_display}}<span class="event-meta event-time"><span class="event-meta-label">Time:</span> {{.}}</span>{{/event_time_display}}
+				{{#event_location}}<span class="event-meta event-location"><span class="event-meta-label">Location:</span> {{post_title}}</span>{{/event_location}}
+				{{#event_links}}{{body}}{{/event_links}}
 			</script>';
 
 			// Add the speakers template
