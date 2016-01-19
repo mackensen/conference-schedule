@@ -45,6 +45,7 @@
   list-style: none;
   margin: 10px -20px -20px -20px;
   border: 0;
+  border-top: 1px solid #e8e8e8;
   padding: 0;
 }
 #conf-sch-single-meta .event-links li {
@@ -56,15 +57,15 @@
 }
 #conf-sch-single-meta .event-links li a {
   display: block;
-  background: rgba(85, 172, 238, 0.1);
+  background: rgba(0, 0, 0, 0.05);
   padding: 5px 20px;
+  color: inherit;
 }
 #conf-sch-single-meta .event-links li.event-hashtag {
-  border-top: 1px solid rgba(85, 172, 238, 0.2);
   color: #147bc9;
 }
 #conf-sch-single-meta .event-links li.event-hashtag a {
-  color: inherit;
+  background-color: rgba(85, 172, 238, 0.05);
   text-decoration: none;
 }
 #conf-sch-single-meta .event-links li.event-hashtag a .icon-label {

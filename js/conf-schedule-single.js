@@ -99,7 +99,7 @@
 
 		// Do we have a hashtag?
 		if ( this.event_hashtag !== undefined && this.event_hashtag != '' ) {
-			$event_links_string += '<li class="event-hashtag"><a href="https://twitter.com/search?q=%23' + this.event_hashtag + '"><i class="icon conf-sch-icon-twitter"></i> <span class="icon-label">#' + this.event_hashtag + '</span></a></li>';
+			$event_links_string += '<li class="event-hashtag"><a href="https://twitter.com/search?q=%23' + this.event_hashtag + '"><i class="conf-sch-icon conf-sch-icon-twitter"></i> <span class="icon-label">#' + this.event_hashtag + '</span></a></li>';
 		}
 
 		if ( $event_links_string != '' ) {
