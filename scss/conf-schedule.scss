@@ -277,6 +277,14 @@ $twitter-blue: #55acee;
                     display: none;
                 }
 
+                &.events {
+
+                    .schedule-event:last-child {
+                        margin-bottom: 0;
+                    }
+                    
+                }
+
             }
 
             /*&.current {

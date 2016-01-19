@@ -202,6 +202,9 @@
 #conference-schedule .schedule-table .schedule-row .schedule-row-item.time {
   display: none;
 }
+#conference-schedule .schedule-table .schedule-row .schedule-row-item.events .schedule-event:last-child {
+  margin-bottom: 0;
+}
 #conference-schedule .schedule-table .schedule-row.current + .schedule-row {
   border-top: 0;
 }
