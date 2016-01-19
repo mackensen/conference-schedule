@@ -450,6 +450,9 @@ class Conference_Schedule_Admin {
 									// Sanitize the value
 									$field_value = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ $field_name ] );
 
+									// Remove any possible hashtags
+									$field_value = preg_replace( '/\#/i', '', $field_value );
+
 									// Update/save value
 									update_post_meta( $post_id, "conf_sch_event_{$field_name}", $field_value );
 
