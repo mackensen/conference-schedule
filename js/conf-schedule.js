@@ -112,7 +112,7 @@
 							if ( $item.event_types != null && $.isArray( $item.event_types ) ) {
 								$.each( $item.event_types, function( $index, $type ) {
 									if ( $type != '' && $.inArray( $type, $event_types ) == -1 ) {
-										$event_types.push($type);
+										$event_types.push($type.replace( /\s/, '-' ));
 									}
 								});
 							}
