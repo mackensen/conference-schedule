@@ -100,11 +100,11 @@
   font-weight: bold;
 }
 #conf-sch-single-meta .event-links li.event-feedback a {
-  background-color: #38761d;
+  background-color: #46852b;
   color: #fff;
 }
 #conf-sch-single-meta .event-links li.event-feedback a:hover {
-  background-color: #112409;
+  background-color: #325e1f;
 }
 
 @media not all and (min-width: 0) and (max-width: 620px) {
