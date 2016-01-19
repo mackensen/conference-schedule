@@ -289,18 +289,9 @@ class Conference_Schedule {
 				</div>
 			</script>';
 
-			// Add speaker info
-			/*$the_content .= '<div class="speakers">
-				<div class="speaker has-image">
-					<img class="speaker-thumb" src="https://hewebal.com/wp-content/uploads/rachel-thompson-300x300.jpg" />
-					<div class="speaker-text">
-						<h3>Rachel Thompson</h3>
-						<h4 class="speaker-position">Director of Emerging Technology and Accessibility, <a href="http://ua.edu/">The University of Alabama</a></h4>
-						<a class="twitter" href="https://twitter.com/rshuttle">@rshuttle</a>
-						<p>Rachel is Director of Emerging Technology and Accessibility in the University of Alabama Center for Instructional Technology, where she is leading a new campus-wide web and instructional technology accessibility initiative. She has been with the Center for Instructional Technology since 2007. Rachel received a Ph.D. in English-Applied Linguistics in 2004 with an emphasis on Southern American English dialects and their depiction in pop culture and fiction. Rachel also teaches linguistics and TESOL courses when possible. Rachel enjoys drawing, playing with her cats, listening to her husband make music, and assisting in his recording studio.</p>
-					</div>
-				</div>
-			</div>';*/
+			//speaker_facebook
+			//speaker_instagram
+			//speaker_twitter
 
 		}
 

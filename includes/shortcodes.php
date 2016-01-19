@@ -71,38 +71,34 @@ class Conference_Schedule_Shortcodes {
 		// Add the schedule holder
 		$content .= '<div id="conference-schedule"></div>';
 
-		/*// Get the schedule data
-		if ( $schedule_data = get_hewebal_schedule_data() ) {
+		/*// What time is it?
+		$current_time = new DateTime( 'now', new DateTimeZone( 'America/Chicago' ) );
 
-			// What time is it?
-			$current_time = new DateTime( 'now', new DateTimeZone( 'America/Chicago' ) );
+		?><div class="schedule-main-buttons-wrapper">
+			<a href="#" class="btn btn-primary go-to-current-event">Go To Current Event</a>
+			</div><?php
 
-			?><div class="schedule-main-buttons-wrapper">
-				<?php *//*<a class="conference-eval btn btn-primary btn-block" href="https://www.surveymonkey.com/r/26WHCFR">Submit conference feedback</a>*//* ?>
-				<a href="#" class="btn btn-primary go-to-current-event">Go To Current Event</a>
-				</div><?php
+			foreach ( $schedule_data as $day_key => $day ) {
 
-				foreach ( $schedule_data as $day_key => $day ) {
+				// Create the date for this day
+				$day_date = new DateTime( $day_key, new DateTimeZone( 'America/Chicago' ) );
 
-					// Create the date for this day
-					$day_date = new DateTime( $day_key, new DateTimeZone( 'America/Chicago' ) );
+				// Has this date passed?
+				//$day_has_passed = $day_date->format( 'j' ) < $current_time->format( 'j' );
 
-					// Has this date passed?
-					//$day_has_passed = $day_date->format( 'j' ) < $current_time->format( 'j' );
+				// Wrap in collapsible block
+				*//*if ( $day_has_passed ) {
+					echo '<div class="collapsible-schedule-block">';
+				}*//*
 
-					// Wrap in collapsible block
-					*//*if ( $day_has_passed ) {
-						echo '<div class="collapsible-schedule-block">';
-					}*//*
+				// Wrap in collapsible block
+				*//*if ( $day_has_passed ) {
+					echo '</div>';
+				}*//*
 
-					// Wrap in collapsible block
-					*//*if ( $day_has_passed ) {
-						echo '</div>';
-					}*//*
+			}
 
-				}
-
-			}*/
+		?></div><?php */
 
 		return $content;
 

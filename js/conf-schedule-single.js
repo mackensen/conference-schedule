@@ -98,21 +98,21 @@
 		var $event_links_string = '';
 
 		// Do we have a hashtag?
-		if ( this.event_hashtag !== undefined && this.event_hashtag != null ) {
+		if ( this.event_hashtag !== undefined && this.event_hashtag ) {
 			$event_links_string += '<li class="event-hashtag"><a href="https://twitter.com/search?q=%23' + this.event_hashtag + '"><i class="conf-sch-icon conf-sch-icon-twitter"></i> <span class="icon-label">#' + this.event_hashtag + '</span></a></li>';
 		}
 
 		// Do we have a slides URL?
-		if ( this.session_slides_url !== undefined && this.session_slides_url != null ) {
+		if ( this.session_slides_url !== undefined && this.session_slides_url ) {
 			$event_links_string += '<li class="event-slides"><a href="' + this.session_slides_url + '">View Slides</span></a></li>';
 		}
 
 		// Do we have a feedback URL?
-		if ( this.session_feedback_url !== undefined && this.session_feedback_url != null ) {
+		if ( this.session_feedback_url !== undefined && this.session_feedback_url ) {
 			$event_links_string += '<li class="event-feedback"><a href="' + this.session_feedback_url + '">Give Feedback</span></a></li>';
 		}
 
-		if ( $event_links_string != null ) {
+		if ( $event_links_string ) {
 			return new Handlebars.SafeString('<ul class="event-links">' + $event_links_string + '</ul>');
 		}
 		return null;
@@ -153,8 +153,7 @@
 		return null;
 	});
 
-	/*speaker_url: "",
-	 speaker_facebook: "",
+	/*speaker_facebook: "",
 	 speaker_instagram: "",
 	 speaker_twitter: "",*/
 
