@@ -15,7 +15,7 @@
 
 		// Get the templates
 		var $conf_sch_templ_content = $('#conference-schedule-template').html();
-		if ( $conf_sch_templ_content !== undefined && $conf_sch_templ_content != '' ) {
+		if ( $conf_sch_templ_content !== undefined && $conf_sch_templ_content != null ) {
 
 			// Parse the template
 			$conf_sch_templ = Handlebars.compile( $conf_sch_templ_content );
@@ -47,12 +47,12 @@
 				$.each( $schedule_items, function( $index, $item ) {
 
 					// Make sure we have a date
-					if ( ! ( $item.event_date !== undefined && $item.event_date != '' ) ) {
+					if ( ! ( $item.event_date !== undefined && $item.event_date != null ) ) {
 						return false;
 					}
 
 					// Make sure we have a start time
-					if ( ! ( $item.event_start_time !== undefined && $item.event_start_time != '' ) ) {
+					if ( ! ( $item.event_start_time !== undefined && $item.event_start_time != null ) ) {
 						return false;
 					}
 
@@ -93,12 +93,12 @@
 						$.each( $day_items, function ($index, $item) {
 
 							// Get the date
-							if ($day_display == '' && $item.event_date_display !== undefined) {
+							if ($day_display == '' && $item.event_date_display != null) {
 								$day_display = $item.event_date_display;
 							}
 
 							// Get the time
-							if ($time_display == '' && $item.event_time_display !== undefined) {
+							if ($time_display == '' && $item.event_time_display != null) {
 								$time_display = $item.event_time_display;
 							}
 
@@ -144,8 +144,8 @@
 	// Format the title
 	Handlebars.registerHelper( 'title', function( $options ) {
 		var $new_title = this.title.rendered;
-		if ( $new_title !== undefined && $new_title != '' ) {
-			if (this.link != '') {
+		if ( $new_title !== undefined && $new_title != null ) {
+			if (this.link != null) {
 				$new_title = '<a href="' + this.link + '">' + $new_title + '</a>';
 			}
 			return new Handlebars.SafeString('<h3 class="event-title">' + $new_title + '</h3>');
@@ -156,7 +156,7 @@
 	// Format the excerpt
 	Handlebars.registerHelper( 'excerpt', function( $options ) {
 		var $new_excerpt = this.excerpt.rendered;
-		if ( $new_excerpt !== undefined && $new_excerpt != '' ) {
+		if ( $new_excerpt !== undefined && $new_excerpt != null ) {
 			return new Handlebars.SafeString('<div class="event-desc">' + $new_excerpt + '</div>');
 		}
 		return null;
@@ -166,7 +166,7 @@
 	Handlebars.registerHelper( 'speakers', function( $options ) {
 		// Build speakers
 		var $speakers = '';
-		if ( this.event_speakers !== undefined && $.isArray( this.event_speakers ) && this.event_speakers.length > 0 ) {
+		if ( this.event_speakers !== null && $.isArray( this.event_speakers ) && this.event_speakers.length > 0 ) {
 			$.each( this.event_speakers, function($index, $value) {
 				$speakers += '<div class="event-speaker">' + $value.post_title + '</div>';
 			});
