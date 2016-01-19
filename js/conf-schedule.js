@@ -166,7 +166,7 @@
 	Handlebars.registerHelper( 'speakers', function( $options ) {
 		// Build speakers
 		var $speakers = '';
-		if ( this.event_speakers !== undefined && this.event_speakers.length > 0 ) {
+		if ( this.event_speakers !== undefined && $.isArray( this.event_speakers ) && this.event_speakers.length > 0 ) {
 			$.each( this.event_speakers, function($index, $value) {
 				$speakers += '<div class="event-speaker">' + $value.post_title + '</div>';
 			});
