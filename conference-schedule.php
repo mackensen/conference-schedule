@@ -33,6 +33,9 @@ if ( is_admin() ) {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/admin.php';
 }
 
+// Add support for featured images
+add_theme_support( 'post-thumbnails' );
+
 class Conference_Schedule {
 
 	/**
@@ -279,6 +282,7 @@ class Conference_Schedule {
 			// Add the speakers template
 			$the_content .= '<script id="conf-sch-single-speakers-template" type="text/x-handlebars-template">
 				<div class="event-speaker">
+					{{#speaker_thumbnail}}<img class="speaker-thumb" src="{{.}}" />{{/speaker_thumbnail}}
 					{{#title}}<h3>{{{rendered}}}</h3>{{/title}}
 					{{#speaker_meta}}{{body}}{{/speaker_meta}}
 					{{#content}}{{{rendered}}}{{/content}}

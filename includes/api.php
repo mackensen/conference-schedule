@@ -37,7 +37,7 @@ class Conference_Schedule_API {
 		}
 
 		// Add speaker info
-		$speaker_fields = array( 'speaker_position', 'speaker_url', 'speaker_company', 'speaker_company_url', 'speaker_facebook', 'speaker_instagram', 'speaker_twitter' );
+		$speaker_fields = array( 'speaker_thumbnail', 'speaker_position', 'speaker_url', 'speaker_company', 'speaker_company_url', 'speaker_facebook', 'speaker_instagram', 'speaker_twitter' );
 		foreach( $speaker_fields as $field_name ) {
 			register_rest_field( 'speakers', $field_name, $rest_field_args );
 		}
@@ -200,6 +200,13 @@ class Conference_Schedule_API {
 					return $feedback_url;
 				}
 				break;
+
+			case 'speaker_thumbnail':
+				if ( ( $image = wp_get_attachment_image_src( get_post_thumbnail_id( $object[ 'id' ] ), 'thumbnail' ) )
+					&& isset( $image[0] ) ) {
+					return $image[0];
+				}
+				return null;
 
 			case 'speaker_position':
 			case 'speaker_url':
