@@ -127,6 +127,7 @@
 #conf-sch-single-speakers .speaker-meta {
   display: block;
   font-style: italic;
+  margin: 0 0 10px 0;
 }
 #conf-sch-single-speakers .speaker-meta .speaker-url {
   display: block;
