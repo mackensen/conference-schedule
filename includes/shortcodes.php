@@ -31,8 +31,8 @@ class Conference_Schedule_Shortcodes {
 		// Enqueue the schedule script when needed
 		if ( isset( $post ) && has_shortcode( $post->post_content, 'print_conference_schedule' ) ) {
 
-			// Register out schedule styles
-			wp_enqueue_style( 'conf-schedule', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'css' ) . 'conf-schedule.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
+			// Enqueue our schedule styles
+			wp_enqueue_style( 'conf-schedule' );
 
 			// Register handlebars
 			wp_register_script( 'handlebars', '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js' );

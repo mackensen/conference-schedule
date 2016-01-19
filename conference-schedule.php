@@ -230,11 +230,14 @@ class Conference_Schedule {
 		// Register our icons
 		wp_register_style( 'conf-schedule-icons', trailingslashit( plugin_dir_url( __FILE__ ) . 'css' ) . 'conf-schedule-icons.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
 
+		// Register our schedule styles
+		wp_register_style( 'conf-schedule', trailingslashit( plugin_dir_url( __FILE__ ) . 'css' ) . 'conf-schedule.min.css', array( 'conf-schedule-icons' ), CONFERENCE_SCHEDULE_VERSION );
+
 		// Enqueue the schedule script when needed
 		if ( is_singular( 'schedule' ) ) {
 
-			// Register our schedule styles
-			wp_enqueue_style( 'conf-schedule', trailingslashit( plugin_dir_url( __FILE__ ) . 'css' ) . 'conf-schedule.min.css', array( 'conf-schedule-icons' ), CONFERENCE_SCHEDULE_VERSION );
+			// Enqueue our schedule styles
+			wp_enqueue_style( 'conf-schedule' );
 
 			// Register handlebars
 			wp_register_script( 'handlebars', '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js' );
