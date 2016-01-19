@@ -285,6 +285,7 @@ class Conference_Schedule {
 					{{#speaker_thumbnail}}<img class="speaker-thumb" src="{{.}}" />{{/speaker_thumbnail}}
 					{{#title}}<h3>{{{rendered}}}</h3>{{/title}}
 					{{#speaker_meta}}{{body}}{{/speaker_meta}}
+					{{#speaker_social_media}}{{{body}}}{{/speaker_social_media}}
 					{{#content}}{{{rendered}}}{{/content}}
 				</div>
 			</script>';

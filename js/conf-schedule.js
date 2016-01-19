@@ -15,7 +15,7 @@
 
 		// Get the templates
 		var $conf_sch_templ_content = $('#conference-schedule-template').html();
-		if ( $conf_sch_templ_content !== undefined && $conf_sch_templ_content != null ) {
+		if ( $conf_sch_templ_content !== undefined && $conf_sch_templ_content ) {
 
 			// Parse the template
 			$conf_sch_templ = Handlebars.compile( $conf_sch_templ_content );
@@ -47,12 +47,12 @@
 				$.each( $schedule_items, function( $index, $item ) {
 
 					// Make sure we have a date
-					if ( ! ( $item.event_date !== undefined && $item.event_date != null ) ) {
+					if ( ! ( $item.event_date !== undefined && $item.event_date ) ) {
 						return false;
 					}
 
 					// Make sure we have a start time
-					if ( ! ( $item.event_start_time !== undefined && $item.event_start_time != null ) ) {
+					if ( ! ( $item.event_start_time !== undefined && $item.event_start_time ) ) {
 						return false;
 					}
 
@@ -96,12 +96,12 @@
 						$.each( $day_items, function ($index, $item) {
 
 							// Get the date
-							if ($day_display == '' && $item.event_date_display != null) {
+							if ($day_display == '' && $item.event_date_display) {
 								$day_display = $item.event_date_display;
 							}
 
 							// Get the time
-							if ($time_display == '' && $item.event_time_display != null) {
+							if ($time_display == '' && $item.event_time_display) {
 								$time_display = $item.event_time_display;
 							}
 
@@ -109,7 +109,7 @@
 							$row_events += $conf_sch_templ($item);
 
 							// Store event types
-							if ( $item.event_types != null && $.isArray( $item.event_types ) ) {
+							if ( $item.event_types && $.isArray( $item.event_types ) ) {
 								$.each( $item.event_types, function( $index, $type ) {
 									if ( $type != '' && $.inArray( $type, $event_types ) == -1 ) {
 										$event_types.push($type.replace( /\s/, '-' ));
@@ -156,8 +156,8 @@
 	// Format the title
 	Handlebars.registerHelper( 'title', function( $options ) {
 		var $new_title = this.title.rendered;
-		if ( $new_title !== undefined && $new_title != null ) {
-			if (this.link != null) {
+		if ( $new_title !== undefined && $new_title ) {
+			if (this.link !== undefined && this.link) {
 				$new_title = '<a href="' + this.link + '">' + $new_title + '</a>';
 			}
 			return new Handlebars.SafeString('<h3 class="event-title">' + $new_title + '</h3>');
@@ -168,7 +168,7 @@
 	// Format the excerpt
 	Handlebars.registerHelper( 'excerpt', function( $options ) {
 		var $new_excerpt = this.excerpt.rendered;
-		if ( $new_excerpt !== undefined && $new_excerpt != null ) {
+		if ( $new_excerpt !== undefined && $new_excerpt ) {
 			return new Handlebars.SafeString('<div class="event-desc">' + $new_excerpt + '</div>');
 		}
 		return null;
@@ -178,12 +178,39 @@
 	Handlebars.registerHelper( 'speakers', function( $options ) {
 		// Build speakers
 		var $speakers = '';
-		if ( this.event_speakers !== null && $.isArray( this.event_speakers ) && this.event_speakers.length > 0 ) {
+		if ( this.event_speakers !== undefined && $.isArray( this.event_speakers ) && this.event_speakers.length > 0 ) {
 			$.each( this.event_speakers, function($index, $value) {
 				$speakers += '<div class="event-speaker">' + $value.post_title + '</div>';
 			});
 		}
 		return new Handlebars.SafeString( '<div class="event-speakers">' + $speakers + '</div>' );
+	});
+
+	// Format the event meta links
+	Handlebars.registerHelper( 'event_links', function( $options ) {
+
+		// Build the string
+		var $event_links_string = '';
+
+		// Do we have a hashtag?
+		if ( this.event_hashtag !== undefined && this.event_hashtag ) {
+			$event_links_string += '<li class="event-hashtag"><a href="https://twitter.com/search?q=%23' + this.event_hashtag + '"><i class="conf-sch-icon conf-sch-icon-twitter"></i> <span class="icon-label">#' + this.event_hashtag + '</span></a></li>';
+		}
+
+		// Do we have a slides URL?
+		if ( this.session_slides_url !== undefined && this.session_slides_url ) {
+			$event_links_string += '<li class="event-slides"><a href="' + this.session_slides_url + '">View Slides</span></a></li>';
+		}
+
+		// Do we have a feedback URL?
+		if ( this.session_feedback_url !== undefined && this.session_feedback_url ) {
+			$event_links_string += '<li class="event-feedback"><a href="' + this.session_feedback_url + '">Give Feedback</span></a></li>';
+		}
+
+		if ( $event_links_string ) {
+			return new Handlebars.SafeString('<ul class="conf-sch-event-links">' + $event_links_string + '</ul>');
+		}
+		return null;
 	});
 
 })( jQuery );

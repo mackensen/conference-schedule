@@ -113,7 +113,7 @@
 		}
 
 		if ( $event_links_string ) {
-			return new Handlebars.SafeString('<ul class="event-links">' + $event_links_string + '</ul>');
+			return new Handlebars.SafeString('<ul class="conf-sch-event-links">' + $event_links_string + '</ul>');
 		}
 		return null;
 	});
@@ -153,8 +153,20 @@
 		return null;
 	});
 
-	/*speaker_facebook: "",
-	 speaker_instagram: "",
-	 speaker_twitter: "",*/
+	// Format the speaker social media
+	Handlebars.registerHelper( 'speaker_social_media', function( $options ) {
+
+		// Build string
+		var $social_media_string = '';
+
+		//speaker_facebook
+		//speaker_instagram
+		//speaker_twitter
+
+		if ( $social_media_string ) {
+			return new Handlebars.SafeString('<ul class="speaker-social-media">' + $social_media_string + '</ul>');
+		}
+		return null;
+	});
 
 })( jQuery );

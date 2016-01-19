@@ -65,6 +65,7 @@ class Conference_Schedule_Shortcodes {
 				{{#title}}{{body}}{{/title}}
 				{{#event_location}}<div class="event-location">{{post_title}}</div>{{/event_location}}
 				{{#speakers}}{{body}}{{/speakers}}
+				{{#event_links}}{{body}}{{/event_links}}
 			</div>
 		</script>';
 
