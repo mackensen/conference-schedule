@@ -12,9 +12,17 @@ $food-bg: rgba( #409b40, 0.06 );
 $social-bg: rgba( #402e83, 0.03 );
 $auditorium-bg: rgba( #c6dbf1, 0.3 );
 $break-bg: rgba( #000, 0.01 );
-$heweb-blue: #0f5588;
 $schedule-border-color: rgba( #000, 0.1 );
 $twitter-blue: #55acee;
+
+// Will set transition values
+@mixin set-transition( $transform... ) {
+    -webkit-transition: $transform;
+    -moz-transition: $transform;
+    -ms-transition: $transform;
+    -o-transition: $transform;
+    transition: $transform;
+}
 
 // For the different event types
 //$event_types: ('keynote': $keynote-bg) ('food': $food-bg) ('social': $social-bg) ('auditorium': $auditorium-bg) ('break': $break-bg);
@@ -72,34 +80,74 @@ $twitter-blue: #55acee;
     .event-links {
         display: block;
         list-style: none;
-        margin: 20px -20px -20px -20px;
+        margin: 10px 0 0 0;
         border: 0;
-        border-top: 1px solid #e8e8e8;
         padding: 0;
+        text-align: center;
 
         li {
             display: block;
             list-style: none;
-            margin: 0;
+            margin: 10px 0 0 0;
             border: 0;
             padding: 0;
 
             a {
                 display: block;
-                background: rgba( #000, 0.05 );
+                background-color: rgba( #000, 0.05 );
                 padding: 5px 20px;
                 color: inherit;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+                text-decoration: none;
+                @include set-transition( background-color 1s ease );
+
+                &:hover {
+                    background-color: rgba( #000, 0.2 );
+                }
+
             }
 
             &.event-hashtag {
-                color: darken( $twitter-blue, 20% );
+                font-weight: bold;
 
                 a {
-                    background-color: rgba( $twitter-blue, 0.05 );
-                    text-decoration: none;
+                    background-color: $twitter-blue;
+                    color: #fff;
 
-                    .icon-label {
-                        text-decoration: underline;
+                    &:hover {
+                        background-color: darken( $twitter-blue, 20% );
+                    }
+
+                }
+
+            }
+
+            &.event-slides {
+                font-weight: bold;
+
+                a {
+                    background-color: #02528d;
+                    color: #fff;
+
+                    &:hover {
+                        background-color: darken( #02528d, 20% );
+                    }
+
+                }
+
+            }
+
+            &.event-feedback {
+                font-weight: bold;
+
+                a {
+                    background-color: #38761d;
+                    color: #fff;
+
+                    &:hover {
+                        background-color: darken( #38761d, 20% );
                     }
 
                 }

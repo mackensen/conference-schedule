@@ -46,33 +46,65 @@
 #conf-sch-single-meta .event-links {
   display: block;
   list-style: none;
-  margin: 20px -20px -20px -20px;
+  margin: 10px 0 0 0;
   border: 0;
-  border-top: 1px solid #e8e8e8;
   padding: 0;
+  text-align: center;
 }
 #conf-sch-single-meta .event-links li {
   display: block;
   list-style: none;
-  margin: 0;
+  margin: 10px 0 0 0;
   border: 0;
   padding: 0;
 }
 #conf-sch-single-meta .event-links li a {
   display: block;
-  background: rgba(0, 0, 0, 0.05);
+  background-color: rgba(0, 0, 0, 0.05);
   padding: 5px 20px;
   color: inherit;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  text-decoration: none;
+  -webkit-transition: background-color 1s ease;
+  -moz-transition: background-color 1s ease;
+  -ms-transition: background-color 1s ease;
+  -o-transition: background-color 1s ease;
+  transition: background-color 1s ease;
+}
+#conf-sch-single-meta .event-links li a:hover {
+  background-color: rgba(0, 0, 0, 0.2);
 }
 #conf-sch-single-meta .event-links li.event-hashtag {
-  color: #147bc9;
+  font-weight: bold;
 }
 #conf-sch-single-meta .event-links li.event-hashtag a {
-  background-color: rgba(85, 172, 238, 0.05);
-  text-decoration: none;
+  background-color: #55acee;
+  color: #fff;
 }
-#conf-sch-single-meta .event-links li.event-hashtag a .icon-label {
-  text-decoration: underline;
+#conf-sch-single-meta .event-links li.event-hashtag a:hover {
+  background-color: #147bc9;
+}
+#conf-sch-single-meta .event-links li.event-slides {
+  font-weight: bold;
+}
+#conf-sch-single-meta .event-links li.event-slides a {
+  background-color: #02528d;
+  color: #fff;
+}
+#conf-sch-single-meta .event-links li.event-slides a:hover {
+  background-color: #011828;
+}
+#conf-sch-single-meta .event-links li.event-feedback {
+  font-weight: bold;
+}
+#conf-sch-single-meta .event-links li.event-feedback a {
+  background-color: #38761d;
+  color: #fff;
+}
+#conf-sch-single-meta .event-links li.event-feedback a:hover {
+  background-color: #112409;
 }
 
 @media not all and (min-width: 0) and (max-width: 620px) {
