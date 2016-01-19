@@ -37,7 +37,7 @@ class Conference_Schedule_API {
 		}
 
 		// Add speaker info
-		$speaker_fields = array( 'speaker_thumbnail', 'speaker_position', 'speaker_url', 'speaker_company', 'speaker_company_url', 'speaker_facebook', 'speaker_instagram', 'speaker_twitter' );
+		$speaker_fields = array( 'speaker_thumbnail', 'speaker_position', 'speaker_url', 'speaker_company', 'speaker_company_url', 'speaker_facebook', 'speaker_instagram', 'speaker_twitter', 'speaker_linkedin' );
 		foreach( $speaker_fields as $field_name ) {
 			register_rest_field( 'speakers', $field_name, $rest_field_args );
 		}
@@ -215,6 +215,7 @@ class Conference_Schedule_API {
 			case 'speaker_facebook':
 			case 'speaker_instagram':
 			case 'speaker_twitter':
+			case 'speaker_linkedin':
 				return get_post_meta( $object[ 'id' ], "conf_sch_{$field_name}", true );
 
 		}

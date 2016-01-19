@@ -162,6 +162,7 @@
 		//speaker_facebook
 		//speaker_instagram
 		//speaker_twitter
+		//speaker_linkedin
 
 		if ( $social_media_string ) {
 			return new Handlebars.SafeString('<ul class="speaker-social-media">' + $social_media_string + '</ul>');

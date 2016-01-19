@@ -296,6 +296,7 @@ class Conference_Schedule {
 			//speaker_facebook
 			//speaker_instagram
 			//speaker_twitter
+			//speaker_linkedin
 
 		}
 

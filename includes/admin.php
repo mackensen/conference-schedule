@@ -503,7 +503,7 @@ class Conference_Schedule_Admin {
 						if ( wp_verify_nonce( $_POST[ 'conf_schedule_save_speaker_social_media_nonce' ], 'conf_schedule_save_speaker_social_media' ) ) {
 
 							// Process each field
-							foreach ( array( 'facebook', 'instagram', 'twitter' ) as $field_name ) {
+							foreach ( array( 'facebook', 'instagram', 'twitter', 'linkedin' ) as $field_name ) {
 								if ( isset( $_POST[ 'conf_schedule' ][ 'speaker' ][ $field_name ] ) ) {
 
 									// Sanitize the value
@@ -782,6 +782,7 @@ class Conference_Schedule_Admin {
 		$speaker_facebook = get_post_meta( $post_id, 'conf_sch_speaker_facebook', true );
 		$speaker_instagram = get_post_meta( $post_id, 'conf_sch_speaker_instagram', true );
 		$speaker_twitter = get_post_meta( $post_id, 'conf_sch_speaker_twitter', true );
+		$speaker_linkedin = get_post_meta( $post_id, 'conf_sch_speaker_linkedin', true );
 
 		?><table class="form-table">
 			<tbody>
@@ -804,6 +805,13 @@ class Conference_Schedule_Admin {
 					<td>
 						<input type="text" id="conf-sch-twitter" name="conf_schedule[speaker][twitter]" value="<?php echo esc_attr( $speaker_twitter ); ?>" class="regular-text" />
 						<p class="description">Please provide the Twitter handle, without the "@".</p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="conf-sch-linkedin">LinkedIn</label></th>
+					<td>
+						<input type="text" id="conf-sch-linkedin" name="conf_schedule[speaker][linkedin]" value="<?php echo esc_attr( $speaker_linkedin ); ?>" class="regular-text" />
+						<p class="description">Please provide the full LinkedIn URL.</p>
 					</td>
 				</tr>
 			</tbody>
