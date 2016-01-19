@@ -31,7 +31,7 @@ class Conference_Schedule_API {
 		);
 
 		// Add event info
-		$event_fields = array( 'event_date', 'event_date_display', 'event_start_time', 'event_end_time', 'event_time_display', 'event_types', 'session_categories', 'event_location', 'event_speakers', 'event_hashtag' );
+		$event_fields = array( 'event_date', 'event_date_display', 'event_start_time', 'event_end_time', 'event_time_display', 'event_types', 'event_location', 'event_speakers', 'event_hashtag', 'session_categories', 'session_slides_url', 'session_feedback_url' );
 		foreach( $event_fields as $field_name ) {
 			register_rest_field( 'schedule', $field_name, $rest_field_args );
 		}
@@ -119,7 +119,7 @@ class Conference_Schedule_API {
 						return $event_post;
 					}
 				}
-				return false;
+				return null;
 
 			case 'event_speakers':
 				if ( $event_speaker_ids = get_post_meta( $object[ 'id' ], 'conf_sch_event_speakers', true ) ) {
@@ -139,7 +139,67 @@ class Conference_Schedule_API {
 
 					return $speakers;
 				}
-				return false;
+				return null;
+
+			case 'session_slides_url':
+
+				// The URL takes priority when a URL and file is provided
+				if ( $slides_url = get_post_meta( $object[ 'id' ], 'conf_sch_event_slides_url', true ) ) {
+					return $slides_url;
+				}
+
+				// Get the file
+				if ( $slides_file_id = get_post_meta( $object[ 'id' ], 'conf_sch_event_slides_file', true ) ) {
+					if ( $slides_file_url = wp_get_attachment_url( $slides_file_id ) ) {
+						return $slides_file_url;
+					}
+
+				}
+				break;
+
+			case 'session_feedback_url':
+
+				// Feedback URL will only show up 30 minutes after the session has started
+				// If no valid session time, well show URL
+				if ( $feedback_url = get_post_meta( $object[ 'id' ], 'conf_sch_event_feedback_url', true ) ) {
+
+					// Get this site's timezone
+					$timezone = get_option('timezone_string');
+
+					// What time is it?
+					$current_time = new DateTime( 'now', new DateTimeZone( $timezone ) );
+
+					// Get date and start time
+					$session_date = get_post_meta( $object[ 'id' ], 'conf_sch_event_date', true );
+					$session_start_time = get_post_meta( $object[ 'id' ], 'conf_sch_event_start_time', true );
+
+					// Build date string
+					$session_date_string = $session_date ? $session_date : null;
+
+					// Send URL if time is not valid
+					if ( $session_date_string && strtotime( $session_date_string ) !== false ) {
+
+						// Add the start time
+						if ( $session_start_time && strtotime( "{$session_date_string} {$session_start_time}" ) !== false ) {
+							$session_date_string .= " {$session_start_time}";
+						}
+
+						// Build session date time
+						$session_date_time = new DateTime( $session_date_string, new DateTimeZone( $timezone ) );
+
+						// Feedback URL will only show up 30 minutes after the session has started
+						if ( ( $current_time->getTimestamp() - $session_date_time->getTimestamp() ) >= 1800 ) {
+							return $feedback_url;
+						}
+
+						return null;
+
+					}
+
+					// If no valid session time, well show URL
+					return $feedback_url;
+				}
+				break;
 
 			case 'speaker_position':
 			case 'speaker_url':
@@ -152,7 +212,7 @@ class Conference_Schedule_API {
 
 		}
 
-		return false;
+		return null;
 	}
 
 }

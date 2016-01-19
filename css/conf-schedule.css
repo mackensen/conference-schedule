@@ -33,9 +33,12 @@
   border-radius: 5px;
   margin: 15px 0 30px 0;
   padding: 20px;
+  font-size: 1em;
+  line-height: 1.6em;
 }
 #conf-sch-single-meta .event-meta {
   display: block;
+  margin: 0 0 5px 0;
 }
 #conf-sch-single-meta .event-meta-label {
   font-weight: bold;
@@ -43,7 +46,7 @@
 #conf-sch-single-meta .event-links {
   display: block;
   list-style: none;
-  margin: 10px -20px -20px -20px;
+  margin: 20px -20px -20px -20px;
   border: 0;
   border-top: 1px solid #e8e8e8;
   padding: 0;
@@ -77,6 +80,7 @@
     float: right;
     margin-left: 30px;
     min-width: 300px;
+    max-width: 350px;
   }
 }
 #conf-sch-single-speakers .speaker-meta {
@@ -87,58 +91,6 @@
   display: block;
 }
 
-/*.single-schedule {
-
-    .schedule-item-details {
-
-        ul {
-            display: block;
-            margin-left: 0;
-            margin-right: 0;
-            padding: 0;
-            list-style: none;
-
-            li {
-                display: block;
-                margin-left: 0;
-                margin-right: 0;
-                list-style: none;
-            }
-
-        }
-    }
-
-    .speakers {
-
-        .speaker {
-            margin: 0 0 20px 0;
-
-            .speaker-thumb {
-                display: block;
-                width: 200px;
-                height: auto;
-                margin: 0 0 20px 0;
-            }
-
-            .speaker-text {
-                overflow: auto;
-            }
-
-            .twitter {
-                display: inline-block;
-                background: url( '../images/twitter-bird-red.png' ) left center no-repeat;
-                background-size: auto 22px;
-                padding: 0 0 0 36px;
-                font-size: 22px;
-                line-height: 1.3;
-                margin: -5px 0 22px 0;
-            }
-
-        }
-
-    }
-
-}*/
 #conference-schedule .schedule-table {
   margin: 0 0 30px 0;
 }
@@ -157,21 +109,6 @@
 #conference-schedule .schedule-table .schedule-row .schedule-event {
   overflow: auto;
   margin: 0 0 25px 0;
-                /*
-
-                .session {
-
-                    & + .session {
-                        margin: 17px 0 0 0;
-                        border-top: 1px solid rgba( #000, 0.1 );
-                        padding-top: 15px;
-                    }
-
-                    *:last-child {
-                        margin-bottom: 0;
-                    }
-
-                }*/
 }
 #conference-schedule .schedule-table .schedule-row .schedule-event .event-time {
   display: block;
@@ -365,30 +302,6 @@
 
 }*/
 @media not all and (min-width: 0) and (max-width: 990px) {
-    /*.single-schedule {
-
-        .schedule-item-details {
-            float: right;
-            margin: 0 20px 30px;
-            min-width: 300px;
-        }
-
-        .speakers {
-
-            .speaker {
-
-                .speaker-thumb {
-                    float: left;
-                    width: 200px;
-                    height: auto;
-                    margin: 0 20px 20px 0;
-                }
-
-            }
-
-        }
-
-    }*/
   #conference-schedule .schedule-table .schedule-row {
     border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
                 /*&.current {

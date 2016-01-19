@@ -632,7 +632,7 @@ class Conference_Schedule_Admin {
 					<th scope="row"><label for="conf-sch-slides-url">Slides URL</label></th>
 					<td>
 						<input type="text" id="conf-sch-slides-url" style="width:75%;" name="conf_schedule[event][slides_url]" value="<?php echo esc_attr( $slides_url ); ?>" />
-						<p class="description">Please provide the URL (or file below) for users to download or view this session's slides.</p>
+						<p class="description">Please provide the URL (or file below) for users to download or view this session's slides. <strong>If a URL and file are provided, the URL will priority.</strong></p>
 					</td>
 				</tr>
 				<tr>

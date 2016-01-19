@@ -14,6 +14,7 @@
 .conf-sch-icon,
 [class^="conf-sch-icon-"],
 [class*=" conf-sch-icon-"] {
+    font-size: inherit !important;
     line-height: inherit !important;
 
     &:before {
@@ -23,8 +24,9 @@
         line-height: inherit !important;
         font-variant: normal !important;
         text-transform: none !important;
+        font-size: inherit !important;
+        line-height: inherit !important;
         speak: none;
-        line-height: 1;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
