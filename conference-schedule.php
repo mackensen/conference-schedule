@@ -14,6 +14,10 @@
  */
 
 // @TODO Add language files
+// @TODO make sure, when multiple sessions in a row, they're always in same room order
+// @TODO add settings:
+	// Need a way to know if they want track labels or not
+// @TODO allow for shortcode to only show specific days or time ranges
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
