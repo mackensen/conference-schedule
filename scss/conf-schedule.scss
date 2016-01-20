@@ -64,7 +64,7 @@ $twitter-blue: #55acee;
     border: 0;
     margin: 0 !important;
     padding: 0;
-    text-align: center;
+    text-align: left;
 
     li {
         display: block;
@@ -74,10 +74,11 @@ $twitter-blue: #55acee;
         padding: 0;
 
         a {
-            display: block;
+            display: inline-block;
             background-color: rgba( #000, 0.05 );
             padding: 5px 20px;
             color: inherit;
+            text-align: center;
             -webkit-border-radius: 5px;
             -moz-border-radius: 5px;
             border-radius: 5px;
@@ -160,6 +161,15 @@ $twitter-blue: #55acee;
 
     .conf-sch-event-links {
         margin: 15px 0 0 0;
+
+        li {
+
+            a {
+                display: block;
+            }
+
+        }
+
     }
 
 }
