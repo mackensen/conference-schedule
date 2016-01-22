@@ -127,13 +127,11 @@
 								$event_types_select.find( 'option[value="' + $value.id + '"]' ).attr( 'selected', true).trigger('change');
 							});
 
-						},
-						cache: false // @TODO set to true?
+						}
 					});
 				}
 
-			},
-			cache: false // @TODO set to true?
+			}
 		} );
 
 	}
@@ -178,13 +176,11 @@
 								$categories_select.find( 'option[value="' + $value.id + '"]' ).attr( 'selected', true).trigger('change');
 							});
 
-						},
-						cache: false // @TODO set to true?
+						}
 					});
 				}
 
-			},
-			cache: false // @TODO set to true?
+			}
 		} );
 
 	}
@@ -232,13 +228,11 @@
 							// Mark the location as selected
 							$location_select.find( 'option[value="' + $event.event_location.ID + '"]').attr('selected', true).trigger('change');
 
-						},
-						cache: false // @TODO set to true?
+						}
 					});
 				}
 
-			},
-			cache: false // @TODO set to true?
+			}
 		} );
 
 	}
@@ -283,13 +277,11 @@
 								$speakers_select.find( 'option[value="' + $value.ID + '"]' ).attr( 'selected', true).trigger('change');
 							});
 
-						},
-						cache: false // @TODO set to true?
+						}
 					});
 				}
 
-			},
-			cache: false // @TODO set to true?
+			}
 		} );
 
 	}
