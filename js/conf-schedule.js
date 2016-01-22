@@ -147,8 +147,7 @@
 				// Add the html
 				$conf_schedule.html( $schedule_html );
 
-			},
-			cache: false // @TODO set to true
+			}
 		} );
 
 	}

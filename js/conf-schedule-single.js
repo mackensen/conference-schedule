@@ -85,8 +85,7 @@
 					});
 				}
 
-			},
-			cache: false // @TODO set to true
+			}
 		} );
 
 	}
