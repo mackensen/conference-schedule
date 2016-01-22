@@ -18,6 +18,11 @@
 // @TODO add settings:
 	// Need a way to know if they want track labels or not
 // @TODO allow for shortcode to only show specific days or time ranges
+// @TODO add speaker social media
+// @TODO set it up so that past days collapse
+// @TODO add button to go to current event?
+// @TODO stylize current event(s)
+// @TODO setup media library integration with slides file
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
