@@ -59,7 +59,7 @@ $twitter-blue: #55acee;
 }
 
 .conf-sch-event-links {
-    display: block;
+    display: inline-block;
     list-style: none;
     border: 0;
     margin: 0 !important;
@@ -74,7 +74,7 @@ $twitter-blue: #55acee;
         padding: 0;
 
         a {
-            display: inline-block;
+            display: block;
             background-color: rgba( #000, 0.05 );
             padding: 5px 20px;
             color: inherit;
@@ -160,6 +160,7 @@ $twitter-blue: #55acee;
     }
 
     .conf-sch-event-links {
+        display: block;
         margin: 15px 0 0 0;
 
         li {

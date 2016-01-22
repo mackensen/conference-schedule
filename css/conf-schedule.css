@@ -28,7 +28,7 @@
 }
 
 .conf-sch-event-links {
-  display: block;
+  display: inline-block;
   list-style: none;
   border: 0;
   margin: 0 !important;
@@ -43,7 +43,7 @@
   padding: 0;
 }
 .conf-sch-event-links li a {
-  display: inline-block;
+  display: block;
   background-color: rgba(0, 0, 0, 0.05);
   padding: 5px 20px;
   color: inherit;
@@ -109,6 +109,7 @@
   font-weight: bold;
 }
 #conf-sch-single-meta .conf-sch-event-links {
+  display: block;
   margin: 15px 0 0 0;
 }
 #conf-sch-single-meta .conf-sch-event-links li a {
