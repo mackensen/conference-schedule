@@ -37,7 +37,7 @@ if ( is_admin() ) {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/admin.php';
 }
 
-// Add support for featured images
+// Add theme support for featured images
 add_theme_support( 'post-thumbnails' );
 
 class Conference_Schedule {
@@ -272,10 +272,16 @@ class Conference_Schedule {
 		// For tweaking the single schedule pages
 		if ( 'schedule' == $post->post_type ) {
 
+			// Get post type object
+			$speakers_post_type_obj = get_post_type_object( 'speakers' );
+
+			// Get post type's archive title
+			$speakers_archive_title = apply_filters( 'post_type_archive_title', $speakers_post_type_obj->labels->name, 'speakers' );
+
 			// Add the info holders
 			$the_content = '<div id="conf-sch-single-meta"></div>' . $the_content;
 			$the_content .= '<div id="conf-sch-single-speakers">
-				<h2>Speakers</h2>
+				<h2>' . $speakers_archive_title . '</h2>
 			</div>';
 
 			// Add the before template
