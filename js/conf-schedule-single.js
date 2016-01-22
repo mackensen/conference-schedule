@@ -103,12 +103,12 @@
 
 		// Do we have a slides URL?
 		if ( this.session_slides_url !== undefined && this.session_slides_url ) {
-			$event_links_string += '<li class="event-slides"><a href="' + this.session_slides_url + '">View Slides</span></a></li>';
+			$event_links_string += '<li class="event-slides"><a href="' + this.session_slides_url + '">' + conf_schedule.view_slides + '</span></a></li>';
 		}
 
 		// Do we have a feedback URL?
 		if ( this.session_feedback_url !== undefined && this.session_feedback_url ) {
-			$event_links_string += '<li class="event-feedback"><a href="' + this.session_feedback_url + '">Give Feedback</span></a></li>';
+			$event_links_string += '<li class="event-feedback"><a href="' + this.session_feedback_url + '">' + conf_schedule.give_feedback + '</span></a></li>';
 		}
 
 		if ( $event_links_string ) {

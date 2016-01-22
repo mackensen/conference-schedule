@@ -40,6 +40,12 @@ class Conference_Schedule_Shortcodes {
 			// Enqueue the schedule script
 			wp_enqueue_script( 'conf-schedule', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'js' ) . 'conf-schedule.min.js', array( 'jquery', 'handlebars' ), CONFERENCE_SCHEDULE_VERSION, true );
 
+			// Pass some translations
+			wp_localize_script( 'conf-schedule', 'conf_schedule', array(
+				'view_slides' => __( 'View Slides', 'conf-schedule' ),
+				'give_feedback' => __( 'Give Feedback', 'conf-schedule' ),
+			) );
+
 		}
 
 	}

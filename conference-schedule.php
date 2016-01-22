@@ -252,6 +252,8 @@ class Conference_Schedule {
 			// Pass some data
 			wp_localize_script( 'conf-schedule-single', 'conf_schedule', array(
 				'post_id' => $post->ID,
+				'view_slides' => __( 'View Slides', 'conf-schedule' ),
+				'give_feedback' => __( 'Give Feedback', 'conf-schedule' ),
 			));
 
 		}
