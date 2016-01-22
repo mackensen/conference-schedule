@@ -286,9 +286,9 @@ class Conference_Schedule {
 
 			// Add the before template
 			$the_content .= '<script id="conf-sch-single-meta-template" type="text/x-handlebars-template">
-				{{#event_date_display}}<span class="event-meta event-date"><span class="event-meta-label">Date:</span> {{.}}</span>{{/event_date_display}}
-				{{#event_time_display}}<span class="event-meta event-time"><span class="event-meta-label">Time:</span> {{.}}</span>{{/event_time_display}}
-				{{#event_location}}<span class="event-meta event-location"><span class="event-meta-label">Location:</span> {{post_title}}</span>{{/event_location}}
+				{{#event_date_display}}<span class="event-meta event-date"><span class="event-meta-label">' . __( 'Date', 'conf-schedule' ) . ':</span> {{.}}</span>{{/event_date_display}}
+				{{#event_time_display}}<span class="event-meta event-time"><span class="event-meta-label">' . __( 'Time', 'conf-schedule' ) . ':</span> {{.}}</span>{{/event_time_display}}
+				{{#event_location}}<span class="event-meta event-location"><span class="event-meta-label">' . __( 'Location', 'conf-schedule' ) . ':</span> {{post_title}}</span>{{/event_location}}
 				{{#event_links}}{{body}}{{/event_links}}
 			</script>';
 
