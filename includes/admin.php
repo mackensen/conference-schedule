@@ -550,58 +550,58 @@ class Conference_Schedule_Admin {
 		?><table class="form-table">
 			<tbody>
 				<tr>
-					<th scope="row"><label for="conf-sch-date">Date</label></th>
+					<th scope="row"><label for="conf-sch-date"><?php _e( 'Date', 'conf-schedule' ); ?></label></th>
 					<td>
 						<input type="text" id="conf-sch-date" value="<?php echo esc_attr( $event_date_mdy ); ?>" class="conf-sch-date-field" />
 						<input name="conf_schedule[event][date]" type="hidden" id="conf-sch-date-alt" value="<?php echo esc_attr( $event_date ); ?>" />
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="conf-sch-start-time">Start Time</label></th>
+					<th scope="row"><label for="conf-sch-start-time"><?php _e( 'Start Time', 'conf-schedule' ); ?></label></th>
 					<td>
 						<input name="conf_schedule[event][start_time]" type="text" id="conf-sch-start-time" value="<?php echo esc_attr( $event_start_time ); ?>" class="regular-text conf-sch-time-field" />
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="conf-sch-end-time">End Time</label></th>
+					<th scope="row"><label for="conf-sch-end-time"><?php _e( 'End Time', 'conf-schedule' ); ?></label></th>
 					<td>
 						<input name="conf_schedule[event][end_time]" type="text" id="conf-sch-end-time" value="<?php echo esc_attr( $event_end_time ); ?>" class="regular-text conf-sch-time-field" />
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="conf-sch-event-types">Event Type(s)</label></th>
+					<th scope="row"><label for="conf-sch-event-types"><?php _e( 'Event Types', 'conf-schedule' ); ?></label></th>
 					<td>
 						<select id="conf-sch-event-types" style="width:75%;" name="conf_schedule[event][event_types][]" multiple="multiple">
-							<option value="">No event types</option>
+							<option value=""><?php _e( 'No event types', 'conf-schedule' ); ?></option>
 						</select>
-						<p class="description"><a class="conf-sch-reload-event-types" href="<?php echo admin_url( 'edit-tags.php?taxonomy=event_types&post_type=schedule' ); ?>" target="_blank">Manage the event types</a></p>
+						<p class="description"><a class="conf-sch-reload-event-types" href="<?php echo admin_url( 'edit-tags.php?taxonomy=event_types&post_type=schedule' ); ?>" target="_blank"><?php _e( 'Manage the event types', 'conf-schedule' ); ?></a></p>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="conf-sch-session-categories">Session Categories</label></th>
+					<th scope="row"><label for="conf-sch-session-categories"><?php _e( 'Session Categories', 'conf-schedule' ); ?></label></th>
 					<td>
 						<select id="conf-sch-session-categories" style="width:75%;" name="conf_schedule[event][session_categories][]" multiple="multiple">
-							<option value="">No session categories</option>
+							<option value=""><?php _e( 'No session categories', 'conf-schedule' ); ?></option>
 						</select>
-						<p class="description"><a class="conf-sch-reload-session-categories" href="<?php echo admin_url( 'edit-tags.php?taxonomy=session_categories&post_type=schedule' ); ?>" target="_blank">Manage the session categories</a></p>
+						<p class="description"><a class="conf-sch-reload-session-categories" href="<?php echo admin_url( 'edit-tags.php?taxonomy=session_categories&post_type=schedule' ); ?>" target="_blank"><?php _e( 'Manage the session categories', 'conf-schedule' ); ?></a></p>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="conf-sch-location">Location</label></th>
+					<th scope="row"><label for="conf-sch-location"><?php _e( 'Location', 'conf-schedule' ); ?></label></th>
 					<td>
-						<select id="conf-sch-location" style="width:75%;" name="conf_schedule[event][location]" data-default="No location">
-							<option value="">No location</option>
+						<select id="conf-sch-location" style="width:75%;" name="conf_schedule[event][location]" data-default="<?php _e( 'No location', 'conf-schedule' ); ?>">
+							<option value=""><?php _e( 'No location', 'conf-schedule' ); ?></option>
 						</select>
-						<p class="description"><a class="conf-sch-reload-locations" href="<?php echo admin_url( 'edit.php?post_type=locations' ); ?>" target="_blank">Manage the locations</a></p>
+						<p class="description"><a class="conf-sch-reload-locations" href="<?php echo admin_url( 'edit.php?post_type=locations' ); ?>" target="_blank"><?php _e( 'Manage the locations', 'conf-schedule' ); ?></a></p>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="conf-sch-speakers">Speaker(s)</label></th>
+					<th scope="row"><label for="conf-sch-speakers"><?php _e( 'Speakers', 'conf-schedule' ); ?></label></th>
 					<td>
 						<select id="conf-sch-speakers" style="width:75%;" name="conf_schedule[event][speakers][]" multiple="multiple">
-							<option value="">No speakers</option>
+							<option value=""><?php _e( 'No speakers', 'conf-schedule' ); ?></option>
 						</select>
-						<p class="description"><a class="conf-sch-reload-speakers" href="<?php echo admin_url( 'edit.php?post_type=speakers' ); ?>" target="_blank">Manage the speakers</a></p>
+						<p class="description"><a class="conf-sch-reload-speakers" href="<?php echo admin_url( 'edit.php?post_type=speakers' ); ?>" target="_blank"><?php _e( 'Manage the speakers', 'conf-schedule' ); ?></a></p>
 					</td>
 				</tr>
 			</tbody>
@@ -629,14 +629,14 @@ class Conference_Schedule_Admin {
 		?><table class="form-table">
 			<tbody>
 				<tr>
-					<th scope="row"><label for="conf-sch-slides-url">Slides URL</label></th>
+					<th scope="row"><label for="conf-sch-slides-url"><?php _e( 'Slides URL', 'conf-schedule' ); ?></label></th>
 					<td>
 						<input type="text" id="conf-sch-slides-url" style="width:75%;" name="conf_schedule[event][slides_url]" value="<?php echo esc_attr( $slides_url ); ?>" />
-						<p class="description">Please provide the URL (or file below) for users to download or view this session's slides. <strong>If a URL and file are provided, the URL will priority.</strong></p>
+						<p class="description"><?php _e( "Please provide the URL (or file below) for users to download or view this session's slides. <strong>If a URL and file are provided, the URL will priority.</strong>", 'conf-schedule' ); ?></p>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="conf-sch-slides-file-input">Slides File</label></th>
+					<th scope="row"><label for="conf-sch-slides-file-input"><?php _e( 'Slides File', 'conf-schedule' ); ?></label></th>
 					<td><?php
 
 						// Should we hide the input?
@@ -656,7 +656,7 @@ class Conference_Schedule_Admin {
 
 								?><div id="conf-sch-slides-file-info" style="margin:0 0 10px 0;">
 									<a style="display:block;margin:0 0 10px 0;" href="<?php echo $attached_slides_url; ?>" target="_blank"><?php echo $attached_slides_url; ?></a>
-									<span class="button conf-sch-slides-file-remove" style="clear:both;padding-left:5px;"><span class="dashicons dashicons-no" style="line-height:inherit"></span> Remove the file</span>
+									<span class="button conf-sch-slides-file-remove" style="clear:both;padding-left:5px;"><span class="dashicons dashicons-no" style="line-height:inherit"></span> <?php _e( 'Remove the file', 'conf-schedule' ); ?></span>
 								</div><?php
 
 							}
@@ -669,14 +669,14 @@ class Conference_Schedule_Admin {
 						}
 
 						?><input type="file" accept="application/pdf" id="conf-sch-slides-file-input" style="width:75%;<?php echo $slides_file_hide_input ? 'display:none;' : null; ?>" size="25" name="conf_schedule_event_slides_file" value="" />
-						<p class="description">You may also upload a file if you wish to host the session's slides for users to download or view. <strong>Only PDF files are allowed.</strong></p>
+						<p class="description"><?php _e( "You may also upload a file if you wish to host the session's slides for users to download or view. <strong>Only PDF files are allowed.</strong>", 'conf-schedule' ); ?></p>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="conf-sch-feedback-url">Feedback URL</label></th>
+					<th scope="row"><label for="conf-sch-feedback-url"><?php _e( 'Feedback URL', 'conf-schedule' ); ?></label></th>
 					<td>
 						<input type="text" id="conf-sch-feedback-url" style="width:75%;" name="conf_schedule[event][feedback_url]" value="<?php echo esc_attr( $feedback_url ); ?>" />
-						<p class="description">Please provide the URL you wish to provide to gather session feedback. <strong>It will display 30 minutes after the session has started.</strong></p>
+						<p class="description"><?php _e( 'Please provide the URL you wish to provide to gather session feedback. <strong>It will display 30 minutes after the session has started.</strong>', 'conf-schedule' ); ?></p>
 					</td>
 				</tr>
 			</tbody>
@@ -702,10 +702,10 @@ class Conference_Schedule_Admin {
 		?><table class="form-table">
 			<tbody>
 				<tr>
-					<th scope="row"><label for="conf-sch-event-hashtag">Hashtag</label></th>
+					<th scope="row"><label for="conf-sch-event-hashtag"><?php _e( 'Hashtag', 'conf-schedule' ); ?></label></th>
 					<td>
 						<input type="text" id="conf-sch-event-hashtag" name="conf_schedule[event][hashtag]" value="<?php echo esc_attr( $event_hashtag ); ?>" class="regular-text" />
-						<p class="description">Please provide the hashtag you wish attendees to use for this event.</p>
+						<p class="description"><?php _e( 'Please provide the hashtag you wish attendees to use for this event.', 'conf-schedule' ); ?></p>
 					</td>
 				</tr>
 			</tbody>
@@ -734,31 +734,31 @@ class Conference_Schedule_Admin {
 		?><table class="form-table">
 			<tbody>
 				<tr>
-					<th scope="row"><label for="conf-sch-position">Position</label></th>
+					<th scope="row"><label for="conf-sch-position"><?php _e( 'Position', 'conf-schedule' ); ?></label></th>
 					<td>
 						<input type="text" id="conf-sch-position" name="conf_schedule[speaker][position]" value="<?php echo esc_attr( $speaker_position ); ?>" class="regular-text" />
-						<p class="description">Please provide the speaker's job title.</p>
+						<p class="description"><?php _e( "Please provide the speaker's job title.", 'conf-schedule' ); ?></p>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="conf-sch-url">Website</label></th>
+					<th scope="row"><label for="conf-sch-url"><?php _e( 'Website', 'conf-schedule' ); ?></label></th>
 					<td>
 						<input type="text" id="conf-sch-url" name="conf_schedule[speaker][url]" value="<?php echo esc_attr( $speaker_url ); ?>" class="regular-text" />
-						<p class="description">Please provide the URL for the speaker's website.</p>
+						<p class="description"><?php _e( "Please provide the URL for the speaker's website.", 'conf-schedule' ); ?></p>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="conf-sch-company">Company</label></th>
+					<th scope="row"><label for="conf-sch-company"><?php _e( 'Company', 'conf-schedule' ); ?></label></th>
 					<td>
 						<input type="text" id="conf-sch-company" name="conf_schedule[speaker][company]" value="<?php echo esc_attr( $speaker_company ); ?>" class="regular-text" />
-						<p class="description">Where does the speaker work?</p>
+						<p class="description"><?php _e( 'Where does the speaker work?', 'conf-schedule' ); ?></p>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="conf-sch-company-url">Company Website</label></th>
+					<th scope="row"><label for="conf-sch-company-url"><?php _e( 'Company Website', 'conf-schedule' ); ?></label></th>
 					<td>
 						<input type="text" id="conf-sch-company-url" name="conf_schedule[speaker][company_url]" value="<?php echo esc_attr( $speaker_company_url ); ?>" class="regular-text" />
-						<p class="description">Please provide the URL for the speaker's company website.</p>
+						<p class="description"><?php _e( "Please provide the URL for the speaker's company website.", 'conf-schedule' ); ?></p>
 					</td>
 				</tr>
 			</tbody>
@@ -787,31 +787,31 @@ class Conference_Schedule_Admin {
 		?><table class="form-table">
 			<tbody>
 				<tr>
-					<th scope="row"><label for="conf-sch-facebook">Facebook</label></th>
+					<th scope="row"><label for="conf-sch-facebook"><?php _e( 'Facebook', 'conf-schedule' ); ?></label></th>
 					<td>
 						<input type="text" id="conf-sch-facebook" name="conf_schedule[speaker][facebook]" value="<?php echo esc_attr( $speaker_facebook ); ?>" class="regular-text" />
-						<p class="description">Please provide the full Facebook URL.</p>
+						<p class="description"><?php _e( 'Please provide the full Facebook URL.', 'conf-schedule' ); ?></p>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="conf-sch-instagram">Instagram</label></th>
+					<th scope="row"><label for="conf-sch-instagram"><?php _e( 'Instagram', 'conf-schedule' ); ?></label></th>
 					<td>
 						<input type="text" id="conf-sch-instagram" name="conf_schedule[speaker][instagram]" value="<?php echo esc_attr( $speaker_instagram ); ?>" class="regular-text" />
-						<p class="description">Please provide the Instagram handle or username.</p>
+						<p class="description"><?php _e( 'Please provide the Instagram handle or username.', 'conf-schedule' ); ?></p>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="conf-sch-twitter">Twitter</label></th>
+					<th scope="row"><label for="conf-sch-twitter"><?php _e( 'Twitter', 'conf-schedule' ); ?></label></th>
 					<td>
 						<input type="text" id="conf-sch-twitter" name="conf_schedule[speaker][twitter]" value="<?php echo esc_attr( $speaker_twitter ); ?>" class="regular-text" />
-						<p class="description">Please provide the Twitter handle, without the "@".</p>
+						<p class="description"><?php _e( 'Please provide the Twitter handle, without the "@".', 'conf-schedule' ); ?></p>
 					</td>
 				</tr>
 				<tr>
 					<th scope="row"><label for="conf-sch-linkedin">LinkedIn</label></th>
 					<td>
 						<input type="text" id="conf-sch-linkedin" name="conf_schedule[speaker][linkedin]" value="<?php echo esc_attr( $speaker_linkedin ); ?>" class="regular-text" />
-						<p class="description">Please provide the full LinkedIn URL.</p>
+						<p class="description"><?php _e( 'Please provide the full LinkedIn URL.', 'conf-schedule' ); ?></p>
 					</td>
 				</tr>
 			</tbody>
