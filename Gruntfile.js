@@ -40,7 +40,7 @@ module.exports = function(grunt) {
             minified: {
                 files: [{
                     expand: true,
-                    src: [ '*.js', '!*.min.js' ],
+                    src: [ '**/*.js', '!**/*.min.js' ],
                     cwd: 'js',
                     dest: 'js',
                     ext: '.min.js'
@@ -53,7 +53,7 @@ module.exports = function(grunt) {
                 tasks: [ 'sass:expanded', 'sass:compressed' ]
             },
             js: {
-                files: [ 'js/*.js', 'js/!*.min.js' ],
+                files: [ 'js/**/*.js', '!js/**/*.min.js' ],
                 tasks: [ 'uglify:minified' ]
             }
         }
