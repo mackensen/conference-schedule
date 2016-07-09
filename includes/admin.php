@@ -86,15 +86,15 @@ class Conference_Schedule_Admin {
 			wp_enqueue_style( 'jquery-ui', '//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', array(), CONFERENCE_SCHEDULE_VERSION );
 
 			// Enqueue the time picker
-			wp_enqueue_style( 'timepicker', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'css' ) . 'timepicker.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
+			wp_enqueue_style( 'timepicker', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'css' ) . 'timepicker.css', array(), CONFERENCE_SCHEDULE_VERSION );
 			wp_register_script( 'timepicker', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'js' ) . 'timepicker.min.js', array( 'jquery' ), CONFERENCE_SCHEDULE_VERSION, true );
 
 			// Enqueue select2
-			wp_enqueue_style( 'select2', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'css' ) . 'select2.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
+			wp_enqueue_style( 'select2', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'css' ) . 'select2.css', array(), CONFERENCE_SCHEDULE_VERSION );
 			wp_register_script( 'select2', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'js' ) . 'select2.min.js', array( 'jquery' ), CONFERENCE_SCHEDULE_VERSION, true );
 
 			// Enqueue the post script
-			wp_enqueue_script( 'conf-schedule-admin-post', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'js' ) . 'admin-post.min.js', array( 'jquery', 'jquery-ui-datepicker', 'timepicker', 'select2' ), CONFERENCE_SCHEDULE_VERSION, true );
+			wp_enqueue_script( 'conf-schedule-admin-post', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'js' ) . 'admin-post-min.js', array( 'jquery', 'jquery-ui-datepicker', 'timepicker', 'select2' ), CONFERENCE_SCHEDULE_VERSION, true );
 
 		}
 
