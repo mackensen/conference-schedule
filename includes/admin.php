@@ -19,11 +19,11 @@ class Conference_Schedule_Admin {
 	 * @return	Conference_Schedule_Admin
 	 */
 	public static function instance() {
-		if ( ! isset( static::$instance ) ) {
+		if ( ! isset( self::$instance ) ) {
 			$className = __CLASS__;
-			static::$instance = new $className;
+			self::$instance = new $className;
 		}
-		return static::$instance;
+		return self::$instance;
 	}
 
 	/**

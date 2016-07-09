@@ -4,7 +4,7 @@
  * Plugin Name:       Conference Schedule
  * Plugin URI:        @TODO
  * Description:       Helps you build a simple schedule for your conference website.
- * Version:           1.0 // @TODO Change to 0.5 after name is changed
+ * Version:           1.0
  * Author:            Rachel Carden
  * Author URI:        https://bamadesigner.com
  * License:           GPL-2.0+
@@ -18,7 +18,6 @@
 // @TODO add settings:
 	// Need a way to know if they want track labels or not
 // @TODO allow for shortcode to only show specific days or time ranges
-// @TODO add speaker social media
 // @TODO set it up so that past days collapse
 // @TODO add button to go to current event?
 // @TODO stylize current event(s)
@@ -73,11 +72,11 @@ class Conference_Schedule {
 	 * @return	Conference_Schedule
 	 */
 	public static function instance() {
-		if ( ! isset( static::$instance ) ) {
+		if ( ! isset( self::$instance ) ) {
 			$className = __CLASS__;
-			static::$instance = new $className;
+			self::$instance = new $className;
 		}
-		return static::$instance;
+		return self::$instance;
 	}
 
 	/**
@@ -142,7 +141,12 @@ class Conference_Schedule {
 	 * @access  public
 	 * @since   1.0.0
 	 */
-	public function install() {}
+	public function install() {
+
+		// Flush the rewrite rules to start fresh
+		flush_rewrite_rules();
+
+	}
 
 	/**
 	 * Runs when the plugin is upgraded.
@@ -150,7 +154,12 @@ class Conference_Schedule {
 	 * @access  public
 	 * @since   1.0.0
 	 */
-	public function upgrader_process_complete() {}
+	public function upgrader_process_complete() {
+
+		// Flush the rewrite rules to start fresh
+		flush_rewrite_rules();
+
+	}
 
 	/**
 	 * Internationalization FTW.
@@ -237,10 +246,10 @@ class Conference_Schedule {
 		global $post;
 
 		// Register our icons
-		wp_register_style( 'conf-schedule-icons', trailingslashit( plugin_dir_url( __FILE__ ) . 'css' ) . 'conf-schedule-icons.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
+		wp_register_style( 'conf-schedule-icons', trailingslashit( plugin_dir_url( __FILE__ ) . 'css' ) . 'conf-schedule-icons.css', array(), CONFERENCE_SCHEDULE_VERSION );
 
 		// Register our schedule styles
-		wp_register_style( 'conf-schedule', trailingslashit( plugin_dir_url( __FILE__ ) . 'css' ) . 'conf-schedule.min.css', array( 'conf-schedule-icons' ), CONFERENCE_SCHEDULE_VERSION );
+		wp_register_style( 'conf-schedule', trailingslashit( plugin_dir_url( __FILE__ ) . 'css' ) . 'conf-schedule.css', array( 'conf-schedule-icons' ), CONFERENCE_SCHEDULE_VERSION );
 
 		// Enqueue the schedule script when needed
 		if ( is_singular( 'schedule' ) ) {
