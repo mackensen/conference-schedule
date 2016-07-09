@@ -31,7 +31,7 @@ class Conference_Schedule_API {
 		);
 
 		// Add event info
-		$event_fields = array( 'event_date', 'event_date_display', 'event_start_time', 'event_end_time', 'event_time_display', 'event_types', 'event_location', 'event_speakers', 'event_hashtag', 'session_categories', 'session_slides_url', 'session_feedback_url' );
+		$event_fields = array( 'event_date', 'event_date_display', 'event_start_time', 'event_end_time', 'event_duration', 'event_time_display', 'event_types', 'event_location', 'event_speakers', 'event_hashtag', 'session_categories', 'session_slides_url', 'session_feedback_url' );
 		foreach( $event_fields as $field_name ) {
 			register_rest_field( 'schedule', $field_name, $rest_field_args );
 		}
@@ -68,6 +68,7 @@ class Conference_Schedule_API {
 				}
 				break;
 
+			case 'event_duration':
 			case 'event_time_display':
 
 				// Get start and end time
@@ -89,11 +90,18 @@ class Conference_Schedule_API {
 					// If we don't have an end time...
 					if ( ! $event_end_time ) {
 						$event_time_display = date( ' a', $event_start_time );
-					} // If we have an end time...
+					}
+
+					// If we have an end time...
 					else {
 
 						// Convert end time
 						$event_end_time = strtotime( $event_end_time );
+
+						// Return duration
+						if ( 'event_duration' == $field_name ) {
+							return ( $event_end_time - $event_start_time );
+						}
 
 						// Figure out if the meridian is different
 						if ( date( 'a', $event_start_time ) != date( 'a', $event_end_time ) ) {
@@ -105,13 +113,13 @@ class Conference_Schedule_API {
 					}
 
 				}
-				return preg_replace( '/(a|p)m/', '$1.m.', $event_time_display );
+				return ( 'event_time_display' == $field_name ) ? preg_replace( '/(a|p)m/', '$1.m.', $event_time_display ) : null;
 
 			case 'event_types':
-				return ( $types = wp_get_object_terms( $object[ 'id' ], 'event_types', array( 'fields' => 'slugs' ) ) ) ? $types : false;
+				return ( $types = wp_get_object_terms( $object[ 'id' ], 'event_types', array( 'fields' => 'slugs' ) ) ) ? $types : null;
 
 			case 'session_categories':
-				return ( $categories = wp_get_object_terms( $object[ 'id' ], 'session_categories', array( 'fields' => 'slugs' ) ) ) ? $categories : false;
+				return ( $categories = wp_get_object_terms( $object[ 'id' ], 'session_categories', array( 'fields' => 'names' ) ) ) ? $categories : null;
 
 			case 'event_location':
 				if ( $event_location_id = get_post_meta( $object[ 'id' ], 'conf_sch_event_location', true ) ) {
