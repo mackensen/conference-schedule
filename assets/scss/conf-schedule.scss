@@ -395,7 +395,8 @@ $conf-sch-events-width: 85%;
                     line-height: 1.4;
                 }
 
-                .event-location {
+                .event-location,
+                .event-address {
                     display: block;
                     margin: 5px 0 0 0;
                     font-size: 0.95em;

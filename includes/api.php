@@ -31,7 +31,7 @@ class Conference_Schedule_API {
 		);
 
 		// Add event info
-		$event_fields = array( 'event_date', 'event_date_display', 'event_start_time', 'event_end_time', 'event_duration', 'event_time_display', 'event_types', 'event_location', 'link_to_post', 'event_speakers', 'event_hashtag', 'session_categories', 'session_slides_url', 'session_feedback_url' );
+		$event_fields = array( 'event_date', 'event_date_display', 'event_start_time', 'event_end_time', 'event_duration', 'event_time_display', 'event_types', 'event_location', 'event_address', 'link_to_post', 'event_speakers', 'event_hashtag', 'session_categories', 'session_slides_url', 'session_feedback_url' );
 		foreach( $event_fields as $field_name ) {
 			register_rest_field( 'schedule', $field_name, $rest_field_args );
 		}
@@ -40,6 +40,12 @@ class Conference_Schedule_API {
 		$speaker_fields = array( 'speaker_thumbnail', 'speaker_position', 'speaker_url', 'speaker_company', 'speaker_company_url', 'speaker_facebook', 'speaker_instagram', 'speaker_twitter', 'speaker_linkedin' );
 		foreach( $speaker_fields as $field_name ) {
 			register_rest_field( 'speakers', $field_name, $rest_field_args );
+		}
+
+		// Add location info
+		$location_fields = array( 'address' );
+		foreach( $location_fields as $field_name ) {
+			register_rest_field( 'locations', $field_name, $rest_field_args );
 		}
 
 	}
@@ -129,6 +135,15 @@ class Conference_Schedule_API {
 					}
 				}
 				return null;
+
+			case 'event_address':
+				if ( ! empty( $object[ 'event_location' ]->ID ) ) {
+					return get_post_meta( $object['event_location']->ID, 'conf_sch_location_address', true );
+				}
+				return null;
+
+			case 'address':
+				return get_post_meta( $object[ 'id' ], 'conf_sch_location_address', true );
 
 			/**
 			 * See if we need to link to the event post in the schedule.

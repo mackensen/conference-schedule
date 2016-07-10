@@ -410,6 +410,20 @@ class Conference_Schedule_Admin {
 
 				break;
 
+			case 'locations':
+
+				// Location Details
+				add_meta_box(
+					'conf-schedule-location-details',
+					__( 'Location Details', 'conf-schedule' ),
+					array( $this, 'print_meta_boxes' ),
+					$post_type,
+					'normal',
+					'high'
+				);
+
+				break;
+
 		}
 
 	}
@@ -458,6 +472,10 @@ class Conference_Schedule_Admin {
 
 			case 'conf-schedule-speaker-social-media':
 				$this->print_speaker_social_media_form( $post->ID );
+				break;
+
+			case 'conf-schedule-location-details':
+				$this->print_location_details_form( $post->ID );
 				break;
 
 		}
@@ -777,6 +795,46 @@ class Conference_Schedule_Admin {
 
 				break;
 
+			case 'locations':
+
+				// Make sure location fields are set
+				if ( isset( $_POST[ 'conf_schedule' ] ) && isset( $_POST[ 'conf_schedule' ][ 'location' ] ) ) {
+
+					// Check if our location details nonce is set because the 'save_post' action can be triggered at other times
+					if ( isset( $_POST[ 'conf_schedule_save_location_details_nonce' ] ) ) {
+
+						// Verify the nonce
+						if ( wp_verify_nonce( $_POST[ 'conf_schedule_save_location_details_nonce' ], 'conf_schedule_save_location_details' ) ) {
+
+							// Process each field
+							foreach ( array( 'address' ) as $field_name ) {
+
+								// If we have a value, update the value
+								if ( isset( $_POST[ 'conf_schedule' ][ 'location' ][ $field_name ] ) ) {
+
+									// Sanitize the value
+									$field_value = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'location' ][ $field_name ] );
+
+									// Update/save value
+									update_post_meta( $post_id, "conf_sch_location_{$field_name}", $field_value );
+
+								}
+
+								// Otherwise, clear out the value
+								else {
+									update_post_meta( $post_id, "conf_sch_location_{$field_name}", null );
+								}
+
+							}
+
+						}
+
+					}
+
+				}
+
+				break;
+
 		}
 
 	}
@@ -1046,6 +1104,35 @@ class Conference_Schedule_Admin {
 					<td>
 						<input type="text" id="conf-sch-company-url" name="conf_schedule[speaker][company_url]" value="<?php echo esc_attr( $speaker_company_url ); ?>" class="regular-text" />
 						<p class="description"><?php _e( "Please provide the URL for the speaker's company website.", 'conf-schedule' ); ?></p>
+					</td>
+				</tr>
+			</tbody>
+		</table><?php
+
+	}
+
+	/**
+	 * Print the location details form for a particular location.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 * @param	int - $post_id - the ID of the location
+	 */
+	public function print_location_details_form( $post_id ) {
+
+		// Add a nonce field so we can check for it when saving the data
+		wp_nonce_field( 'conf_schedule_save_location_details', 'conf_schedule_save_location_details_nonce' );
+
+		// Get saved location details
+		$location_address = get_post_meta( $post_id, 'conf_sch_location_address', true );
+
+		?><table class="form-table">
+			<tbody>
+				<tr>
+					<th scope="row"><label for="conf-sch-address"><?php _e( 'Address', 'conf-schedule' ); ?></label></th>
+					<td>
+						<input type="text" id="conf-sch-address" name="conf_schedule[location][address]" value="<?php echo esc_attr( $location_address ); ?>" class="regular-text" />
+						<p class="description"><?php _e( "Please provide the location's address.", 'conf-schedule' ); ?></p>
 					</td>
 				</tr>
 			</tbody>
