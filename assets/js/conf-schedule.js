@@ -184,18 +184,6 @@
 		return null;
 	});
 
-	// Format the speaker(s)
-	Handlebars.registerHelper( 'speakers', function( $options ) {
-		// Build speakers
-		var $speakers = '';
-		if ( this.event_speakers !== undefined && $.isArray( this.event_speakers ) && this.event_speakers.length > 0 ) {
-			$.each( this.event_speakers, function($index, $value) {
-				$speakers += '<div class="event-speaker">' + $value.post_title + '</div>';
-			});
-		}
-		return new Handlebars.SafeString( '<div class="event-speakers">' + $speakers + '</div>' );
-	});
-
 	// Format the event meta links
 	Handlebars.registerHelper( 'event_links', function( $options ) {
 

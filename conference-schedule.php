@@ -662,7 +662,7 @@ class Conference_Schedule {
 				{{#event_time_display}}<div class="event-time">{{.}}</div>{{/event_time_display}}
 				{{#title}}{{body}}{{/title}}
 				{{#event_location}}<div class="event-location">{{post_title}}</div>{{/event_location}}
-				{{#speakers}}{{body}}{{/speakers}}
+				{{#if event_speakers}}<div class="event-speakers">{{#each event_speakers}}<div class="event-speaker">{{post_title}}</div>{{/each}}</div>{{/if}}
 				{{#if session_categories}}<div class="event-categories">{{#each session_categories}}{{#unless @first}}, {{/unless}}{{.}}{{/each}}</div>{{/if}}
 				{{#event_links}}{{body}}{{/event_links}}
 			</div>
