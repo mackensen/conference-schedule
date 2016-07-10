@@ -312,6 +312,32 @@ class Conference_Schedule {
 
 		}
 
+		// Does this post have our shortcode?
+		$has_schedule_shortcode = isset( $post ) && has_shortcode( $post->post_content, 'print_conference_schedule' );
+
+		// If not the shortcode, do we want to add the schedule to the page?
+		$add_schedule_to_page = ! $has_schedule_shortcode ? $this->add_schedule_to_page() : false;
+
+		// Enqueue the schedule script when needed
+		if ( $has_schedule_shortcode || $add_schedule_to_page ) {
+
+			// Enqueue our schedule styles
+			wp_enqueue_style( 'conf-schedule' );
+
+			// Register handlebars
+			wp_register_script( 'handlebars', '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js' );
+
+			// Enqueue the schedule script
+			wp_enqueue_script( 'conf-schedule', trailingslashit( plugin_dir_url( __FILE__ ) . 'js' ) . 'conf-schedule-min.js', array( 'jquery', 'handlebars' ), CONFERENCE_SCHEDULE_VERSION, true );
+
+			// Pass some translations
+			wp_localize_script( 'conf-schedule', 'conf_schedule', array(
+				'view_slides' => __( 'View Slides', 'conf-schedule' ),
+				'give_feedback' => __( 'Give Feedback', 'conf-schedule' ),
+			) );
+
+		}
+
 	}
 
 	/**
@@ -363,6 +389,16 @@ class Conference_Schedule {
 					{{/if}}
 				</div>
 			</script>';
+
+			return $the_content;
+
+		}
+
+		// If we want to add the schedule to a page...
+		if ( $this->add_schedule_to_page() ) {
+
+			// Add the schedule
+			$the_content .= $this->get_conference_schedule();
 
 		}
 
@@ -569,6 +605,43 @@ class Conference_Schedule {
 		// Register the session categories taxonomy
 		register_taxonomy( 'session_categories', array( 'schedule' ), $session_categories_args );
 
+	}
+
+	/**
+	 * Returns true if, setting wise,
+	 * we should add the schedule to the current page.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 * @return	string - the schedule
+	 */
+	public function add_schedule_to_page() {
+		global $post;
+
+		// Make sure we have an ID and a post type
+		if ( empty( $post->ID ) || empty( $post->post_type ) ) {
+			return false;
+		}
+
+		// We only add to pages
+		if ( 'page' != $post->post_type ) {
+			return false;
+		}
+
+		// Get settings
+		$settings = $this->get_settings();
+
+		// If we want to add the schedule to this page...
+		if ( ! empty( $settings['schedule_add_page'] ) && $settings['schedule_add_page'] > 0 ) {
+			if ( $post->ID == $settings['schedule_add_page'] ) {
+
+				// Add the schedule
+				return true;
+
+			}
+		}
+
+		return false;
 	}
 
 	/**
