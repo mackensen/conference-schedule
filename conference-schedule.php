@@ -305,6 +305,7 @@ class Conference_Schedule {
 				{{#event_date_display}}<span class="event-meta event-date"><span class="event-meta-label">' . __( 'Date', 'conf-schedule' ) . ':</span> {{.}}</span>{{/event_date_display}}
 				{{#event_time_display}}<span class="event-meta event-time"><span class="event-meta-label">' . __( 'Time', 'conf-schedule' ) . ':</span> {{.}}</span>{{/event_time_display}}
 				{{#event_location}}<span class="event-meta event-location"><span class="event-meta-label">' . __( 'Location', 'conf-schedule' ) . ':</span> {{post_title}}</span>{{/event_location}}
+				{{#if session_categories}}<span class="event-meta event-categories"><span class="event-meta-label">' . __( 'Categories', 'conf-schedule' ) . ':</span> {{#each session_categories}}{{#unless @first}}, {{/unless}}{{.}}{{/each}}</span>{{/if}}
 				{{#event_links}}{{body}}{{/event_links}}
 			</script>';
 
