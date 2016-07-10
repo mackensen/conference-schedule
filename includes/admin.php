@@ -3,6 +3,15 @@
 class Conference_Schedule_Admin {
 
 	/**
+	 * ID of the settings page
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 * @var string
+	 */
+	public $settings_page_id;
+
+	/**
 	 * Holds the class instance.
 	 *
 	 * @since	1.0.0
@@ -37,6 +46,14 @@ class Conference_Schedule_Admin {
 		// Add styles and scripts for the tools page
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ), 20 );
 
+		// Add regular settings page
+		add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
+
+		// Register our settings
+		add_action( 'admin_init', array( $this, 'register_settings' ), 1 );
+
+		// Add our settings meta boxes
+		add_action( 'admin_head-schedule_page_conf-schedule-settings', array( $this, 'add_settings_meta_boxes' ) );
 
 		// Add instructions to thumbnail admin meta box
 		add_filter( 'admin_post_thumbnail_html', array( $this, 'filter_admin_post_thumbnail_html' ), 1, 2 );
@@ -86,6 +103,18 @@ class Conference_Schedule_Admin {
 	public function enqueue_styles_scripts( $hook_suffix ) {
 		global $post_type;
 
+		// Only for the settings page
+		if ( $this->settings_page_id == $hook_suffix ) {
+
+			// Enqueue our main styles
+			wp_enqueue_style( 'conf-schedule-settings', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'css' ) . 'conf-schedule-settings.css', array(), CONFERENCE_SCHEDULE_VERSION );
+
+			// Need these scripts for the meta boxes to work correctly on our settings page
+			wp_enqueue_script( 'post' );
+			wp_enqueue_script( 'postbox' );
+
+		}
+
 		// Only for the post pages
 		if ( 'schedule' == $post_type && in_array( $hook_suffix, array( 'post.php', 'post-new.php' ) ) ) {
 
@@ -108,6 +137,177 @@ class Conference_Schedule_Admin {
 	}
 
 	/**
+	 * Add our settings page.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 */
+	public function add_settings_page() {
+		$this->settings_page_id = add_submenu_page(
+			'edit.php?post_type=schedule',
+			__( 'Conference Schedule Settings', 'conf-schedule' ),
+			__( 'Settings', 'conf-schedule' ),
+			'edit_posts',
+			'conf-schedule-settings',
+			array( $this, 'print_settings_page' )
+    	);
+	}
+
+	/**
+	 * Print our settings page.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 */
+	public function print_settings_page() {
+
+		?><div class="wrap">
+			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1><?php
+
+			// Print the settings form
+			?><form method="post" action="options.php" novalidate="novalidate"><?php
+
+				// Setup fields
+				settings_fields( 'conf_schedule' );
+
+				?><div id="poststuff">
+					<div id="post-body" class="metabox-holder columns-2">
+
+						<div id="postbox-container-1" class="postbox-container">
+
+							<div id="side-sortables" class="meta-box-sortables"><?php
+								do_meta_boxes( $this->settings_page_id, 'side', array() );
+							?></div> <!-- #side-sortables -->
+
+						</div> <!-- #postbox-container-1 -->
+
+						<div id="postbox-container-2" class="postbox-container">
+
+							<div id="normal-sortables" class="meta-box-sortables"><?php
+								do_meta_boxes( $this->settings_page_id, 'normal', array() );
+								?></div> <!-- #normal-sortables -->
+
+							<div id="advanced-sortables" class="meta-box-sortables"><?php
+								do_meta_boxes( $this->settings_page_id, 'advanced', array() );
+								?></div> <!-- #advanced-sortables --><?php
+
+							// Print save button
+							submit_button( 'Save Changes', 'primary', 'conf_schedule_save_changes', false );
+
+						?></div> <!-- #postbox-container-2 -->
+
+					</div> <!-- #post-body -->
+					<br class="clear" />
+				</div> <!-- #poststuff -->
+
+			</form>
+		</div> <!-- .wrap --><?php
+
+	}
+
+	/**
+	 * Register our settings.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 */
+	public function register_settings() {
+		register_setting( 'conf_schedule', 'conf_schedule', array( $this, 'update_settings' ) );
+	}
+
+	/**
+	 * Updates the 'conf_schedule' setting.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 * @param	array - the settings we're sanitizing
+	 * @return	array - the updated settings
+	 */
+	public function update_settings( $settings ) {
+		return $settings;
+	}
+
+	/**
+	 * Add our settings meta boxes.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 */
+	public function add_settings_meta_boxes() {
+
+		// About this Plugin
+		add_meta_box( 'conf-schedule-about-mb', __( 'About this Plugin', 'conf-schedule' ), array( $this, 'print_settings_meta_boxes' ), $this->settings_page_id, 'side', 'core', array( 'id' => 'about' ) );
+
+		// Spread the Love
+		add_meta_box( 'conf-schedule-promote-mb', __( 'Spread the Love', 'conf-schedule' ), array( $this, 'print_settings_meta_boxes' ), $this->settings_page_id, 'side', 'core', array( 'id' => 'promote' ) );
+
+		// Displaying the Schedule
+		add_meta_box( 'conf-schedule-display-schedule-mb', __( 'Displaying The Schedule', 'conf-schedule' ), array( $this, 'print_settings_meta_boxes' ), $this->settings_page_id, 'normal', 'core', array( 'id' => 'display-schedule' ) );
+
+	}
+
+	/**
+	 * Print our settings meta boxes.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 * @param 	array - $post - information about the current post, which is empty because there is no current post on a settings page
+	 * @param 	array - $metabox - information about the metabox
+	 */
+	public function print_settings_meta_boxes( $post, $metabox ) {
+
+		switch( $metabox[ 'args' ][ 'id' ] ) {
+
+			// About meta box
+			case 'about':
+				?><p><?php _e( 'Helps you build a simple schedule for your conference website.', 'conf-schedule' ); ?></p>
+				<p><strong><a href="<?php echo CONFERENCE_SCHEDULE_PLUGIN_URL; ?>" target="_blank"><?php _e( 'Conference Schedule', 'conf-schedule' ); ?></a></strong><br />
+				<strong><?php _e( 'Version', 'conf-schedule' ); ?>:</strong> <?php echo CONFERENCE_SCHEDULE_VERSION; ?><br /><strong><?php _e( 'Author', 'conf-schedule' ); ?>:</strong> <a href="https://bamadesigner.com/" target="_blank">Rachel Carden</a></p><?php
+				break;
+
+			// Promote meta box
+			case 'promote':
+				?><p class="twitter"><a href="https://twitter.com/bamadesigner" title="<?php _e( 'Follow bamadesigner on Twitter', 'conf-schedule' ); ?>" target="_blank"><span class="dashicons dashicons-twitter"></span> <span class="promote-text"><?php _e( 'Follow me on Twitter', 'conf-schedule' ); ?></span></a></p>
+				<p class="donate"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ZCAN2UX7QHZPL&lc=US&item_name=Rachel%20Carden%20%28Conference%20Schedule%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted" title="<?php esc_attr_e( 'Donate a few bucks to the plugin', 'conf-schedule' ); ?>" target="_blank"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" alt="<?php esc_attr_e( 'Donate', 'conf-schedule' ); ?>" /> <span class="promote-text"><?php _e( 'and buy me a coffee', 'conf-schedule' ); ?></span></a></p><?php
+				break;
+
+			// Displaying The Schedule meta box
+			case 'display-schedule':
+
+				// Get the settings
+				$settings = conference_schedule()->get_settings();
+
+				// Get the existing pages
+				$pages = get_pages();
+
+				// Print the settings table
+				?><table id="conf-schedule-settings" class="form-table conf-schedule-settings">
+					<tbody>
+						<tr>
+							<td>
+								<strong><?php _e( 'Use the shortcode', 'conf-schedule' ); ?></strong>
+								<p class="description"><?php _e( 'Place the shortcode [print_conference_schedule] inside any content to add the schedule to a page.', 'conf-schedule' ); ?></p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="conf-schedule-schedule-add-page"><strong><?php _e( 'Add the schedule to a page', 'conf-schedule' ); ?></strong></label>
+								<select name="conf_schedule[schedule_add_page]" id="conf-schedule-schedule-add-page">
+									<option value=""><?php _e( 'Do not add to a page', 'conf-schedule' ); ?></option>
+									<?php foreach( $pages as $page ) { ?>
+										<option value="<?php echo $page->ID; ?>"<?php selected( ! empty( $settings['schedule_add_page'] ) && $page->ID == $settings['schedule_add_page'] ); ?>><?php echo $page->post_title; ?></option>
+									<?php } ?>
+								</select>
+								<p class="description"><?php _e( 'If defined, will automatically add the schedule to the end of the selected page. Otherwise, you can add the schedule with the [print_conference_schedule] shortcode.', 'conf-schedule' ); ?></p>
+							</td>
+						</tr>
+					</tbody>
+				</table><?php
+				break;
+
+		}
+
+	}
 
 	/**
 	 * Adds instructions to the admin thumbnail meta box.
@@ -755,7 +955,7 @@ class Conference_Schedule_Admin {
 					<th scope="row"><label for="conf-sch-event-hashtag"><?php _e( 'Hashtag', 'conf-schedule' ); ?></label></th>
 					<td>
 						<input type="text" id="conf-sch-event-hashtag" name="conf_schedule[event][hashtag]" value="<?php echo esc_attr( $event_hashtag ); ?>" class="regular-text" />
-						<p class="description"><?php _e( 'Please provide the hashtag you wish attendees to use for this event.', 'conf-schedule' ); ?></p>
+						<p class="description"><?php _e( 'Please provide the hashtag you wish attendees to use for this event. If no hashtag is provided, the schedule will display the speaker(s) Twitter account.', 'conf-schedule' ); ?></p>
 					</td>
 				</tr>
 			</tbody>

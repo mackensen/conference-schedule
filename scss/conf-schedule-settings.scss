@@ -1,0 +1,65 @@
+// Our about meta box
+#conf-schedule-about-mb {
+
+	p {
+		line-height: 19px;
+	}
+
+}
+
+// Our promote meta box
+#conf-schedule-promote-mb {
+
+	p {
+		margin: 10px 0;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	.promote-text {
+		text-decoration: underline;
+	}
+
+	.dashicons {
+		text-decoration: none;
+	}
+
+	.donate img {
+		margin: 0 4px 2px 0;
+		vertical-align: middle;
+	}
+
+}
+
+// Any of our settings tables
+.conf-schedule-settings {
+
+	label,
+	legend {
+		display: block;
+		font-size: inherit !important;
+		margin: 0 0 5px 0;
+
+		&.inline {
+			display: inline-block;
+		}
+
+	}
+
+	select {
+		width: 100%;
+
+		&.inline {
+			width: auto;
+		}
+
+	}
+
+}
+
+// The main save button
+#conf_schedule_save_changes {
+	width: 100%;
+}

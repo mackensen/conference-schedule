@@ -4,7 +4,7 @@
  * Plugin Name:       Conference Schedule
  * Plugin URI:        @TODO
  * Description:       Helps you build a simple schedule for your conference website.
- * Version:           1.0
+ * Version:           0.5
  * Author:            Rachel Carden
  * Author URI:        https://bamadesigner.com
  * License:           GPL-2.0+
@@ -17,6 +17,7 @@
 // @TODO make sure, when multiple sessions in a row, they're always in same room order
 // @TODO add settings:
 	// Need a way to know if they want track labels or not
+	// If they want to designate a page to automatically add to
 // @TODO allow for shortcode to only show specific days or time ranges
 // @TODO set it up so that past days collapse
 // @TODO add button to go to current event?
@@ -30,6 +31,7 @@ if ( ! defined( 'WPINC' ) ) {
 
 // If you define them, will they be used?
 define( 'CONFERENCE_SCHEDULE_VERSION', '0.5' );
+define( 'CONFERENCE_SCHEDULE_PLUGIN_URL', 'https://github.com/bamadesigner/conference-schedule' );
 define( 'CONFERENCE_SCHEDULE_PLUGIN_FILE', 'conference-schedule/conference-schedule.php' );
 
 // Require the files we need
@@ -54,6 +56,15 @@ class Conference_Schedule {
 	 * @var		boolean
 	 */
 	public $is_network_active;
+
+	/**
+	 * Will hold the plugin's settings.
+	 *
+	 * @since	1.0.0
+	 * @access	private
+	 * @var		array
+	 */
+	private static $settings;
 
 	/**
 	 * Holds the class instance.
@@ -170,6 +181,35 @@ class Conference_Schedule {
 	 */
 	public function textdomain() {
 		load_plugin_textdomain( 'conf-schedule', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+	}
+
+	/**
+	 * Returns settings for the front-end.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 * @return  array - the settings
+	 */
+	public function get_settings() {
+
+		// If already set, return the settings
+		if ( isset( self::$settings ) ) {
+			return self::$settings;
+		}
+
+		// Define the default settings
+		$default_settings = array(
+			'schedule_add_page' => '',
+		);
+
+		// Get settings
+		$settings = get_option( 'conf_schedule' );
+
+		// Merge with defaults
+		$settings = wp_parse_args( $settings, $default_settings );
+
+		// Store the settings
+		return self::$settings = $settings;
 	}
 
 	/**
