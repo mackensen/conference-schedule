@@ -117,7 +117,7 @@ class Conference_Schedule {
 		// Add needed styles and scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ), 20 );
 
-		// Tweak the event pages
+		// Tweak the event pages and add schedule to a page, if necessary
 		add_filter( 'the_content', array( $this, 'the_content' ), 1000 );
 
 		// Register custom post types
@@ -568,6 +568,66 @@ class Conference_Schedule {
 
 		// Register the session categories taxonomy
 		register_taxonomy( 'session_categories', array( 'schedule' ), $session_categories_args );
+
+	}
+
+	/**
+	 * Get the conference schedule.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 * @return	string - the schedule
+	 */
+	public function get_conference_schedule() {
+		ob_start();
+
+		// Add the template ?>
+		<script id="conference-schedule-template" type="text/x-handlebars-template">
+			<div class="schedule-event{{#event_types}} {{.}}{{/event_types}}">
+				{{#event_time_display}}<div class="event-time">{{.}}</div>{{/event_time_display}}
+				{{#title}}{{body}}{{/title}}
+				{{#event_location}}<div class="event-location">{{post_title}}</div>{{/event_location}}
+				{{#speakers}}{{body}}{{/speakers}}
+				{{#if session_categories}}<div class="event-categories">{{#each session_categories}}{{#unless @first}}, {{/unless}}{{.}}{{/each}}</div>{{/if}}
+				{{#event_links}}{{body}}{{/event_links}}
+			</div>
+		</script>
+		<?php
+
+		// Add the schedule holder ?>
+		<div id="conference-schedule"></div>
+		<?php
+
+		/*// What time is it?
+		$current_time = new DateTime( 'now', new DateTimeZone( 'America/Chicago' ) );
+
+		?><div class="schedule-main-buttons-wrapper">
+			<a href="#" class="btn btn-primary go-to-current-event">Go To Current Event</a>
+			</div><?php
+
+			foreach ( $schedule_data as $day_key => $day ) {
+
+				// Create the date for this day
+				$day_date = new DateTime( $day_key, new DateTimeZone( 'America/Chicago' ) );
+
+				// Has this date passed?
+				//$day_has_passed = $day_date->format( 'j' ) < $current_time->format( 'j' );
+
+				// Wrap in collapsible block
+				*//*if ( $day_has_passed ) {
+					echo '<div class="collapsible-schedule-block">';
+				}*//*
+
+				// Wrap in collapsible block
+				*//*if ( $day_has_passed ) {
+					echo '</div>';
+				}*//*
+
+			}
+
+		?></div><?php */
+
+		return ob_get_clean();
 
 	}
 
