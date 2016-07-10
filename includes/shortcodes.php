@@ -59,57 +59,7 @@ class Conference_Schedule_Shortcodes {
 	 * @return	string - the content for the shortcode
 	 */
 	public function print_conference_schedule( $args = array() ) {
-
-		// Prepare the shortcode args
-		//$args = shortcode_atts( array(), $args );
-
-		// Build the content
-		// Add the template
-		$content = '<script id="conference-schedule-template" type="text/x-handlebars-template">
-			<div class="schedule-event{{#event_types}} {{.}}{{/event_types}}">
-				{{#event_time_display}}<div class="event-time">{{.}}</div>{{/event_time_display}}
-				{{#title}}{{body}}{{/title}}
-				{{#event_location}}<div class="event-location">{{post_title}}</div>{{/event_location}}
-				{{#speakers}}{{body}}{{/speakers}}
-				{{#if session_categories}}<div class="event-categories">{{#each session_categories}}{{#unless @first}}, {{/unless}}{{.}}{{/each}}</div>{{/if}}
-				{{#event_links}}{{body}}{{/event_links}}
-			</div>
-		</script>';
-
-		// Add the schedule holder
-		$content .= '<div id="conference-schedule"></div>';
-
-		/*// What time is it?
-		$current_time = new DateTime( 'now', new DateTimeZone( 'America/Chicago' ) );
-
-		?><div class="schedule-main-buttons-wrapper">
-			<a href="#" class="btn btn-primary go-to-current-event">Go To Current Event</a>
-			</div><?php
-
-			foreach ( $schedule_data as $day_key => $day ) {
-
-				// Create the date for this day
-				$day_date = new DateTime( $day_key, new DateTimeZone( 'America/Chicago' ) );
-
-				// Has this date passed?
-				//$day_has_passed = $day_date->format( 'j' ) < $current_time->format( 'j' );
-
-				// Wrap in collapsible block
-				*//*if ( $day_has_passed ) {
-					echo '<div class="collapsible-schedule-block">';
-				}*//*
-
-				// Wrap in collapsible block
-				*//*if ( $day_has_passed ) {
-					echo '</div>';
-				}*//*
-
-			}
-
-		?></div><?php */
-
-		return $content;
-
+		return conference_schedule()->get_conference_schedule();
 	}
 
 }
