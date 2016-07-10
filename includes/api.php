@@ -96,7 +96,7 @@ class Conference_Schedule_API {
 
 					// If we don't have an end time...
 					if ( ! $event_end_time ) {
-						$event_time_display = date( ' a', $event_start_time );
+						$event_time_display .= date( ' a', $event_start_time );
 					}
 
 					// If we have an end time...
