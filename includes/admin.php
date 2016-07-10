@@ -40,6 +40,10 @@ class Conference_Schedule_Admin {
 
 		// Add instructions to thumbnail admin meta box
 		add_filter( 'admin_post_thumbnail_html', array( $this, 'filter_admin_post_thumbnail_html' ), 1, 2 );
+
+		// Add admin notices
+		add_action( 'admin_notices', array( $this, 'print_admin_notice' ) );
+
 		// Add meta boxes
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 1, 2 );
 
@@ -120,6 +124,25 @@ class Conference_Schedule_Admin {
 
 		return $content;
 	}
+
+	/**
+	 * Prints any needed admin notices.
+	 *
+	 * @access  public
+	 * @since   1.1.0
+	 */
+	public function print_admin_notice() {
+
+		// Let us know if the REST API plugin, which we depend on, is not active
+		if ( ! is_plugin_active( 'WP-API/plugin.php' ) && ! is_plugin_active( 'rest-api/plugin.php' ) ) {
+			?><div class="updated notice">
+				<p><?php _e( 'The Conference Schedule plugin depends on the REST API plugin, version 2.0. <a href="' . admin_url('plugins.php') . '">Please activate this plugin</a>. ', 'conf-schedule' ); ?></p>
+			</div><?php
+		}
+
+	}
+
+	/**
 	 * Adds our admin meta boxes.
 	 *
 	 * @access  public
