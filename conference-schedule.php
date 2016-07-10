@@ -288,10 +288,10 @@ class Conference_Schedule {
 		global $post;
 
 		// Register our icons
-		wp_register_style( 'conf-schedule-icons', trailingslashit( plugin_dir_url( __FILE__ ) . 'assets/css' ) . 'conf-schedule-icons.css', array(), CONFERENCE_SCHEDULE_VERSION );
+		wp_register_style( 'conf-schedule-icons', trailingslashit( plugin_dir_url( __FILE__ ) . 'assets/css' ) . 'conf-schedule-icons.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
 
 		// Register our schedule styles
-		wp_register_style( 'conf-schedule', trailingslashit( plugin_dir_url( __FILE__ ) . 'assets/css' ) . 'conf-schedule.css', array( 'conf-schedule-icons' ), CONFERENCE_SCHEDULE_VERSION );
+		wp_register_style( 'conf-schedule', trailingslashit( plugin_dir_url( __FILE__ ) . 'assets/css' ) . 'conf-schedule.min.css', array( 'conf-schedule-icons' ), CONFERENCE_SCHEDULE_VERSION );
 
 		// Enqueue the schedule script when needed
 		if ( is_singular( 'schedule' ) ) {
@@ -303,7 +303,7 @@ class Conference_Schedule {
 			wp_register_script( 'handlebars', '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js' );
 
 			// Enqueue the schedule script
-			wp_enqueue_script( 'conf-schedule-single', trailingslashit( plugin_dir_url( __FILE__ ) . 'assets/js' ) . 'conf-schedule-single-min.js', array( 'jquery', 'handlebars' ), CONFERENCE_SCHEDULE_VERSION, true );
+			wp_enqueue_script( 'conf-schedule-single', trailingslashit( plugin_dir_url( __FILE__ ) . 'assets/js' ) . 'conf-schedule-single.min.js', array( 'jquery', 'handlebars' ), CONFERENCE_SCHEDULE_VERSION, true );
 
 			// Pass some data
 			wp_localize_script( 'conf-schedule-single', 'conf_schedule', array(
@@ -330,7 +330,7 @@ class Conference_Schedule {
 			wp_register_script( 'handlebars', '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js' );
 
 			// Enqueue the schedule script
-			wp_enqueue_script( 'conf-schedule', trailingslashit( plugin_dir_url( __FILE__ ) . 'assets/js' ) . 'conf-schedule-min.js', array( 'jquery', 'handlebars' ), CONFERENCE_SCHEDULE_VERSION, true );
+			wp_enqueue_script( 'conf-schedule', trailingslashit( plugin_dir_url( __FILE__ ) . 'assets/js' ) . 'conf-schedule.min.js', array( 'jquery', 'handlebars' ), CONFERENCE_SCHEDULE_VERSION, true );
 
 			// Pass some translations
 			wp_localize_script( 'conf-schedule', 'conf_schedule', array(
