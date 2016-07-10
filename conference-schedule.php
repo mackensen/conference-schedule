@@ -297,14 +297,14 @@ class Conference_Schedule {
 		// Register our schedule styles
 		wp_register_style( 'conf-schedule', trailingslashit( plugin_dir_url( __FILE__ ) . 'assets/css' ) . 'conf-schedule.min.css', array( 'conf-schedule-icons' ), CONFERENCE_SCHEDULE_VERSION );
 
+		// Register handlebars
+		wp_register_script( 'handlebars', '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js' );
+
 		// Enqueue the schedule script when needed
 		if ( is_singular( 'schedule' ) ) {
 
 			// Enqueue our schedule styles
 			wp_enqueue_style( 'conf-schedule' );
-
-			// Register handlebars
-			wp_register_script( 'handlebars', '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js' );
 
 			// Enqueue the schedule script
 			wp_enqueue_script( 'conf-schedule-single', trailingslashit( plugin_dir_url( __FILE__ ) . 'assets/js' ) . 'conf-schedule-single.min.js', array( 'jquery', 'handlebars' ), CONFERENCE_SCHEDULE_VERSION, true );
@@ -316,31 +316,30 @@ class Conference_Schedule {
 				'give_feedback' => __( 'Give Feedback', 'conf-schedule' ),
 			));
 
-		}
+		} else {
 
-		// Does this post have our shortcode?
-		$has_schedule_shortcode = isset( $post ) && has_shortcode( $post->post_content, 'print_conference_schedule' );
+			// Does this post have our shortcode?
+			$has_schedule_shortcode = isset( $post ) && has_shortcode( $post->post_content, 'print_conference_schedule' );
 
-		// If not the shortcode, do we want to add the schedule to the page?
-		$add_schedule_to_page = ! $has_schedule_shortcode ? $this->add_schedule_to_page() : false;
+			// If not the shortcode, do we want to add the schedule to the page?
+			$add_schedule_to_page = ! $has_schedule_shortcode ? $this->add_schedule_to_page() : false;
 
-		// Enqueue the schedule script when needed
-		if ( $has_schedule_shortcode || $add_schedule_to_page ) {
+			// Enqueue the schedule script when needed
+			if ( $has_schedule_shortcode || $add_schedule_to_page ) {
 
-			// Enqueue our schedule styles
-			wp_enqueue_style( 'conf-schedule' );
+				// Enqueue our schedule styles
+				wp_enqueue_style( 'conf-schedule' );
 
-			// Register handlebars
-			wp_register_script( 'handlebars', '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js' );
+				// Enqueue the schedule script
+				wp_enqueue_script( 'conf-schedule', trailingslashit( plugin_dir_url( __FILE__ ) . 'assets/js' ) . 'conf-schedule.min.js', array( 'jquery', 'handlebars' ), CONFERENCE_SCHEDULE_VERSION, true );
 
-			// Enqueue the schedule script
-			wp_enqueue_script( 'conf-schedule', trailingslashit( plugin_dir_url( __FILE__ ) . 'assets/js' ) . 'conf-schedule.min.js', array( 'jquery', 'handlebars' ), CONFERENCE_SCHEDULE_VERSION, true );
+				// Pass some translations
+				wp_localize_script( 'conf-schedule', 'conf_schedule', array(
+					'view_slides' => __( 'View Slides', 'conf-schedule' ),
+					'give_feedback' => __( 'Give Feedback', 'conf-schedule' ),
+				) );
 
-			// Pass some translations
-			wp_localize_script( 'conf-schedule', 'conf_schedule', array(
-				'view_slides' => __( 'View Slides', 'conf-schedule' ),
-				'give_feedback' => __( 'Give Feedback', 'conf-schedule' ),
-			) );
+			}
 
 		}
 
