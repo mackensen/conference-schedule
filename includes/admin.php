@@ -380,7 +380,7 @@ class Conference_Schedule_Admin {
 						if ( wp_verify_nonce( $_POST[ 'conf_schedule_save_session_details_nonce' ], 'conf_schedule_save_session_details' ) ) {
 
 							// Process each field
-							foreach ( array( 'slides_url', 'feedback_url' ) as $field_name ) {
+							foreach ( array( 'slides_url', 'feedback_url', 'feedback_reveal_delay_seconds' ) as $field_name ) {
 								if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ $field_name ] ) ) {
 
 									// Sanitize the value
@@ -625,6 +625,7 @@ class Conference_Schedule_Admin {
 		$slides_url = get_post_meta( $post_id, 'conf_sch_event_slides_url', true );
 		$slides_file = get_post_meta( $post_id, 'conf_sch_event_slides_file', true );
 		$feedback_url = get_post_meta( $post_id, 'conf_sch_event_feedback_url', true );
+		$feedback_reveal_delay_seconds = get_post_meta( $post_id, 'conf_sch_event_feedback_reveal_delay_seconds', true );
 
 		?><table class="form-table">
 			<tbody>
@@ -676,7 +677,14 @@ class Conference_Schedule_Admin {
 					<th scope="row"><label for="conf-sch-feedback-url"><?php _e( 'Feedback URL', 'conf-schedule' ); ?></label></th>
 					<td>
 						<input type="text" id="conf-sch-feedback-url" style="width:75%;" name="conf_schedule[event][feedback_url]" value="<?php echo esc_attr( $feedback_url ); ?>" />
-						<p class="description"><?php _e( 'Please provide the URL you wish to provide to gather session feedback. <strong>It will display 30 minutes after the session has started.</strong>', 'conf-schedule' ); ?></p>
+						<p class="description"><?php _e( 'Please provide the URL you wish to provide to gather session feedback. <strong>It will display 30 minutes after the session has started, unless you provide a value below.</strong>', 'conf-schedule' ); ?></p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="conf-sch-feedback-reveal-delay-seconds"><?php _e( 'Feedback Reveal Delay Seconds', 'conf-schedule' ); ?></label></th>
+					<td>
+						<input type="text" id="conf-sch-feedback-reveal-delay-seconds" style="width:75%;" name="conf_schedule[event][feedback_reveal_delay_seconds]" value="<?php echo esc_attr( $feedback_reveal_delay_seconds ); ?>" />
+						<p class="description"><?php _e( 'Please provide the number of seconds after the start of the session after which the feedback button will be revealed.  1800 is the default (30 minutes).', 'conf-schedule' ); ?></p>
 					</td>
 				</tr>
 			</tbody>

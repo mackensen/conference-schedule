@@ -177,9 +177,17 @@ class Conference_Schedule_API {
 					// What time is it?
 					$current_time = new DateTime( 'now', new DateTimeZone( $timezone ) );
 
-					// Get date and start time
+					// Get date and start time and reveal delay
 					$session_date = get_post_meta( $object[ 'id' ], 'conf_sch_event_date', true );
 					$session_start_time = get_post_meta( $object[ 'id' ], 'conf_sch_event_start_time', true );
+					$session_feedback_reveal_delay_seconds = get_post_meta( $object[ 'id' ], 'conf_sch_event_feedback_reveal_delay_seconds', true );
+
+					// Set the default delay to 30 minutes
+					if ( ! empty( $session_feedback_reveal_delay_seconds ) && $session_feedback_reveal_delay_seconds > 0 ) {
+						$session_feedback_reveal_delay_seconds = intval( $session_feedback_reveal_delay_seconds );
+					} else {
+						$session_feedback_reveal_delay_seconds = 1800;
+					}
 
 					// Build date string
 					$session_date_string = $session_date ? $session_date : null;
@@ -196,7 +204,7 @@ class Conference_Schedule_API {
 						$session_date_time = new DateTime( $session_date_string, new DateTimeZone( $timezone ) );
 
 						// Feedback URL will only show up 30 minutes after the session has started
-						if ( ( $current_time->getTimestamp() - $session_date_time->getTimestamp() ) >= 1800 ) {
+						if ( ( $current_time->getTimestamp() - $session_date_time->getTimestamp() ) >= $session_feedback_reveal_delay_seconds ) {
 							return $feedback_url;
 						}
 
