@@ -31,7 +31,7 @@ class Conference_Schedule_API {
 		);
 
 		// Add event info
-		$event_fields = array( 'event_date', 'event_date_display', 'event_start_time', 'event_end_time', 'event_duration', 'event_time_display', 'event_types', 'event_location', 'event_speakers', 'event_hashtag', 'session_categories', 'session_slides_url', 'session_feedback_url' );
+		$event_fields = array( 'event_date', 'event_date_display', 'event_start_time', 'event_end_time', 'event_duration', 'event_time_display', 'event_types', 'event_location', 'link_to_post', 'event_speakers', 'event_hashtag', 'session_categories', 'session_slides_url', 'session_feedback_url' );
 		foreach( $event_fields as $field_name ) {
 			register_rest_field( 'schedule', $field_name, $rest_field_args );
 		}
@@ -53,6 +53,7 @@ class Conference_Schedule_API {
 	 * @return	mixed
 	 */
 	public function get_field_value( $object, $field_name, $request ) {
+		global $wpdb;
 
 		switch( $field_name ) {
 
@@ -128,6 +129,28 @@ class Conference_Schedule_API {
 					}
 				}
 				return null;
+
+			/**
+			 * See if we need to link to the event post in the schedule.
+			 *
+			 * The default is true.
+			 *
+			 * If database row doesn't exist, then set as default.
+			 * Otherwise, check value.
+			 */
+			case 'link_to_post':
+
+				// Check the database
+				$sch_link_to_post_db = $wpdb->get_var( "SELECT meta_id FROM {$wpdb->postmeta} WHERE post_id = {$object[ 'id' ]} AND meta_key = 'conf_sch_link_to_post'" );
+
+				// If row exists, then check the value
+				if ( $sch_link_to_post_db ) {
+					$sch_link_to_post = get_post_meta( $object[ 'id' ], 'conf_sch_link_to_post', true );
+					if ( ! $sch_link_to_post ) {
+						return false;
+					}
+				}
+				return true;
 
 			case 'event_speakers':
 				if ( $event_speaker_ids = get_post_meta( $object[ 'id' ], 'conf_sch_event_speakers', true ) ) {

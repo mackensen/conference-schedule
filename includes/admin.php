@@ -606,9 +606,21 @@ class Conference_Schedule_Admin {
 								// Update/save value
 								update_post_meta( $post_id, 'conf_sch_event_speakers', $event_speakers );
 
-							} // Clear out speakers meta
+							}
+
+							// Clear out speakers meta
 							else {
 								update_post_meta( $post_id, 'conf_sch_event_speakers', null );
+							}
+
+							// Make sure 'sch_link_to_post' is set
+							if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'sch_link_to_post' ] ) ) {
+								update_post_meta( $post_id, 'conf_sch_link_to_post', '1' );
+							}
+
+							// Clear out 'sch_link_to_post' meta
+							else {
+								update_post_meta( $post_id, 'conf_sch_link_to_post', '0' );
 							}
 
 						}
@@ -777,6 +789,7 @@ class Conference_Schedule_Admin {
 	 * @param	int - $post_id - the ID of the event
 	 */
 	public function print_event_details_form( $post_id ) {
+		global $wpdb;
 
 		// Add a nonce field so we can check for it when saving the data
 		wp_nonce_field( 'conf_schedule_save_event_details', 'conf_schedule_save_event_details_nonce' );
@@ -785,6 +798,24 @@ class Conference_Schedule_Admin {
 		$event_date = get_post_meta( $post_id, 'conf_sch_event_date', true ); // Y-m-d
 		$event_start_time = get_post_meta( $post_id, 'conf_sch_event_start_time', true );
 		$event_end_time = get_post_meta( $post_id, 'conf_sch_event_end_time', true );
+
+		/**
+		 * See if we need to link to the event post in the schedule.
+		 *
+		 * The default is true.
+		 *
+		 * If database row doesn't exist, then set as default.
+		 * Otherwise, check value.
+		 */
+		$sch_link_to_post = true;
+
+		// Check the database
+		$sch_link_to_post_db = $wpdb->get_var( "SELECT meta_id FROM {$wpdb->postmeta} WHERE post_id = {$post_id} AND meta_key = 'conf_sch_link_to_post'" );
+
+		// If row exists, then check the value
+		if ( $sch_link_to_post_db ) {
+			$sch_link_to_post = get_post_meta( $post_id, 'conf_sch_link_to_post', true );
+		}
 
 		// Convert event date to m/d/Y
 		$event_date_mdy = $event_date ? date( 'm/d/Y', strtotime( $event_date ) ) : null;
@@ -844,6 +875,12 @@ class Conference_Schedule_Admin {
 							<option value=""><?php _e( 'No speakers', 'conf-schedule' ); ?></option>
 						</select>
 						<p class="description"><a class="conf-sch-reload-speakers" href="<?php echo admin_url( 'edit.php?post_type=speakers' ); ?>" target="_blank"><?php _e( 'Manage the speakers', 'conf-schedule' ); ?></a></p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><?php _e( 'Include Link to Event Post in Schedule', 'conf-schedule' ); ?></th>
+					<td>
+						<label for="conf-sch-link-post"><input name="conf_schedule[event][sch_link_to_post]" type="checkbox" id="conf-sch-link-post" value="1"<?php checked( isset( $sch_link_to_post ) && $sch_link_to_post ); ?> /> <?php _e( "If checked, will include a link to the event's post in the schedule.", 'conf-schedule' ); ?></label>
 					</td>
 				</tr>
 			</tbody>

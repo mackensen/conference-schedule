@@ -167,7 +167,7 @@
 	Handlebars.registerHelper( 'title', function( $options ) {
 		var $new_title = this.title.rendered;
 		if ( $new_title !== undefined && $new_title ) {
-			if (this.link !== undefined && this.link) {
+			if ( this.link_to_post && this.link !== undefined && this.link ) {
 				$new_title = '<a href="' + this.link + '">' + $new_title + '</a>';
 			}
 			return new Handlebars.SafeString('<h3 class="event-title">' + $new_title + '</h3>');
