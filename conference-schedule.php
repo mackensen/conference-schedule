@@ -261,7 +261,7 @@ class Conference_Schedule {
 			wp_register_script( 'handlebars', '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js' );
 
 			// Enqueue the schedule script
-			wp_enqueue_script( 'conf-schedule-single', trailingslashit( plugin_dir_url( __FILE__ ) . 'js' ) . 'conf-schedule-single.min.js', array( 'jquery', 'handlebars' ), CONFERENCE_SCHEDULE_VERSION, true );
+			wp_enqueue_script( 'conf-schedule-single', trailingslashit( plugin_dir_url( __FILE__ ) . 'js' ) . 'conf-schedule-single-min.js', array( 'jquery', 'handlebars' ), CONFERENCE_SCHEDULE_VERSION, true );
 
 			// Pass some data
 			wp_localize_script( 'conf-schedule-single', 'conf_schedule', array(
@@ -297,7 +297,7 @@ class Conference_Schedule {
 			// Add the info holders
 			$the_content = '<div id="conf-sch-single-meta"></div>' . $the_content;
 			$the_content .= '<div id="conf-sch-single-speakers">
-				<h2>' . $speakers_archive_title . '</h2>
+				<h2 class="conf-sch-single-speakers-title">' . $speakers_archive_title . '</h2>
 			</div>';
 
 			// Add the before template
@@ -312,18 +312,17 @@ class Conference_Schedule {
 			// Add the speakers template
 			$the_content .= '<script id="conf-sch-single-speakers-template" type="text/x-handlebars-template">
 				<div class="event-speaker">
-					{{#speaker_thumbnail}}<img class="speaker-thumb" src="{{.}}" />{{/speaker_thumbnail}}
-					{{#title}}<h3>{{{rendered}}}</h3>{{/title}}
-					{{#speaker_meta}}{{body}}{{/speaker_meta}}
-					{{#speaker_social_media}}{{{body}}}{{/speaker_social_media}}
-					{{#content}}{{{rendered}}}{{/content}}
+					{{#if title.rendered}}<h3 class="speaker-name">{{{title.rendered}}}</h3>{{/if}}
+					{{{speaker_meta}}}
+					{{{speaker_social_media}}}
+					{{#if content}}
+						<div class="speaker-bio{{#if speaker_thumbnail}} has-photo{{/if}}">
+							{{#if speaker_thumbnail}}<img class="speaker-thumb" src="{{speaker_thumbnail}}" />{{/if}}
+							{{{content.rendered}}}
+						</div>
+					{{/if}}
 				</div>
 			</script>';
-
-			//speaker_facebook
-			//speaker_instagram
-			//speaker_twitter
-			//speaker_linkedin
 
 		}
 

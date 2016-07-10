@@ -16,6 +16,7 @@
 [class*=" conf-sch-icon-"] {
     font-size: inherit !important;
     line-height: inherit !important;
+    margin: 0 2px 0 0 !important;
 
     &:before {
         font-family: "conf-schedule-icons" !important;
@@ -52,5 +53,10 @@
     &.conf-sch-icon-globe:before {
         content: "\67";
     }
-
+    &.conf-sch-icon-linkedin-square:before {
+        content: "\68";
+    }
+    &.conf-sch-icon-linkedin:before {
+        content: "\69";
+    }
 }

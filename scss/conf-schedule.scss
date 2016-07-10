@@ -14,6 +14,9 @@ $auditorium-bg: rgba( #c6dbf1, 0.3 );
 $break-bg: rgba( #000, 0.01 );
 $schedule-border-color: rgba( #000, 0.1 );
 $twitter-blue: #55acee;
+$facebook-blue: #3b5998;
+$instagram-blue: #3f729b;
+$linkedin-blue: #0077b5;
 
 // Will set transition values
 @mixin set-transition( $transform... ) {
@@ -62,14 +65,14 @@ $twitter-blue: #55acee;
     display: inline-block;
     list-style: none;
     border: 0;
-    margin: 0 !important;
+    margin: 5px 0 0 0 !important;
     padding: 0;
     text-align: left;
 
     li {
         display: block;
         list-style: none;
-        margin: 10px 0 0 0;
+        margin: 5px 0 0 0;
         border: 0;
         padding: 0;
 
@@ -91,7 +94,7 @@ $twitter-blue: #55acee;
 
         }
 
-        &.event-hashtag {
+        &.event-twitter {
             font-weight: bold;
 
             a {
@@ -161,7 +164,7 @@ $twitter-blue: #55acee;
 
     .conf-sch-event-links {
         display: block;
-        margin: 15px 0 0 0;
+        margin: 12px 0 0 0 !important;
 
         li {
 
@@ -188,39 +191,190 @@ $twitter-blue: #55acee;
 }
 
 // Customize the speakers on single schedule pages
+$speaker-thumb-width: 200px;
+$speaker-thumb-height: 200px;
+$speaker-thumb-top: 5px;
 #conf-sch-single-speakers {
     display: none;
 
-    .speaker-thumb {
-        float: left;
-        max-width: 200px;
-        height: auto;
-        margin: 0 20px 20px 0;
+    .conf-sch-single-speakers-title {
+        margin-bottom: 12px;
     }
 
-    .speaker-meta {
-        display: block;
-        font-style: italic;
-        margin: 0 0 10px 0;
+    .event-speaker {
+        clear: both;
+        margin: 0 0 20px 0;
 
-        .speaker-url {
+        .speaker-name {
+            margin: 0;
+        }
+
+        .speaker-meta {
             display: block;
+            font-style: italic;
+            margin: 10px 0 0 0;
+
+            .speaker-url {
+                display: block;
+            }
+
+        }
+
+        .speaker-social-media {
+            display: block;
+            list-style: none;
+            border: 0;
+            margin: 10px 0 0 0 !important;
+            padding: 0;
+            text-align: left;
+
+            li {
+                display: inline-block;
+                list-style: none;
+                margin: 0 10px 15px 0;
+                border: 0;
+                padding: 0;
+                font-size: 0.9em;
+                line-height: 1.8;
+
+                a {
+                    display: block;
+                    background-color: rgba(#000, 0.05);
+                    padding: 5px 15px;
+                    color: inherit;
+                    text-align: center;
+                    -webkit-border-radius: 5px;
+                    -moz-border-radius: 5px;
+                    border-radius: 5px;
+                    text-decoration: none;
+                    @include set-transition(background-color 1s ease);
+
+                    &:hover {
+                        background-color: rgba(#000, 0.2);
+                    }
+
+                }
+
+                &.twitter {
+                    font-weight: bold;
+
+                    a {
+                        background-color: $twitter-blue;
+                        color: #fff;
+
+                        &:hover {
+                            background-color: darken($twitter-blue, 20%);
+                        }
+
+                    }
+
+                }
+
+                &.facebook {
+                    font-weight: bold;
+
+                    a {
+                        background-color: $facebook-blue;
+                        color: #fff;
+
+                        &:hover {
+                            background-color: darken($facebook-blue, 20%);
+                        }
+
+                    }
+
+                }
+
+                &.instagram {
+                    font-weight: bold;
+
+                    a {
+                        background-color: $instagram-blue;
+                        color: #fff;
+
+                        &:hover {
+                            background-color: darken($instagram-blue, 20%);
+                        }
+
+                    }
+
+                }
+
+                &.linkedin {
+                    font-weight: bold;
+
+                    a {
+                        background-color: $linkedin-blue;
+                        color: #fff;
+
+                        &:hover {
+                            background-color: darken($linkedin-blue, 20%);
+                        }
+
+                    }
+
+                }
+
+            }
+
+         }
+
+        .speaker-bio {
+            clear: both;
+            margin: 10px 0 0 0;
+
+            &.has-photo {
+
+                .speaker-thumb {
+                    width: auto !important;
+                    max-width: 100%;
+                    height: auto;
+                    margin: 10px 0 10px 0;
+                    border: 0;
+                }
+
+            }
+
+        }
+
+        // There's already enough space with the social media
+        .speaker-social-media + .speaker-bio {
+            margin-top: 0;
         }
 
     }
 
 }
 
+// Set schedule variables
+$conf-sch-time-width: 15%;
+$conf-sch-events-width: 85%;
 #conference-schedule {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+
+    * {
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+    
+    .schedule-header {
+	    margin-top: 30px;
+    }
 
     .schedule-table {
-        margin: 0 0 30px 0;
+        margin: 20px 0 30px 0;
+
+        .schedule-header-row {
+            display: none;
+        }
 
         .schedule-row {
             clear: both;
             overflow: auto;
-            border-top: 1px solid $schedule-border-color;
-            padding: 25px 0;
+            padding: 0 0 25px 0;
 
             &:last-child {
                 border-bottom: 1px solid $schedule-border-color;
@@ -236,24 +390,30 @@ $twitter-blue: #55acee;
 
                 .event-title {
                     font-weight: bold;
-                    margin: 0 0 10px 0;
-                    font-size: 22px;
-                    line-height: 26px;
+                    margin: 0;
+                    font-size: 1.2em;
+                    line-height: 1.4;
                 }
 
                 .event-location {
                     display: block;
+                    margin: 5px 0 0 0;
+                    font-size: 0.95em;
+                    line-height: 1.3;
+                    opacity: 0.8;
+                }
+
+                .event-categories {
                     font-style: italic;
-                    margin: -4px 0 7px 0;
-                    font-size: 19px;
-                    line-height: 22px;
+                    margin: 2px 0 0 0;
                 }
 
                 .event-speakers {
-                    font-size: 18px;
-                    line-height: 25px;
+                    font-size: 1.1em;
+                    line-height: 1.3;
                     color: #222;
                     font-weight: bold;
+                    margin: 3px 0 0 0;
                 }
 
                 .event-desc {
@@ -280,9 +440,8 @@ $twitter-blue: #55acee;
                 clear: both;
                 background: none;
                 position: relative;
-                -moz-box-sizing: border-box;
-                -webkit-box-sizing: border-box;
-                box-sizing: border-box;
+                border-top: 1px solid $schedule-border-color;
+                padding: 25px 0 0 0;
 
                 &.time {
                     display: none;
@@ -305,9 +464,8 @@ $twitter-blue: #55acee;
         }
 
         .schedule-row.current + .schedule-row {
-            border-top: 0;
 
-            &:before {
+            .schedule-row-item {
                 border-top: 0;
             }
 
@@ -422,10 +580,38 @@ $twitter-blue: #55acee;
 
 }*/
 
-// Small and Larger
-/*@media not all and (min-width: 0) and (max-width: $screen-xs-max) {
+// Screens larger than 600px
+@media not all and (min-width: 0) and (max-width: 600px) {
 
-    // Tweak the schedule page
+    #conf-sch-single-speakers {
+
+        .event-speaker {
+
+            .speaker-bio {
+
+                &.has-photo {
+                    position: relative;
+                    padding-left: $speaker-thumb-width + 25px;
+                    min-height: $speaker-thumb-height + $speaker-thumb-top;
+
+                    .speaker-thumb {
+                        position: absolute;
+                        left: 0;
+                        top: $speaker-thumb-top;
+                        width: $speaker-thumb-width !important;
+                        height: auto;
+                        margin: 0 0 20px 0;
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+    /*// Tweak the schedule page
     body.page-template-schedule {
 
         .schedule-main-buttons-wrapper {
@@ -456,19 +642,78 @@ $twitter-blue: #55acee;
 
         }
 
-    }
+    }*/
 
-}*/
+}
 
-// Medium and Larger
-@media not all and (min-width: 0) and (max-width: 990px) {
+// Screens larger than 1000px
+@media not all and (min-width: 0) and (max-width: 1000px) {
 
     #conference-schedule {
 
         .schedule-table {
 
+            .schedule-header-row {
+                display: block;
+                clear: both;
+                overflow: auto;
+                background: #f6f6f6;
+                padding: 10px 0;
+                text-transform: uppercase;
+                opacity: 0.8;
+                font-size: 0.9em;
+                line-height: 1.1;
+
+                .schedule-header-item {
+                    display: block;
+                    clear: none;
+                    float: left;
+
+                    &.time {
+                        display: block;
+                        width: $conf-sch-time-width;
+                        padding: 0 10px;
+                    }
+
+                    &.events {
+                        width: $conf-sch-events-width;
+
+                        .schedule-header-event {
+                            padding: 0 10px;
+
+                            // Two and four items
+                            &:first-child:nth-last-child(2),
+                            &:first-child:nth-last-child(2) ~ .schedule-header-event,
+                            &:first-child:nth-last-child(4),
+                            &:first-child:nth-last-child(4) ~ .schedule-header-event {
+                                float: left;
+                                width: 50%;
+                            }
+
+                            // Three items
+                            &:first-child:nth-last-child(3),
+                            &:first-child:nth-last-child(3) ~ .schedule-header-event {
+                                float: left;
+                                width: 33.3333%;
+                            }
+
+                            &:first-child {
+                                padding-left: 0;
+                            }
+
+                            &:last-child {
+                                padding-right: 0;
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
             .schedule-row {
-                border-top: 1px solid $schedule-border-color !important;
 
                 &:last-child {
                     border-bottom: 1px solid $schedule-border-color !important;
@@ -496,38 +741,38 @@ $twitter-blue: #55acee;
                     display: block;
                     clear: none;
                     float: left;
+                    border-top: 1px solid $schedule-border-color !important;
 
                     &.time {
                         display: block;
-                        width: 15%;
-                        padding: 0 10px 0 0;
-                        font-size: 15px;
-                        line-height: 18px;
+                        width: $conf-sch-time-width;
+                        padding-right: 10px;
+                        padding-left: 10px;
+                        font-size: 0.8em;
+                        line-height: 1.7;
                         margin: 0 0 8px 0;
                         opacity: 0.9;
                     }
 
                     &.events {
-                        width: 85%;
+                        width: $conf-sch-events-width;
 
-                        .session {
+                        .schedule-event {
                             padding: 0 10px;
-                            -moz-box-sizing: border-box;
-                            -webkit-box-sizing: border-box;
-                            box-sizing: border-box;
+                            min-height: 1px;
 
                             // Two and four items
                             &:first-child:nth-last-child(2),
-                            &:first-child:nth-last-child(2) ~ .session,
+                            &:first-child:nth-last-child(2) ~ .schedule-event,
                             &:first-child:nth-last-child(4),
-                            &:first-child:nth-last-child(4) ~ .session {
+                            &:first-child:nth-last-child(4) ~ .schedule-event {
                                 float: left;
                                 width: 50%;
                             }
 
                             // Three items
                             &:first-child:nth-last-child(3),
-                            &:first-child:nth-last-child(3) ~ .session {
+                            &:first-child:nth-last-child(3) ~ .schedule-event {
                                 float: left;
                                 width: 33.3333%;
                             }

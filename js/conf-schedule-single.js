@@ -20,7 +20,7 @@
 
 		// Take care of the before
 		var $conf_sch_single_meta_templ_content = $('#conf-sch-single-meta-template').html();
-		if ( $conf_sch_single_meta_templ_content !== undefined && $conf_sch_single_meta_templ_content != null ) {
+		if ( $conf_sch_single_meta_templ_content !== undefined && $conf_sch_single_meta_templ_content != '' ) {
 
 			// Parse the template
 			$conf_sch_single_meta_templ = Handlebars.compile( $conf_sch_single_meta_templ_content );
@@ -29,7 +29,7 @@
 
 		// Take care of the speakers
 		var $conf_sch_single_speakers_templ_content = $('#conf-sch-single-speakers-template').html();
-		if ( $conf_sch_single_speakers_templ_content !== undefined && $conf_sch_single_speakers_templ_content != null ) {
+		if ( $conf_sch_single_speakers_templ_content !== undefined && $conf_sch_single_speakers_templ_content != '' ) {
 
 			// Parse the template
 			$conf_sch_single_speakers_templ = Handlebars.compile( $conf_sch_single_speakers_templ_content );
@@ -98,7 +98,7 @@
 
 		// Do we have a hashtag?
 		if ( this.event_hashtag !== undefined && this.event_hashtag ) {
-			$event_links_string += '<li class="event-hashtag"><a href="https://twitter.com/search?q=%23' + this.event_hashtag + '"><i class="conf-sch-icon conf-sch-icon-twitter"></i> <span class="icon-label">#' + this.event_hashtag + '</span></a></li>';
+			$event_links_string += '<li class="event-twitter"><a href="https://twitter.com/search?q=%23' + this.event_hashtag + '"><i class="conf-sch-icon conf-sch-icon-twitter"></i> <span class="icon-label">#' + this.event_hashtag + '</span></a></li>';
 		}
 
 		// Do we have a slides URL?
@@ -121,19 +121,19 @@
 	Handlebars.registerHelper( 'speaker_meta', function( $options ) {
 
 		// Make sure we at least have a position
-		if ( this.speaker_position !== undefined && this.speaker_position != null ) {
+		if ( this.speaker_position !== undefined && this.speaker_position != '' ) {
 
 			// Build string
 			var $speaker_pos_string = '<span class="speaker-position">' + this.speaker_position + '</span>';
 
 			// Get company
-			if ( this.speaker_company !== undefined && this.speaker_company != null ) {
+			if ( this.speaker_company !== undefined && this.speaker_company != '' ) {
 
 				// Add company name
 				var $speaker_company = this.speaker_company;
 
 				// Get company URL
-				if ( this.speaker_company_url !== undefined && this.speaker_company_url != null ) {
+				if ( this.speaker_company_url !== undefined && this.speaker_company_url != '' ) {
 					$speaker_company = '<a href="' + this.speaker_company_url + '">' + $speaker_company + '</a>';
 				}
 
@@ -141,7 +141,7 @@
 				$speaker_pos_string += ', <span class="speaker-company">' + $speaker_company + '</span>';
 
 				// Add speaker URL
-				/*if ( this.speaker_url !== undefined && this.speaker_url != null ) {
+				/*if ( this.speaker_url !== undefined && this.speaker_url != '' ) {
 					$speaker_pos_string += ' <span class="speaker-url"><a href="' + this.speaker_url + '">' + this.speaker_url + '</a></span>';
 				}*/
 
@@ -158,10 +158,25 @@
 		// Build string
 		var $social_media_string = '';
 
-		//speaker_facebook
-		//speaker_instagram
-		//speaker_twitter
-		//speaker_linkedin
+		// Add Facebook
+		if ( this.speaker_facebook !== undefined && this.speaker_facebook ) {
+			$social_media_string += '<li class="social-media facebook"><a href="' + this.speaker_facebook + '"><i class="conf-sch-icon conf-sch-icon-facebook-square"></i> <span class="icon-label">Facebook</span></a></li>';
+		}
+
+		// Add Twitter
+		if ( this.speaker_twitter !== undefined && this.speaker_twitter ) {
+			$social_media_string += '<li class="social-media twitter"><a href="https://twitter.com/' + this.speaker_twitter + '"><i class="conf-sch-icon conf-sch-icon-twitter"></i> <span class="icon-label">Twitter</span></a></li>';
+		}
+
+		// Add Instagram
+		if ( this.speaker_instagram !== undefined && this.speaker_instagram ) {
+			$social_media_string += '<li class="social-media instagram"><a href="https://www.instagram.com/' + this.speaker_instagram + '"><i class="conf-sch-icon conf-sch-icon-instagram"></i> <span class="icon-label">Instagram</span></a></li>';
+		}
+
+		// Add LinkedIn
+		if ( this.speaker_linkedin !== undefined && this.speaker_linkedin ) {
+			$social_media_string += '<li class="social-media linkedin"><a href="' + this.speaker_linkedin + '"><i class="conf-sch-icon conf-sch-icon-linkedin-square"></i> <span class="icon-label">LinkedIn</span></a></li>';
+		}
 
 		if ( $social_media_string ) {
 			return new Handlebars.SafeString('<ul class="speaker-social-media">' + $social_media_string + '</ul>');

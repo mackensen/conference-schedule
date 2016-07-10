@@ -38,7 +38,7 @@ class Conference_Schedule_Shortcodes {
 			wp_register_script( 'handlebars', '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js' );
 
 			// Enqueue the schedule script
-			wp_enqueue_script( 'conf-schedule', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'js' ) . 'conf-schedule.min.js', array( 'jquery', 'handlebars' ), CONFERENCE_SCHEDULE_VERSION, true );
+			wp_enqueue_script( 'conf-schedule', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'js' ) . 'conf-schedule-min.js', array( 'jquery', 'handlebars' ), CONFERENCE_SCHEDULE_VERSION, true );
 
 			// Pass some translations
 			wp_localize_script( 'conf-schedule', 'conf_schedule', array(

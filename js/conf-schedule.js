@@ -96,17 +96,17 @@
 						$.each( $day_items, function ($index, $item) {
 
 							// Get the date
-							if ($day_display == '' && $item.event_date_display) {
+							if ( $day_display == '' && $item.event_date_display ) {
 								$day_display = $item.event_date_display;
 							}
 
 							// Get the time
-							if ($time_display == '' && $item.event_time_display) {
+							if ( $time_display == '' && $item.event_time_display ) {
 								$time_display = $item.event_time_display;
 							}
 
 							// Render the templates
-							$row_events += $conf_sch_templ($item);
+							$row_events += $conf_sch_templ( $item );
 
 							// Store event types
 							if ( $item.event_types && $.isArray( $item.event_types ) ) {
@@ -132,6 +132,17 @@
 						$schedule_day_html += $schedule_row_html;
 
 					});
+
+					// Build the column header row
+					/*var $schedule_header = '<div class="schedule-header-item time">Time</div>';
+					$schedule_header += '<div class="schedule-header-item events">';
+					$schedule_header += '<div class="schedule-header-event">Auditorium</div>';
+					$schedule_header += '<div class="schedule-header-event ">RM A320</div>';
+					$schedule_header += '<div class="schedule-header-event">RM B226</div>';
+					$schedule_header += '</div>';
+
+					// Add the column header row
+					$schedule_day_html = '<div class="schedule-header-row">' + $schedule_header + '</div>' + $schedule_day_html;*/
 
 					// Wrap the day in the table
 					$schedule_day_html = '<div class="schedule-table">' + $schedule_day_html + '</div>';
@@ -191,9 +202,18 @@
 		// Build the string
 		var $event_links_string = '';
 
-		// Do we have a hashtag?
+		// Do we have an event hashtag?
 		if ( this.event_hashtag !== undefined && this.event_hashtag ) {
-			$event_links_string += '<li class="event-hashtag"><a href="https://twitter.com/search?q=%23' + this.event_hashtag + '"><i class="conf-sch-icon conf-sch-icon-twitter"></i> <span class="icon-label">#' + this.event_hashtag + '</span></a></li>';
+			$event_links_string += '<li class="event-twitter"><a href="https://twitter.com/search?q=%23' + this.event_hashtag + '"><i class="conf-sch-icon conf-sch-icon-twitter"></i> <span class="icon-label">#' + this.event_hashtag + '</span></a></li>';
+		}
+
+		// Do we have speaker twitters?
+		else if (this.event_speakers !== undefined && this.event_speakers && this.event_speakers.length > 0) {
+			$.each(this.event_speakers, function ($index, $value) {
+				if ($value.twitter !== undefined && $value.twitter) {
+					$event_links_string += '<li class="event-twitter"><a href="https://twitter.com/' + $value.twitter + '"><i class="conf-sch-icon conf-sch-icon-twitter"></i> <span class="icon-label">@' + $value.twitter + '</span></a></li>';
+				}
+			});
 		}
 
 		// Do we have a slides URL?

@@ -141,6 +141,10 @@ class Conference_Schedule_API {
 					$speakers = array();
 					foreach( $event_speaker_ids as $speaker_id ) {
 						if ( $speaker_post = get_post( $speaker_id ) ) {
+
+							// Add twitter
+							$speaker_post->twitter = get_post_meta( $speaker_id, 'conf_sch_speaker_twitter', true );
+
 							$speakers[] = $speaker_post;
 						}
 					}
