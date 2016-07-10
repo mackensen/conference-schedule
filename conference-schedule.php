@@ -36,7 +36,6 @@ define( 'CONFERENCE_SCHEDULE_PLUGIN_FILE', 'conference-schedule/conference-sched
 
 // Require the files we need
 require_once plugin_dir_path( __FILE__ ) . 'includes/api.php';
-require_once plugin_dir_path( __FILE__ ) . 'includes/shortcodes.php';
 
 // We only need admin functionality in the admin
 if ( is_admin() ) {
@@ -125,6 +124,9 @@ class Conference_Schedule {
 
 		// Register taxonomies
 		add_action( 'init', array( $this, 'register_taxonomies' ), 0 );
+
+		// Add our [print_conference_schedule] shortcode
+		add_shortcode( 'print_conference_schedule', array( $this, 'conference_schedule_shortcode' ) );
 
 	}
 
@@ -702,6 +704,18 @@ class Conference_Schedule {
 
 		return ob_get_clean();
 
+	}
+
+	/**
+	 * Returns the [print_conference_schedule] shortcode content.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 * @param   array - $args - arguments passed to the shortcode
+	 * @return  string - the content for the shortcode
+	 */
+	public function conference_schedule_shortcode( $args = array() ) {
+		return conference_schedule()->get_conference_schedule();
 	}
 
 }
