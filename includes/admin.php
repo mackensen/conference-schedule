@@ -807,7 +807,7 @@ class Conference_Schedule_Admin {
 						if ( wp_verify_nonce( $_POST[ 'conf_schedule_save_location_details_nonce' ], 'conf_schedule_save_location_details' ) ) {
 
 							// Process each field
-							foreach ( array( 'address' ) as $field_name ) {
+							foreach ( array( 'address', 'google_maps_url' ) as $field_name ) {
 
 								// If we have a value, update the value
 								if ( isset( $_POST[ 'conf_schedule' ][ 'location' ][ $field_name ] ) ) {
@@ -1125,6 +1125,7 @@ class Conference_Schedule_Admin {
 
 		// Get saved location details
 		$location_address = get_post_meta( $post_id, 'conf_sch_location_address', true );
+		$location_google_maps_url = get_post_meta( $post_id, 'conf_sch_location_google_maps_url', true );
 
 		?><table class="form-table">
 			<tbody>
@@ -1133,6 +1134,13 @@ class Conference_Schedule_Admin {
 					<td>
 						<input type="text" id="conf-sch-address" name="conf_schedule[location][address]" value="<?php echo esc_attr( $location_address ); ?>" class="regular-text" />
 						<p class="description"><?php _e( "Please provide the location's address.", 'conf-schedule' ); ?></p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="conf-sch-google-maps-url"><?php _e( 'Google Maps URL', 'conf-schedule' ); ?></label></th>
+					<td>
+						<input type="url" id="conf-sch-google-maps-url" name="conf_schedule[location][google_maps_url]" value="<?php echo esc_attr( $location_google_maps_url ); ?>" class="regular-text" />
+						<p class="description"><?php _e( "Please provide the Google Maps URL for this location.", 'conf-schedule' ); ?></p>
 					</td>
 				</tr>
 			</tbody>
