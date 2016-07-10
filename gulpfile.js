@@ -4,17 +4,17 @@ var minify = require('gulp-minify');
 var watch = require('gulp-watch');
 
 gulp.task('sass', function() {
-	gulp.src('scss/*.scss')
-		.pipe(watch('scss/*.scss'))
+	gulp.src('assets/scss/*.scss')
+		.pipe(watch('assets/scss/*.scss'))
 		.pipe(sass({outputStyle:'compressed'}))
-		.pipe(gulp.dest('css'));
+		.pipe(gulp.dest('assets/css'));
 });
 
 gulp.task('compress', function() {
-	gulp.src(['js/admin-post.js','js/conf-schedule.js','js/conf-schedule-single.js'])
-		.pipe(watch(['js/admin-post.js','js/conf-schedule.js','js/conf-schedule-single.js']))
+	gulp.src(['assets/js/admin-post.js','assets/js/conf-schedule.js','assets/js/conf-schedule-single.js'])
+		.pipe(watch(['assets/js/admin-post.js','assets/js/conf-schedule.js','assets/js/conf-schedule-single.js']))
 		.pipe(minify())
-		.pipe(gulp.dest('js'))
+		.pipe(gulp.dest('assets/js'))
 });
 
 gulp.task('default', ['sass','compress']);
