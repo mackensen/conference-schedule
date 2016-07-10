@@ -37,6 +37,9 @@ class Conference_Schedule_Admin {
 		// Add styles and scripts for the tools page
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ), 20 );
 
+
+		// Add instructions to thumbnail admin meta box
+		add_filter( 'admin_post_thumbnail_html', array( $this, 'filter_admin_post_thumbnail_html' ), 1, 2 );
 		// Add meta boxes
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 1, 2 );
 
@@ -101,6 +104,22 @@ class Conference_Schedule_Admin {
 	}
 
 	/**
+
+	/**
+	 * Adds instructions to the admin thumbnail meta box.
+	 *
+	 * @access  public
+	 * @since   1.1.0
+	 */
+	public function filter_admin_post_thumbnail_html( $content, $post_id ) {
+
+		// Show instructions for speaker photo
+		if ( 'speakers' == get_post_type( $post_id ) ) {
+			$content .= '<div class="wp-ui-highlight" style="padding:10px;margin:15px 0 5px 0;">' . __( "Please load the speaker's photo as a featured image. The image needs to be at least 200px wide.", 'conf-schedule' ) . '</div>';
+		}
+
+		return $content;
+	}
 	 * Adds our admin meta boxes.
 	 *
 	 * @access  public
