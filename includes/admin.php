@@ -106,7 +106,7 @@ class Conference_Schedule_Admin {
 		// Only for the settings page
 		if ( $this->settings_page_id == $hook_suffix ) {
 
-			// Enqueue our main styles
+			// Enqueue our settings styles
 			wp_enqueue_style( 'conf-schedule-settings', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/css' ) . 'conf-schedule-settings.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
 
 			// Need these scripts for the meta boxes to work correctly on our settings page
@@ -118,19 +118,33 @@ class Conference_Schedule_Admin {
 		// Only for the post pages
 		if ( 'schedule' == $post_type && in_array( $hook_suffix, array( 'post.php', 'post-new.php' ) ) ) {
 
-			// Enqueue the UI style
-			wp_enqueue_style( 'jquery-ui', '//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', array(), CONFERENCE_SCHEDULE_VERSION );
+			// Register the UI style
+			wp_register_style( 'jquery-ui', '//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', array(), CONFERENCE_SCHEDULE_VERSION );
 
-			// Enqueue the time picker
-			wp_enqueue_style( 'timepicker', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/css' ) . 'timepicker.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
+			// Register the time picker
+			wp_register_style( 'timepicker', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/css' ) . 'timepicker.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
 			wp_register_script( 'timepicker', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/js' ) . 'timepicker.min.js', array( 'jquery' ), CONFERENCE_SCHEDULE_VERSION, true );
 
-			// Enqueue select2
-			wp_enqueue_style( 'select2', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/css' ) . 'select2.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
+			// Register select2
+			wp_register_style( 'select2', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/css' ) . 'select2.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
 			wp_register_script( 'select2', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/js' ) . 'select2.min.js', array( 'jquery' ), CONFERENCE_SCHEDULE_VERSION, true );
+
+			// Enqueue the post styles
+			wp_enqueue_style( 'conf-schedule-admin-post', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/css' ) . 'admin-post-schedule.min.css', array( 'jquery-ui', 'timepicker', 'select2' ), CONFERENCE_SCHEDULE_VERSION );
 
 			// Enqueue the post script
 			wp_enqueue_script( 'conf-schedule-admin-post', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/js' ) . 'admin-post.min.js', array( 'jquery', 'jquery-ui-datepicker', 'timepicker', 'select2' ), CONFERENCE_SCHEDULE_VERSION, true );
+
+			// Get the API route
+			$wp_rest_api_route = function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : '';
+			if ( ! empty( $wp_rest_api_route ) ) {
+				$wp_rest_api_route = "/{$wp_rest_api_route}/wp/v2/";
+			}
+			
+			// Pass info to the script
+			wp_localize_script( 'conf-schedule-admin-post', 'conf_sch', array(
+				'wp_api_route' => $wp_rest_api_route,
+			));
 
 		}
 
@@ -532,7 +546,9 @@ class Conference_Schedule_Admin {
 							}
 
 							// Make sure times are set
-							foreach ( array( 'start_time', 'end_time' ) as $time_key ) {
+							foreach ( array( 'start_time', 'end_time', 'combine_start_time', 'combine_end_time' ) as $time_key ) {
+
+								// If we have a value, store it
 								if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ $time_key ] ) ) {
 
 									// Sanitize the value
@@ -547,6 +563,12 @@ class Conference_Schedule_Admin {
 									update_post_meta( $post_id, "conf_sch_event_{$time_key}", $time_value );
 
 								}
+
+								// Otherwise, clear it out
+								else {
+									update_post_meta( $post_id, "conf_sch_event_{$time_key}", null );
+								}
+
 							}
 
 							// Make sure type is set
@@ -631,6 +653,16 @@ class Conference_Schedule_Admin {
 								update_post_meta( $post_id, 'conf_sch_event_speakers', null );
 							}
 
+							// Make sure 'conf_sch_combine_event' is set
+							if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'combine_event' ] ) ) {
+								update_post_meta( $post_id, 'conf_sch_combine_event', true );
+							}
+
+							// Clear out 'sch_link_to_post' meta
+							else {
+								update_post_meta( $post_id, 'conf_sch_combine_event', null );
+							}
+
 							// Make sure 'sch_link_to_post' is set
 							if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'sch_link_to_post' ] ) ) {
 								update_post_meta( $post_id, 'conf_sch_link_to_post', '1' );
@@ -652,7 +684,7 @@ class Conference_Schedule_Admin {
 						if ( wp_verify_nonce( $_POST[ 'conf_schedule_save_session_details_nonce' ], 'conf_schedule_save_session_details' ) ) {
 
 							// Process each field
-							foreach ( array( 'slides_url', 'feedback_url', 'feedback_reveal_delay_seconds' ) as $field_name ) {
+							foreach ( array( 'livestream_url', 'slides_url', 'feedback_url', 'feedback_reveal_delay_seconds' ) as $field_name ) {
 								if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ $field_name ] ) ) {
 
 									// Sanitize the value
@@ -875,10 +907,18 @@ class Conference_Schedule_Admin {
 			$sch_link_to_post = get_post_meta( $post_id, 'conf_sch_link_to_post', true );
 		}
 
+		// Should we combine this event with other events?
+		$sch_combine_event = get_post_meta( $post_id, 'conf_sch_combine_event', true );
+		$sch_combine_event_enabled = isset( $sch_combine_event ) && $sch_combine_event;
+
+		// Get combined time block
+		$event_combine_start_time = get_post_meta( $post_id, 'conf_sch_event_combine_start_time', true );
+		$event_combine_end_time = get_post_meta( $post_id, 'conf_sch_event_combine_end_time', true );
+
 		// Convert event date to m/d/Y
 		$event_date_mdy = $event_date ? date( 'm/d/Y', strtotime( $event_date ) ) : null;
 
-		?><table class="form-table">
+		?><table class="form-table conf-schedule-post">
 			<tbody>
 				<tr>
 					<th scope="row"><label for="conf-sch-date"><?php _e( 'Date', 'conf-schedule' ); ?></label></th>
@@ -900,9 +940,28 @@ class Conference_Schedule_Admin {
 					</td>
 				</tr>
 				<tr>
+					<th scope="row"><?php _e( 'Combine with other events', 'conf-schedule' ); ?></th>
+					<td>
+						<label for="conf-sch-combine-event"><input name="conf_schedule[event][combine_event]" type="checkbox" id="conf-sch-combine-event" value="1"<?php checked( $sch_combine_event_enabled ); ?> /> <?php _e( "If checked, this event will be combined with other events on the schedule", 'conf-schedule' ); ?></label>
+						<p class="description"><?php _e( 'For example, lightning talks are usually events where multiple sessions equal one block on the schedule. This setting helps combines these sessions on the schedule.', 'conf-schedule' ); ?></p>
+
+						<span id="conf-sch-combine-event-times"<?php echo ! $sch_combine_event_enabled ? ' class="disabled"' : ''; ?>>
+							<p class="description"><strong><?php _e( 'Please provide the time block for the combined events.', 'conf-schedule' ); ?></strong></p>
+
+							<label class="label-block" for="conf-sch-combine-start-time"><?php _e( 'Start Time', 'conf-schedule' ); ?></label>
+							<input name="conf_schedule[event][combine_start_time]" type="text" id="conf-sch-combine-start-time" value="<?php echo esc_attr( $event_combine_start_time ); ?>" class="regular-text conf-sch-time-field" />
+
+							<br /><br />
+							<label class="label-block" for="conf-sch-combine-end-time"><?php _e( 'End Time', 'conf-schedule' ); ?></label>
+							<input name="conf_schedule[event][combine_end_time]" type="text" id="conf-sch-combine-end-time" value="<?php echo esc_attr( $event_combine_end_time ); ?>" class="regular-text conf-sch-time-field" />
+						</span>
+
+					</td>
+				</tr>
+				<tr>
 					<th scope="row"><label for="conf-sch-event-types"><?php _e( 'Event Types', 'conf-schedule' ); ?></label></th>
 					<td>
-						<select id="conf-sch-event-types" style="width:75%;" name="conf_schedule[event][event_types][]" multiple="multiple">
+						<select id="conf-sch-event-types" name="conf_schedule[event][event_types][]" multiple="multiple">
 							<option value=""><?php _e( 'No event types', 'conf-schedule' ); ?></option>
 						</select>
 						<p class="description"><a class="conf-sch-reload-event-types" href="<?php echo admin_url( 'edit-tags.php?taxonomy=event_types&post_type=schedule' ); ?>" target="_blank"><?php _e( 'Manage the event types', 'conf-schedule' ); ?></a></p>
@@ -911,7 +970,7 @@ class Conference_Schedule_Admin {
 				<tr>
 					<th scope="row"><label for="conf-sch-session-categories"><?php _e( 'Session Categories', 'conf-schedule' ); ?></label></th>
 					<td>
-						<select id="conf-sch-session-categories" style="width:75%;" name="conf_schedule[event][session_categories][]" multiple="multiple">
+						<select id="conf-sch-session-categories" name="conf_schedule[event][session_categories][]" multiple="multiple">
 							<option value=""><?php _e( 'No session categories', 'conf-schedule' ); ?></option>
 						</select>
 						<p class="description"><a class="conf-sch-reload-session-categories" href="<?php echo admin_url( 'edit-tags.php?taxonomy=session_categories&post_type=schedule' ); ?>" target="_blank"><?php _e( 'Manage the session categories', 'conf-schedule' ); ?></a></p>
@@ -920,7 +979,7 @@ class Conference_Schedule_Admin {
 				<tr>
 					<th scope="row"><label for="conf-sch-location"><?php _e( 'Location', 'conf-schedule' ); ?></label></th>
 					<td>
-						<select id="conf-sch-location" style="width:75%;" name="conf_schedule[event][location]" data-default="<?php _e( 'No location', 'conf-schedule' ); ?>">
+						<select id="conf-sch-location" name="conf_schedule[event][location]" data-default="<?php _e( 'No location', 'conf-schedule' ); ?>">
 							<option value=""><?php _e( 'No location', 'conf-schedule' ); ?></option>
 						</select>
 						<p class="description"><a class="conf-sch-reload-locations" href="<?php echo admin_url( 'edit.php?post_type=locations' ); ?>" target="_blank"><?php _e( 'Manage the locations', 'conf-schedule' ); ?></a></p>
@@ -929,7 +988,7 @@ class Conference_Schedule_Admin {
 				<tr>
 					<th scope="row"><label for="conf-sch-speakers"><?php _e( 'Speakers', 'conf-schedule' ); ?></label></th>
 					<td>
-						<select id="conf-sch-speakers" style="width:75%;" name="conf_schedule[event][speakers][]" multiple="multiple">
+						<select id="conf-sch-speakers" name="conf_schedule[event][speakers][]" multiple="multiple">
 							<option value=""><?php _e( 'No speakers', 'conf-schedule' ); ?></option>
 						</select>
 						<p class="description"><a class="conf-sch-reload-speakers" href="<?php echo admin_url( 'edit.php?post_type=speakers' ); ?>" target="_blank"><?php _e( 'Manage the speakers', 'conf-schedule' ); ?></a></p>
@@ -959,17 +1018,25 @@ class Conference_Schedule_Admin {
 		wp_nonce_field( 'conf_schedule_save_session_details', 'conf_schedule_save_session_details_nonce' );
 
 		// Get saved event details
+		$livestream_url = get_post_meta( $post_id, 'conf_sch_event_livestream_url', true );
 		$slides_url = get_post_meta( $post_id, 'conf_sch_event_slides_url', true );
 		$slides_file = get_post_meta( $post_id, 'conf_sch_event_slides_file', true );
 		$feedback_url = get_post_meta( $post_id, 'conf_sch_event_feedback_url', true );
 		$feedback_reveal_delay_seconds = get_post_meta( $post_id, 'conf_sch_event_feedback_reveal_delay_seconds', true );
 
-		?><table class="form-table">
+		?><table class="form-table conf-schedule-post">
 			<tbody>
+				<tr>
+					<th scope="row"><label for="conf-sch-livestream-url"><?php _e( 'Livestream URL', 'conf-schedule' ); ?></label></th>
+					<td>
+						<input type="text" id="conf-sch-livestream-url" name="conf_schedule[event][livestream_url]" value="<?php echo esc_attr( $livestream_url ); ?>" />
+						<p class="description"><?php _e( "Please provide the URL for users to view the livestream.", 'conf-schedule' ); ?></p>
+					</td>
+				</tr>
 				<tr>
 					<th scope="row"><label for="conf-sch-slides-url"><?php _e( 'Slides URL', 'conf-schedule' ); ?></label></th>
 					<td>
-						<input type="text" id="conf-sch-slides-url" style="width:75%;" name="conf_schedule[event][slides_url]" value="<?php echo esc_attr( $slides_url ); ?>" />
+						<input type="text" id="conf-sch-slides-url" name="conf_schedule[event][slides_url]" value="<?php echo esc_attr( $slides_url ); ?>" />
 						<p class="description"><?php _e( "Please provide the URL (or file below) for users to download or view this session's slides. <strong>If a URL and file are provided, the URL will priority.</strong>", 'conf-schedule' ); ?></p>
 					</td>
 				</tr>
@@ -1013,14 +1080,14 @@ class Conference_Schedule_Admin {
 				<tr>
 					<th scope="row"><label for="conf-sch-feedback-url"><?php _e( 'Feedback URL', 'conf-schedule' ); ?></label></th>
 					<td>
-						<input type="text" id="conf-sch-feedback-url" style="width:75%;" name="conf_schedule[event][feedback_url]" value="<?php echo esc_attr( $feedback_url ); ?>" />
+						<input type="text" id="conf-sch-feedback-url" name="conf_schedule[event][feedback_url]" value="<?php echo esc_attr( $feedback_url ); ?>" />
 						<p class="description"><?php _e( 'Please provide the URL you wish to provide to gather session feedback. <strong>It will display 30 minutes after the session has started, unless you provide a value below.</strong>', 'conf-schedule' ); ?></p>
 					</td>
 				</tr>
 				<tr>
 					<th scope="row"><label for="conf-sch-feedback-reveal-delay-seconds"><?php _e( 'Feedback Reveal Delay Seconds', 'conf-schedule' ); ?></label></th>
 					<td>
-						<input type="text" id="conf-sch-feedback-reveal-delay-seconds" style="width:75%;" name="conf_schedule[event][feedback_reveal_delay_seconds]" value="<?php echo esc_attr( $feedback_reveal_delay_seconds ); ?>" />
+						<input type="text" id="conf-sch-feedback-reveal-delay-seconds" name="conf_schedule[event][feedback_reveal_delay_seconds]" value="<?php echo esc_attr( $feedback_reveal_delay_seconds ); ?>" />
 						<p class="description"><?php _e( 'Please provide the number of seconds after the start of the session after which the feedback button will be revealed.  1800 is the default (30 minutes).', 'conf-schedule' ); ?></p>
 					</td>
 				</tr>
@@ -1044,7 +1111,7 @@ class Conference_Schedule_Admin {
 		// Get saved social media
 		$event_hashtag = get_post_meta( $post_id, 'conf_sch_event_hashtag', true );
 
-		?><table class="form-table">
+		?><table class="form-table conf-schedule-post">
 			<tbody>
 				<tr>
 					<th scope="row"><label for="conf-sch-event-hashtag"><?php _e( 'Hashtag', 'conf-schedule' ); ?></label></th>
@@ -1076,7 +1143,7 @@ class Conference_Schedule_Admin {
 		$speaker_company = get_post_meta( $post_id, 'conf_sch_speaker_company', true );
 		$speaker_company_url = get_post_meta( $post_id, 'conf_sch_speaker_company_url', true );
 
-		?><table class="form-table">
+		?><table class="form-table conf-schedule-post">
 			<tbody>
 				<tr>
 					<th scope="row"><label for="conf-sch-position"><?php _e( 'Position', 'conf-schedule' ); ?></label></th>
@@ -1127,7 +1194,7 @@ class Conference_Schedule_Admin {
 		$location_address = get_post_meta( $post_id, 'conf_sch_location_address', true );
 		$location_google_maps_url = get_post_meta( $post_id, 'conf_sch_location_google_maps_url', true );
 
-		?><table class="form-table">
+		?><table class="form-table conf-schedule-post">
 			<tbody>
 				<tr>
 					<th scope="row"><label for="conf-sch-address"><?php _e( 'Address', 'conf-schedule' ); ?></label></th>
@@ -1166,7 +1233,7 @@ class Conference_Schedule_Admin {
 		$speaker_twitter = get_post_meta( $post_id, 'conf_sch_speaker_twitter', true );
 		$speaker_linkedin = get_post_meta( $post_id, 'conf_sch_speaker_linkedin', true );
 
-		?><table class="form-table">
+		?><table class="form-table conf-schedule-post">
 			<tbody>
 				<tr>
 					<th scope="row"><label for="conf-sch-facebook"><?php _e( 'Facebook', 'conf-schedule' ); ?></label></th>

@@ -47,13 +47,13 @@
 	function render_conf_schedule_single() {
 
 		// Make sure we have an ID
-		if ( ! ( conf_schedule.post_id !== undefined && conf_schedule.post_id > 0 ) ) {
+		if ( ! ( conf_sch.post_id !== undefined && conf_sch.post_id > 0 ) ) {
 			return false;
 		}
 
 		// Get the schedule information
 		$.ajax( {
-			url: '/wp-json/wp/v2/schedule/' + conf_schedule.post_id,
+			url: conf_sch.wp_api_route + 'schedule/' + conf_sch.post_id,
 			success: function ( $schedule_item ) {
 
 				// Build/add the html
@@ -65,7 +65,7 @@
 
 						// Get the speaker information
 						$.ajax({
-							url: '/wp-json/wp/v2/speakers/' + $value.ID,
+							url: conf_sch.wp_api_route + 'speakers/' + $value.ID,
 							success: function ($speaker) {
 
 								// Make sure is valid speaker
@@ -103,12 +103,12 @@
 
 		// Do we have a slides URL?
 		if ( this.session_slides_url !== undefined && this.session_slides_url ) {
-			$event_links_string += '<li class="event-slides"><a href="' + this.session_slides_url + '">' + conf_schedule.view_slides + '</span></a></li>';
+			$event_links_string += '<li class="event-slides"><a href="' + this.session_slides_url + '">' + conf_sch.view_slides + '</span></a></li>';
 		}
 
 		// Do we have a feedback URL?
 		if ( this.session_feedback_url !== undefined && this.session_feedback_url ) {
-			$event_links_string += '<li class="event-feedback"><a href="' + this.session_feedback_url + '">' + conf_schedule.give_feedback + '</span></a></li>';
+			$event_links_string += '<li class="event-feedback"><a href="' + this.session_feedback_url + '">' + conf_sch.give_feedback + '</span></a></li>';
 		}
 
 		if ( $event_links_string ) {

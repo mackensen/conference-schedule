@@ -300,6 +300,12 @@ class Conference_Schedule {
 		// Register handlebars
 		wp_register_script( 'handlebars', '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js' );
 
+		// Get the API route
+		$wp_rest_api_route = function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : '';
+		if ( ! empty( $wp_rest_api_route ) ) {
+			$wp_rest_api_route = "/{$wp_rest_api_route}/wp/v2/";
+		}
+
 		// Enqueue the schedule script when needed
 		if ( is_singular( 'schedule' ) ) {
 
@@ -310,10 +316,11 @@ class Conference_Schedule {
 			wp_enqueue_script( 'conf-schedule-single', trailingslashit( plugin_dir_url( __FILE__ ) . 'assets/js' ) . 'conf-schedule-single.min.js', array( 'jquery', 'handlebars' ), CONFERENCE_SCHEDULE_VERSION, true );
 
 			// Pass some data
-			wp_localize_script( 'conf-schedule-single', 'conf_schedule', array(
-				'post_id' => $post->ID,
-				'view_slides' => __( 'View Slides', 'conf-schedule' ),
+			wp_localize_script( 'conf-schedule-single', 'conf_sch', array(
+				'post_id'       => $post->ID,
+				'view_slides'   => __( 'View Slides', 'conf-schedule' ),
 				'give_feedback' => __( 'Give Feedback', 'conf-schedule' ),
+				'wp_api_route'  => $wp_rest_api_route,
 			));
 
 		} else {
@@ -334,9 +341,10 @@ class Conference_Schedule {
 				wp_enqueue_script( 'conf-schedule', trailingslashit( plugin_dir_url( __FILE__ ) . 'assets/js' ) . 'conf-schedule.min.js', array( 'jquery', 'handlebars' ), CONFERENCE_SCHEDULE_VERSION, true );
 
 				// Pass some translations
-				wp_localize_script( 'conf-schedule', 'conf_schedule', array(
-					'view_slides' => __( 'View Slides', 'conf-schedule' ),
+				wp_localize_script( 'conf-schedule', 'conf_sch', array(
+					'view_slides'   => __( 'View Slides', 'conf-schedule' ),
 					'give_feedback' => __( 'Give Feedback', 'conf-schedule' ),
+					'wp_api_route'  => $wp_rest_api_route,
 				) );
 
 			}
@@ -661,7 +669,7 @@ class Conference_Schedule {
 
 		// Add the template ?>
 		<script id="conference-schedule-template" type="text/x-handlebars-template">
-			<div class="schedule-event{{#event_types}} {{.}}{{/event_types}}">
+			<div id="conf-sch-event-{{id}}" class="schedule-event{{#event_types}} {{.}}{{/event_types}}">
 				{{#event_time_display}}<div class="event-time">{{.}}</div>{{/event_time_display}}
 				{{#title}}{{body}}{{/title}}
 				{{#event_location}}<div class="event-location">{{post_title}}</div>{{/event_location}}

@@ -1,0 +1,37 @@
+// Any of our settings tables
+.conf-schedule-post {
+
+	.label-block {
+		display: block;
+		font-weight: bold;
+		margin: 0 0 5px 0;
+	}
+
+	input[type="text"],
+	select {
+		width: 75%;
+
+		&.inline {
+			width: auto;
+		}
+
+	}
+
+}
+
+#conf-sch-combine-event-times {
+	display: block;
+	background: #f3f3f3;
+	margin: 15px 0 0 0;
+	padding: 15px;
+
+	.description {
+		margin: 0 0 10px 0;
+	}
+
+	&.disabled {
+		opacity: 0.4;
+		pointer-events: none;
+	}
+
+}

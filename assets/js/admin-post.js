@@ -33,9 +33,27 @@
 
 		});
 
+		// Run some code when the combine start time changes
+		$( '#conf-sch-combine-start-time').on( 'changeTime', function() {
+
+			// Change settings for end time
+			$( '#conf-sch-combine-end-time' ).timepicker( 'option', 'minTime', $(this).val() );
+
+		});
+
 		// Change settings for end time
-		$( '#conf-sch-end-time' ).timepicker( 'option', 'showDuration', true );
+		$( '#conf-sch-end-time, #conf-sch-combine-end-time' ).timepicker( 'option', 'showDuration', true );
 		$( '#conf-sch-end-time' ).timepicker( 'option', 'durationTime', function() { return $( '#conf-sch-start-time').val() } );
+		$( '#conf-sch-combine-end-time' ).timepicker( 'option', 'durationTime', function() { return $( '#conf-sch-combine-start-time').val() } );
+
+		// Enable/disable combine time blocks
+		$( '#conf-sch-combine-event' ).change(function() {
+			if ( $( this ).is( ':checked' ) ) {
+				$( '#conf-sch-combine-event-times' ).removeClass( 'disabled' );
+			} else {
+				$( '#conf-sch-combine-event-times' ).addClass( 'disabled' );
+			}
+		});
 
 		// Setup the event types select2
 		$( '#conf-sch-event-types').select2();
@@ -92,7 +110,7 @@
 
 		// Get the event types for the select2
 		$.ajax( {
-			url: '/wp-json/wp/v2/event_types?number=-1',
+			url: conf_sch.wp_api_route + 'event_types?number=-1',
 			success: function ( $types ) {
 
 				// Make sure we have info
@@ -114,7 +132,7 @@
 				// See what event types are selected for this particular post
 				if ( $( '#post_ID' ).val() != '' ) {
 					$.ajax({
-						url: '/wp-json/wp/v2/event_types?post=' + $( '#post_ID' ).val() + '&number=-1',
+						url: conf_sch.wp_api_route + 'event_types?post=' + $( '#post_ID' ).val() + '&number=-1',
 						success: function ( $selected_event_types ) {
 
 							// Make sure we have info
@@ -141,7 +159,7 @@
 
 		// Get the session categories for the select2
 		$.ajax( {
-			url: '/wp-json/wp/v2/session_categories?number=-1',
+			url: conf_sch.wp_api_route + 'session_categories?number=-1',
 			success: function ( $categories ) {
 
 				// Make sure we have info
@@ -163,7 +181,7 @@
 				// See what session categories are selected for this particular post
 				if ( $( '#post_ID' ).val() != '' ) {
 					$.ajax({
-						url: '/wp-json/wp/v2/session_categories?post=' + $( '#post_ID' ).val() + '&number=-1',
+						url: conf_sch.wp_api_route + 'session_categories?post=' + $( '#post_ID' ).val() + '&number=-1',
 						success: function ( $selected_categories ) {
 
 							// Make sure we have info
@@ -190,7 +208,7 @@
 
 		// Get the location for the select2
 		$.ajax( {
-			url: '/wp-json/wp/v2/locations?filter[posts_per_page]=-1',
+			url: conf_sch.wp_api_route + 'locations?filter[posts_per_page]=-1',
 			success: function ( $locations ) {
 
 				// Make sure we have info
@@ -217,7 +235,7 @@
 				// See what is selected for this particular post
 				if ( $( '#post_ID' ).val() != '' ) {
 					$.ajax({
-						url: '/wp-json/wp/v2/schedule/' + $( '#post_ID' ).val(),
+						url: conf_sch.wp_api_route + 'schedule/' + $( '#post_ID' ).val(),
 						success: function ( $event ) {
 
 							// Make sure we have info
@@ -242,7 +260,7 @@
 
 		// Get the speakers for the select2
 		$.ajax( {
-			url: '/wp-json/wp/v2/speakers?filter[posts_per_page]=-1',
+			url: conf_sch.wp_api_route + 'speakers?filter[posts_per_page]=-1',
 			success: function ( $speakers ) {
 
 				// Make sure we have info
@@ -264,7 +282,7 @@
 				// See what is selected for this particular post
 				if ( $( '#post_ID' ).val() != '' ) {
 					$.ajax({
-						url: '/wp-json/wp/v2/schedule/' + $( '#post_ID' ).val(),
+						url: conf_sch.wp_api_route + 'schedule/' + $( '#post_ID' ).val(),
 						success: function ( $event ) {
 
 							// Make sure we have info
