@@ -691,7 +691,7 @@ class Conference_Schedule_Admin {
 									$field_value = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ $field_name ] );
 
 									// Update/save value
-									update_post_meta( $post_id, "conf_sch_event_{$field_name}", $field_value );
+									update_post_meta( $post_id, "conf_sch_event_{$field_name}", trim( $field_value ) );
 
 								}
 							}
