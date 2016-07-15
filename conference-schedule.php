@@ -373,23 +373,41 @@ class Conference_Schedule {
 			// Get post type's archive title
 			$speakers_archive_title = apply_filters( 'post_type_archive_title', $speakers_post_type_obj->labels->name, 'speakers' );
 
-			// Add the info holders
-			$the_content = '<div id="conf-sch-single-meta"></div>' . $the_content;
-			$the_content .= '<div id="conf-sch-single-speakers">
-				<h2 class="conf-sch-single-speakers-title">' . $speakers_archive_title . '</h2>
-			</div>';
+			// Get livestream URL
+			$livestream_url = get_post_meta( $post->ID, 'conf_sch_event_livestream_url', true );
 
-			// Add the before template
-			$the_content .= '<script id="conf-sch-single-meta-template" type="text/x-handlebars-template">
-				{{#event_date_display}}<span class="event-meta event-date"><span class="event-meta-label">' . __( 'Date', 'conf-schedule' ) . ':</span> {{.}}</span>{{/event_date_display}}
-				{{#event_time_display}}<span class="event-meta event-time"><span class="event-meta-label">' . __( 'Time', 'conf-schedule' ) . ':</span> {{.}}</span>{{/event_time_display}}
-				{{#event_location}}<span class="event-meta event-location"><span class="event-meta-label">' . __( 'Location', 'conf-schedule' ) . ':</span> {{post_title}}</span>{{/event_location}}
-				{{#if session_categories}}<span class="event-meta event-categories"><span class="event-meta-label">' . __( 'Categories', 'conf-schedule' ) . ':</span> {{#each session_categories}}{{#unless @first}}, {{/unless}}{{.}}{{/each}}</span>{{/if}}
+			ob_start();
+
+			// Add livestream holder ?>
+			<div id="conf-sch-single-livestream"></div>
+			<?php
+
+			// Add the livestream template ?>
+			<script id="conf-sch-single-ls-template" type="text/x-handlebars-template">
+				{{#if session_livestream_url}}<div class="callout"><a href="{{session_livestream_url}}">Watch the livestream</a></div>{{/if}}
+			</script>
+			<?php
+
+			// Add the info holders ?>
+			<div id="conf-sch-single-meta"></div>
+			<?php echo $the_content; ?>
+			<div id="conf-sch-single-speakers">
+				<h2 class="conf-sch-single-speakers-title"><?php echo $speakers_archive_title; ?></h2>
+			</div>
+			<?php
+
+			// Add the before template ?>
+			<script id="conf-sch-single-meta-template" type="text/x-handlebars-template">
+				{{#event_date_display}}<span class="event-meta event-date"><span class="event-meta-label"><?php _e( 'Date', 'conf-schedule' ); ?>:</span> {{.}}</span>{{/event_date_display}}
+				{{#event_time_display}}<span class="event-meta event-time"><span class="event-meta-label"><?php _e( 'Time', 'conf-schedule' ); ?>:</span> {{.}}</span>{{/event_time_display}}
+				{{#event_location}}<span class="event-meta event-location"><span class="event-meta-label"><?php _e( 'Location', 'conf-schedule' ); ?>:</span> {{post_title}}</span>{{/event_location}}
+				{{#if session_categories}}<span class="event-meta event-categories"><span class="event-meta-label"><?php _e( 'Categories', 'conf-schedule' ); ?>:</span> {{#each session_categories}}{{#unless @first}}, {{/unless}}{{.}}{{/each}}</span>{{/if}}
 				{{#event_links}}{{body}}{{/event_links}}
-			</script>';
+			</script>
+			<?php
 
-			// Add the speakers template
-			$the_content .= '<script id="conf-sch-single-speakers-template" type="text/x-handlebars-template">
+			// Add the speakers template ?>
+			<script id="conf-sch-single-speakers-template" type="text/x-handlebars-template">
 				<div class="event-speaker">
 					{{#if title.rendered}}<h3 class="speaker-name">{{{title.rendered}}}</h3>{{/if}}
 					{{{speaker_meta}}}
@@ -401,9 +419,10 @@ class Conference_Schedule {
 						</div>
 					{{/if}}
 				</div>
-			</script>';
+			</script>
+			<?php
 
-			return $the_content;
+			return ob_get_clean();
 
 		}
 

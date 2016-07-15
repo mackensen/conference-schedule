@@ -1,6 +1,10 @@
 (function( $ ) {
 	'use strict';
 
+	// Will hold the livestream
+	var $conf_sch_single_ls = null;
+    var $conf_sch_single_ls_templ = false;
+
 	// Will hold the before and template
 	var $conf_sch_single_meta = null;
 	var $conf_sch_single_meta_templ = false;
@@ -13,10 +17,20 @@
 	$(document).ready(function() {
 
 		// Set the containers
+		$conf_sch_single_ls = $( '#conf-sch-single-livestream' );
 		$conf_sch_single_meta = $( '#conf-sch-single-meta' );
 
 		// Hide speakers so we can fade in
 		$conf_sch_single_speakers = $( '#conf-sch-single-speakers').hide();
+
+		// Take care of the livestream
+		var $conf_sch_single_ls_templ_content = $('#conf-sch-single-ls-template').html();
+		if ( $conf_sch_single_ls_templ_content !== undefined && $conf_sch_single_ls_templ_content != '' ) {
+
+			// Parse the template
+			$conf_sch_single_ls_templ = Handlebars.compile( $conf_sch_single_ls_templ_content );
+
+		}
 
 		// Take care of the before
 		var $conf_sch_single_meta_templ_content = $('#conf-sch-single-meta-template').html();
@@ -55,6 +69,9 @@
 		$.ajax( {
 			url: conf_sch.wp_api_route + 'schedule/' + conf_sch.post_id,
 			success: function ( $schedule_item ) {
+
+				// Build/add the livestream button
+				$conf_sch_single_ls.hide().html( $conf_sch_single_ls_templ($schedule_item)).fadeIn( 1000 );
 
 				// Build/add the html
 				$conf_sch_single_meta.hide().html( $conf_sch_single_meta_templ($schedule_item)).fadeIn( 1000 );
