@@ -355,7 +355,12 @@ class Conference_Schedule_API {
 
 				// Feedback URL will only show up 30 minutes after the session has started
 				// If no valid session time, well show URL
-				if ( $feedback_url = get_post_meta( $object[ 'id' ], 'conf_sch_event_feedback_url', true ) ) {
+				$feedback_url = get_post_meta( $object[ 'id' ], 'conf_sch_event_feedback_url', true );
+
+				// Filter the feedback URL
+				$feedback_url = apply_filters( 'conf_sch_feedback_url', $feedback_url, $object );
+
+				if ( $feedback_url ) {
 
 					// Get this site's timezone
 					$timezone = get_option('timezone_string');
