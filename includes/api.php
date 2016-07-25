@@ -51,7 +51,8 @@ class Conference_Schedule_API {
 			'session_categories',
 			'session_livestream_url',
 			'session_slides_url',
-			'session_feedback_url'
+			'session_feedback_url',
+			'session_follow_up_url'
 		);
 		foreach( $event_fields as $field_name ) {
 			register_rest_field( 'schedule', $field_name, $rest_field_args );
@@ -350,6 +351,10 @@ class Conference_Schedule_API {
 					return ! empty( $slides_file_url ) ? $slides_file_url : null;
 				}
 				return null;
+
+			case 'session_follow_up_url':
+				$follow_up_url = get_post_meta( $object[ 'id' ], 'conf_sch_event_follow_up_url', true );
+				return ! empty( $follow_up_url ) ? $follow_up_url : null;
 
 			case 'session_feedback_url':
 

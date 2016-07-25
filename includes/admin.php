@@ -684,7 +684,7 @@ class Conference_Schedule_Admin {
 						if ( wp_verify_nonce( $_POST[ 'conf_schedule_save_session_details_nonce' ], 'conf_schedule_save_session_details' ) ) {
 
 							// Process each field
-							foreach ( array( 'livestream_url', 'slides_url', 'feedback_url', 'feedback_reveal_delay_seconds' ) as $field_name ) {
+							foreach ( array( 'livestream_url', 'slides_url', 'feedback_url', 'feedback_reveal_delay_seconds', 'follow_up_url' ) as $field_name ) {
 								if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ $field_name ] ) ) {
 
 									// Sanitize the value
@@ -1023,6 +1023,7 @@ class Conference_Schedule_Admin {
 		$slides_file = get_post_meta( $post_id, 'conf_sch_event_slides_file', true );
 		$feedback_url = get_post_meta( $post_id, 'conf_sch_event_feedback_url', true );
 		$feedback_reveal_delay_seconds = get_post_meta( $post_id, 'conf_sch_event_feedback_reveal_delay_seconds', true );
+		$follow_up_url = get_post_meta( $post_id, 'conf_sch_event_follow_up_url', true );
 
 		?><table class="form-table conf-schedule-post">
 			<tbody>
@@ -1089,6 +1090,13 @@ class Conference_Schedule_Admin {
 					<td>
 						<input type="text" id="conf-sch-feedback-reveal-delay-seconds" name="conf_schedule[event][feedback_reveal_delay_seconds]" value="<?php echo esc_attr( $feedback_reveal_delay_seconds ); ?>" />
 						<p class="description"><?php _e( 'Please provide the number of seconds after the start of the session after which the feedback button will be revealed.  1800 is the default (30 minutes).', 'conf-schedule' ); ?></p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="conf-sch-follow-up-url"><?php _e( 'Follow Up/Materials URL', 'conf-schedule' ); ?></label></th>
+					<td>
+						<input type="url" id="conf-sch-follow-up-url" name="conf_schedule[event][follow_up_url]" value="<?php echo esc_attr( $follow_up_url ); ?>" />
+						<p class="description"><?php _e( 'Please provide the URL you wish to provide for session follow-up materials.', 'conf-schedule' ); ?></p>
 					</td>
 				</tr>
 			</tbody>
