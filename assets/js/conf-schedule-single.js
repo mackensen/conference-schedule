@@ -24,7 +24,7 @@
 		$conf_sch_single_speakers = $( '#conf-sch-single-speakers').hide();
 
 		// Take care of the livestream
-		var $conf_sch_single_ls_templ_content = $('#conf-sch-single-ls-template').html();
+		var $conf_sch_single_ls_templ_content = $( '#conf-sch-single-ls-template' ).html();
 		if ( $conf_sch_single_ls_templ_content !== undefined && $conf_sch_single_ls_templ_content != '' ) {
 
 			// Parse the template
@@ -33,7 +33,7 @@
 		}
 
 		// Take care of the before
-		var $conf_sch_single_meta_templ_content = $('#conf-sch-single-meta-template').html();
+		var $conf_sch_single_meta_templ_content = $( '#conf-sch-single-meta-template' ).html();
 		if ( $conf_sch_single_meta_templ_content !== undefined && $conf_sch_single_meta_templ_content != '' ) {
 
 			// Parse the template
@@ -42,7 +42,7 @@
 		}
 
 		// Take care of the speakers
-		var $conf_sch_single_speakers_templ_content = $('#conf-sch-single-speakers-template').html();
+		var $conf_sch_single_speakers_templ_content = $( '#conf-sch-single-speakers-template' ).html();
 		if ( $conf_sch_single_speakers_templ_content !== undefined && $conf_sch_single_speakers_templ_content != '' ) {
 
 			// Parse the template
@@ -66,24 +66,24 @@
 		}
 
 		// Get the schedule information
-		$.ajax( {
+		$.ajax({
 			url: conf_sch.wp_api_route + 'schedule/' + conf_sch.post_id,
-			success: function ( $schedule_item ) {
+			success: function( $schedule_item ) {
 
 				// Build/add the livestream button
-				$conf_sch_single_ls.hide().html( $conf_sch_single_ls_templ($schedule_item)).fadeIn( 1000 );
+				$conf_sch_single_ls.hide().html( $conf_sch_single_ls_templ( $schedule_item ) ).fadeIn( 1000 );
 
 				// Build/add the html
-				$conf_sch_single_meta.hide().html( $conf_sch_single_meta_templ($schedule_item)).fadeIn( 1000 );
+				$conf_sch_single_meta.hide().html( $conf_sch_single_meta_templ( $schedule_item ) ).fadeIn( 1000 );
 
 				// Get the speakers
 				if ( $schedule_item.event_speakers !== undefined ) {
-					$.each( $schedule_item.event_speakers, function($index, $value){
+					$.each( $schedule_item.event_speakers, function( $index, $value ) {
 
 						// Get the speaker information
 						$.ajax({
 							url: conf_sch.wp_api_route + 'speakers/' + $value.ID,
-							success: function ($speaker) {
+							success: function( $speaker ) {
 
 								// Make sure is valid speaker
 								if ( ! ( $speaker.id !== undefined && $speaker.id > 0 ) ) {
@@ -91,7 +91,7 @@
 								}
 
 								// Create speaker
-								var $speaker_dom = $( $conf_sch_single_speakers_templ($speaker));
+								var $speaker_dom = $( $conf_sch_single_speakers_templ( $speaker ) );
 
 								// Render/add the speaker and fade in
 								$conf_sch_single_speakers.append( $speaker_dom ).fadeIn( 1000 );
@@ -103,7 +103,7 @@
 				}
 
 			}
-		} );
+		});
 
 	}
 
@@ -129,7 +129,7 @@
 		}
 
 		if ( $event_links_string ) {
-			return new Handlebars.SafeString('<ul class="conf-sch-event-links">' + $event_links_string + '</ul>');
+			return new Handlebars.SafeString( '<ul class="conf-sch-event-links">' + $event_links_string + '</ul>' );
 		}
 		return null;
 	});
@@ -164,7 +164,7 @@
 
 			}
 
-			return new Handlebars.SafeString('<div class="speaker-meta">' + $speaker_pos_string + '</div>');
+			return new Handlebars.SafeString( '<div class="speaker-meta">' + $speaker_pos_string + '</div>' );
 		}
 		return null;
 	});
@@ -196,7 +196,7 @@
 		}
 
 		if ( $social_media_string ) {
-			return new Handlebars.SafeString('<ul class="speaker-social-media">' + $social_media_string + '</ul>');
+			return new Handlebars.SafeString( '<ul class="speaker-social-media">' + $social_media_string + '</ul>' );
 		}
 		return null;
 	});

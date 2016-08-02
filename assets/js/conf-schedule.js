@@ -14,7 +14,7 @@
 		$conf_schedule = $( '#conference-schedule' );
 
 		// Get the templates
-		var $conf_sch_templ_content = $('#conference-schedule-template').html();
+		var $conf_sch_templ_content = $( '#conference-schedule-template' ).html();
 		if ( $conf_sch_templ_content !== undefined && $conf_sch_templ_content ) {
 
 			// Parse the template
@@ -33,7 +33,7 @@
 	function render_conference_schedule() {
 
 		// Get the schedule information
-		$.ajax( {
+		$.ajax({
 			url: conf_sch.wp_api_route + 'schedule',
 			success: function( $schedule_items ) {
 
@@ -112,7 +112,7 @@
 							if ( $item.event_types && $.isArray( $item.event_types ) ) {
 								$.each( $item.event_types, function( $index, $type ) {
 									if ( $type != '' && $.inArray( $type, $event_types ) == -1 ) {
-										$event_types.push($type.replace( /\s/, '-' ));
+										$event_types.push( $type.replace( /\s/, '-' ) );
 									}
 								});
 							}
@@ -170,7 +170,7 @@
 			if ( this.link_to_post && this.link !== undefined && this.link ) {
 				$new_title = '<a href="' + this.link + '">' + $new_title + '</a>';
 			}
-			return new Handlebars.SafeString('<h3 class="event-title">' + $new_title + '</h3>');
+			return new Handlebars.SafeString( '<h3 class="event-title">' + $new_title + '</h3>' );
 		}
 		return null;
 	});
@@ -179,7 +179,7 @@
 	Handlebars.registerHelper( 'excerpt', function( $options ) {
 		var $new_excerpt = this.excerpt.rendered;
 		if ( $new_excerpt !== undefined && $new_excerpt ) {
-			return new Handlebars.SafeString('<div class="event-desc">' + $new_excerpt + '</div>');
+			return new Handlebars.SafeString( '<div class="event-desc">' + $new_excerpt + '</div>' );
 		}
 		return null;
 	});
@@ -196,9 +196,9 @@
 		}
 
 		// Do we have speaker twitters?
-		else if (this.event_speakers !== undefined && this.event_speakers && this.event_speakers.length > 0) {
+		else if ( this.event_speakers !== undefined && this.event_speakers && this.event_speakers.length > 0 ) {
 			$.each( this.event_speakers, function( $index, $value ) {
-				if ($value.twitter !== undefined && $value.twitter) {
+				if ( $value.twitter !== undefined && $value.twitter ) {
 					$event_links_string += '<li class="event-twitter"><a href="https://twitter.com/' + $value.twitter + '"><i class="conf-sch-icon conf-sch-icon-twitter"></i> <span class="icon-label">@' + $value.twitter + '</span></a></li>';
 				}
 			});
@@ -215,7 +215,7 @@
 		}
 
 		if ( $event_links_string ) {
-			return new Handlebars.SafeString('<ul class="conf-sch-event-links">' + $event_links_string + '</ul>');
+			return new Handlebars.SafeString( '<ul class="conf-sch-event-links">' + $event_links_string + '</ul>' );
 		}
 		return null;
 	});
