@@ -1037,7 +1037,7 @@ class Conference_Schedule_Admin {
 				<tr>
 					<th scope="row"><label for="conf-sch-slides-url"><?php _e( 'Slides URL', 'conf-schedule' ); ?></label></th>
 					<td>
-						<input type="text" id="conf-sch-slides-url" name="conf_schedule[event][slides_url]" value="<?php echo esc_attr( $slides_url ); ?>" />
+						<input type="url" id="conf-sch-slides-url" name="conf_schedule[event][slides_url]" value="<?php echo esc_attr( $slides_url ); ?>" />
 						<p class="description"><?php _e( "Please provide the URL (or file below) for users to download or view this session's slides. <strong>If a URL and file are provided, the URL will priority.</strong>", 'conf-schedule' ); ?></p>
 					</td>
 				</tr>
@@ -1081,7 +1081,7 @@ class Conference_Schedule_Admin {
 				<tr>
 					<th scope="row"><label for="conf-sch-feedback-url"><?php _e( 'Feedback URL', 'conf-schedule' ); ?></label></th>
 					<td>
-						<input type="text" id="conf-sch-feedback-url" name="conf_schedule[event][feedback_url]" value="<?php echo esc_attr( $feedback_url ); ?>" />
+						<input type="url" id="conf-sch-feedback-url" name="conf_schedule[event][feedback_url]" value="<?php echo esc_attr( $feedback_url ); ?>" />
 						<p class="description"><?php _e( 'Please provide the URL you wish to provide to gather session feedback. <strong>It will display 30 minutes after the session has started, unless you provide a value below.</strong>', 'conf-schedule' ); ?></p>
 					</td>
 				</tr>
