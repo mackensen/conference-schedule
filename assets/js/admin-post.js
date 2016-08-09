@@ -33,66 +33,58 @@
 
 		});
 
-		// Run some code when the combine start time changes
-		$( '#conf-sch-combine-start-time' ).on( 'changeTime', function() {
-
-			// Change settings for end time
-			$( '#conf-sch-combine-end-time' ).timepicker( 'option', 'minTime', $(this).val() );
-
-		});
-
 		// Change settings for end time
-		$( '#conf-sch-end-time, #conf-sch-combine-end-time' ).timepicker( 'option', 'showDuration', true );
+		$( '#conf-sch-end-time' ).timepicker( 'option', 'showDuration', true );
 		$( '#conf-sch-end-time' ).timepicker( 'option', 'durationTime', function() { return $( '#conf-sch-start-time' ).val() } );
-		$( '#conf-sch-combine-end-time' ).timepicker( 'option', 'durationTime', function() { return $( '#conf-sch-combine-start-time' ).val() } );
 
-		// Enable/disable combine time blocks
-		$( '#conf-sch-combine-event' ).change(function() {
-			if ( $( this ).is( ':checked' ) ) {
-				$( '#conf-sch-combine-event-times' ).removeClass( 'disabled' );
-			} else {
-				$( '#conf-sch-combine-event-times' ).addClass( 'disabled' );
-			}
-		});
-
-		// Setup the event types select2
+		// Setup the select2 fields
 		$( '#conf-sch-event-types' ).select2();
-		conf_sch_set_event_types();
-
-		// Reload event types when you click
-		$( '.conf-sch-reload-event-types' ).on( 'click', function() {
-			conf_sch_set_event_types();
-		});
-
-		// Setup session categories select2
 		$( '#conf-sch-session-categories' ).select2();
-		conf_sch_set_session_categories();
-
-		// Reload session categories when you click
-		$( '.conf-sch-reload-session-categories' ).on( 'click', function() {
-			conf_sch_set_session_categories();
-		});
-
-		// Setup location select2
 		$( '#conf-sch-location' ).select2();
-		conf_sch_set_location();
+		$( '#conf-sch-speakers' ).select2();
 
-		// Reload locations when you click
-		$( '.conf-sch-reload-locations' ).on( 'click', function() {
-			conf_sch_set_location();
+		// Populate the events and refresh when you click
+		conf_sch_populate_events();
+		$( '.conf-sch-refresh-events' ).on( 'click', function( $event ) {
+			$event.preventDefault();
+			conf_sch_populate_events();
+			return false;
 		});
 
-		// Setup sepeakers select2
-		$( '#conf-sch-speakers' ).select2();
-		conf_sch_set_speakers();
+		// Populate the event types and refresh when you click
+		conf_sch_populate_event_types();
+		$( '.conf-sch-refresh-event-types' ).on( 'click', function( $event ) {
+			$event.preventDefault();
+			conf_sch_populate_event_types();
+			return false;
+		});
 
-		// Reload speakers when you click
-		$( '.conf-sch-reload-speakers' ).on( 'click', function() {
-			conf_sch_set_speakers();
+		// Populate the session categories and refresh when you click
+		conf_sch_populate_session_categories();
+		$( '.conf-sch-refresh-session-categories' ).on( 'click', function( $event ) {
+			$event.preventDefault();
+			conf_sch_populate_session_categories();
+			return false;
+		});
+
+		// Populate the locations and refresh when you click
+		conf_sch_populate_locations();
+		$( '.conf-sch-refresh-locations' ).on( 'click', function( $event ) {
+			$event.preventDefault();
+			conf_sch_populate_locations();
+			return false;
+		});
+
+		// Populate the speakers and refresh when you click
+		conf_sch_populate_speakers();
+		$( '.conf-sch-refresh-speakers' ).on( 'click', function( $event ) {
+			$event.preventDefault();
+			conf_sch_populate_speakers();
+			return false;
 		});
 
 		// Remove the slides file
-		$( '.conf-sch-slides-file-remove' ).on( 'click', function($event) {
+		$( '.conf-sch-slides-file-remove' ).on( 'click', function( $event ) {
 			$event.preventDefault();
 
 			// Hide the info
@@ -105,21 +97,87 @@
 
 	});
 
-	// Set the event types for the select2
-	function conf_sch_set_event_types() {
+	// Populate the event
+	function conf_sch_populate_events() {
 
-		// Get the event types for the select2
+		// Set the <select> field and disable
+		var $events_select = $( '#conf-sch-event-parent' ).prop( 'disabled', 'disabled' );
+
+		// Get the field information
+		$.ajax({
+			url: conf_sch.wp_api_route + 'schedule?filter[posts_per_page]=-1&filter[conf_sch_ignore_clause_filter]=1',
+			success: function( $select_data ) {
+
+				// Make sure we have info
+				if ( undefined === $select_data || '' == $select_data ) {
+					return false;
+				}
+
+				// Reset the <select>
+				$events_select.empty();
+
+				// Add default <option>
+				if ( $events_select.data( 'default' ) != '' ) {
+					$events_select.append( '<option value="">' + $events_select.data( 'default' ) + '</option>' );
+				}
+
+				// Add the options
+				$.each( $select_data, function( $index, $value ) {
+
+					// Don't include current event
+					if ( undefined !== conf_sch.post_id && conf_sch.post_id == $value.id ) {
+						return;
+					}
+
+					// Build title string
+					var $event_title = $value.title.rendered;
+
+					// Add the option
+					$events_select.append( '<option value="' + $value.id + '">' + $event_title + '</option>' );
+
+				});
+
+				// See what is selected for this particular post
+				if ( undefined !== conf_sch.post_id && conf_sch.post_id > 0 ) {
+					$.ajax({
+						url: conf_sch.wp_api_route + 'schedule/' + conf_sch.post_id,
+						success: function( $event ) {
+
+							// Make sure we have info
+							if ( undefined === $event.event_parent || '' == $event.event_parent ) {
+								return false;
+							}
+
+							// Mark the location as selected
+							$events_select.find( 'option[value="' + $event.event_parent + '"]' ).attr( 'selected', true).trigger( 'change' );
+
+						}
+					});
+				}
+
+				// Enable the select
+				$events_select.prop( 'disabled', false );
+
+			}
+		});
+
+	}
+
+	// Populate the event types
+	function conf_sch_populate_event_types() {
+
+		// Set the <select> and disable
+    	var $event_types_select = $( '#conf-sch-event-types' ).prop( 'disabled', 'disabled' );
+
+		// Get the event types information
 		$.ajax({
 			url: conf_sch.wp_api_route + 'event_types?number=-1',
 			success: function( $types ) {
 
 				// Make sure we have info
-				if ( $types === undefined || $types == '' ) {
+				if ( undefined === $types || '' == $types ) {
 					return false;
 				}
-
-				// Set the <select>
-				var $event_types_select = $( '#conf-sch-event-types' );
 
 				// Reset the <select>
 				$event_types_select.empty();
@@ -130,13 +188,13 @@
 				});
 
 				// See what event types are selected for this particular post
-				if ( $( '#post_ID' ).val() != '' ) {
+				if ( undefined !== conf_sch.post_id && conf_sch.post_id > 0 ) {
 					$.ajax({
-						url: conf_sch.wp_api_route + 'event_types?post=' + $( '#post_ID' ).val() + '&number=-1',
+						url: conf_sch.wp_api_route + 'event_types?post=' + conf_sch.post_id + '&number=-1',
 						success: function( $selected_event_types ) {
 
 							// Make sure we have info
-							if ( $selected_event_types === undefined || $selected_event_types == '' ) {
+							if ( undefined === $selected_event_types || '' == $selected_event_types ) {
 								return false;
 							}
 
@@ -149,26 +207,29 @@
 					});
 				}
 
+				// Enable the select
+				$event_types_select.prop( 'disabled', false );
+
 			}
 		});
 
 	}
 
-	// Set the session categories for the select2
-	function conf_sch_set_session_categories() {
+	// Populate the session categories
+	function conf_sch_populate_session_categories() {
 
-		// Get the session categories for the select2
+		// Set the <select> and disable
+		var $categories_select = $( '#conf-sch-session-categories' ).prop( 'disabled', 'disabled' );
+
+		// Get the session categories information
 		$.ajax({
 			url: conf_sch.wp_api_route + 'session_categories?number=-1',
 			success: function( $categories ) {
 
 				// Make sure we have info
-				if ( $categories === undefined || $categories == '' ) {
+				if ( undefined === $categories || '' == $categories ) {
 					return false;
 				}
-
-				// Set the <select>
-				var $categories_select = $( '#conf-sch-session-categories' );
 
 				// Reset the <select>
 				$categories_select.empty();
@@ -179,13 +240,13 @@
 				});
 
 				// See what session categories are selected for this particular post
-				if ( $( '#post_ID' ).val() != '' ) {
+				if ( undefined !== conf_sch.post_id && conf_sch.post_id > 0 ) {
 					$.ajax({
-						url: conf_sch.wp_api_route + 'session_categories?post=' + $( '#post_ID' ).val() + '&number=-1',
+						url: conf_sch.wp_api_route + 'session_categories?post=' + conf_sch.post_id + '&number=-1',
 						success: function( $selected_categories ) {
 
 							// Make sure we have info
-							if ( $selected_categories === undefined || $selected_categories == '' ) {
+							if ( undefined === $selected_categories || '' == $selected_categories ) {
 								return false;
 							}
 
@@ -198,78 +259,84 @@
 					});
 				}
 
+				// Enable the select
+                $categories_select.prop( 'disabled', false );
+
 			}
 		});
 
 	}
 
-	// Set the location for the select2
-	function conf_sch_set_location() {
+	// Populate the locations
+	function conf_sch_populate_locations() {
 
-		// Get the location for the select2
+		// Set the <select> and disable
+		var $locations_select = $( '#conf-sch-location' ).prop( 'disabled', 'disabled' );
+
+		// Get the field information
 		$.ajax({
 			url: conf_sch.wp_api_route + 'locations?filter[posts_per_page]=-1',
-			success: function( $locations ) {
+			success: function( $select_data ) {
 
 				// Make sure we have info
-				if ( $locations === undefined || $locations == '' ) {
+				if ( undefined === $select_data || '' == $select_data ) {
 					return false;
 				}
 
-				// Set the <select>
-				var $location_select = $( '#conf-sch-location' );
-
 				// Reset the <select>
-				$location_select.empty();
+				$locations_select.empty();
 
 				// Add default <option>
-				if ( $location_select.data( 'default' ) != '' ) {
-					$location_select.append( '<option value="">' + $location_select.data( 'default' ) + '</option>' );
+				if ( $locations_select.data( 'default' ) != '' ) {
+					$locations_select.append( '<option value="">' + $locations_select.data( 'default' ) + '</option>' );
 				}
 
 				// Add the options
-				$.each( $locations, function( $index, $value ) {
-					$location_select.append( '<option value="' + $value.id + '">' + $value.title.rendered + '</option>' );
+				$.each( $select_data, function( $index, $value ) {
+					$locations_select.append( '<option value="' + $value.id + '">' + $value.title.rendered + '</option>' );
 				});
 
 				// See what is selected for this particular post
-				if ( $( '#post_ID' ).val() != '' ) {
+				if ( undefined !== conf_sch.post_id && conf_sch.post_id > 0 ) {
 					$.ajax({
-						url: conf_sch.wp_api_route + 'schedule/' + $( '#post_ID' ).val(),
+						url: conf_sch.wp_api_route + 'schedule/' + conf_sch.post_id,
 						success: function( $event ) {
 
 							// Make sure we have info
-							if ( $event.event_location === undefined || $event.event_location == '' ) {
+							if ( undefined === $event.event_location || '' == $event.event_location ) {
 								return false;
 							}
 
 							// Mark the location as selected
-							$location_select.find( 'option[value="' + $event.event_location.ID + '"]' ).attr( 'selected', true).trigger( 'change' );
+							$locations_select.find( 'option[value="' + $event.event_location.ID + '"]' ).attr( 'selected', true).trigger( 'change' );
 
 						}
 					});
 				}
 
+				// Enable the select
+				$locations_select.prop( 'disabled', false );
+
 			}
 		});
 
 	}
 
-	// Set the speakers for the select2
-	function conf_sch_set_speakers() {
+	// Populate the speakers field
+	function conf_sch_populate_speakers() {
 
-		// Get the speakers for the select2
+		// Set the <select> and disable
+		var $speakers_select = $( '#conf-sch-speakers' ).prop( 'disabled', 'disabled' );
+
+		// Get the speakers information
 		$.ajax({
 			url: conf_sch.wp_api_route + 'speakers?filter[posts_per_page]=-1',
 			success: function( $speakers ) {
 
 				// Make sure we have info
-				if ( $speakers === undefined || $speakers == '' ) {
+				if ( undefined === $speakers || '' == $speakers ) {
 					return false;
 				}
-
-				// Set the <select>
-				var $speakers_select = $( '#conf-sch-speakers' );
 
 				// Reset the <select>
 				$speakers_select.empty();
@@ -280,13 +347,13 @@
 				});
 
 				// See what is selected for this particular post
-				if ( $( '#post_ID' ).val() != '' ) {
+				if ( undefined !== conf_sch.post_id && conf_sch.post_id > 0 ) {
 					$.ajax({
-						url: conf_sch.wp_api_route + 'schedule/' + $( '#post_ID' ).val(),
+						url: conf_sch.wp_api_route + 'schedule/' + conf_sch.post_id,
 						success: function( $event ) {
 
 							// Make sure we have info
-							if ( $event.event_speakers === undefined || $event.event_speakers == '' ) {
+							if ( undefined === $event.event_speakers || '' == $event.event_speakers ) {
 								return false;
 							}
 
@@ -298,6 +365,9 @@
 						}
 					});
 				}
+
+				// Enable the select
+				$speakers_select.prop( 'disabled', false );
 
 			}
 		});

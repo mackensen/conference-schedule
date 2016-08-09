@@ -32,6 +32,9 @@
 	// Get/update the schedule
 	function render_conference_schedule() {
 
+		// Will hold all "children" events
+		var $children_events = [];
+
 		// Get the schedule information
 		$.ajax({
 			url: conf_sch.wp_api_route + 'schedule',
@@ -46,6 +49,12 @@
 				// Go through each item
 				$.each( $schedule_items, function( $index, $item ) {
 
+					// If this event is a child, don't add (for now)
+                	if ( $item.event_parent > 0 ) {
+                		$children_events.push( $item );
+                		return true;
+                	}
+
 					// Make sure we have a date
 					if ( ! ( $item.event_date !== undefined && $item.event_date ) ) {
 						return false;
@@ -56,18 +65,30 @@
 						return false;
 					}
 
-					// Make sure array exists
+					// Build time index
+					var $event_time_index = $item.event_start_time;
+
+					// Add end time
+					if ( $item.event_end_time ) {
+						$event_time_index += ":" + $item.event_end_time;
+					}
+
+					// Make sure array exists for the day
 					if ( $schedule_by_dates[$item.event_date] === undefined ) {
 						$schedule_by_dates[$item.event_date] = {};
 					}
 
-					// Make sure start time exists
-					if ( $schedule_by_dates[$item.event_date][$item.event_start_time] === undefined ) {
-						$schedule_by_dates[$item.event_date][$item.event_start_time] = [];
+					// Make sure time row exists
+					if ( $schedule_by_dates[$item.event_date][$event_time_index] === undefined ) {
+						$schedule_by_dates[$item.event_date][$event_time_index] = {
+							start_time: $item.event_start_time,
+							end_time: $item.event_end_time,
+							events: []
+						};
 					}
 
 					// Add this item by date
-					$schedule_by_dates[$item.event_date][$item.event_start_time].push( $item );
+					$schedule_by_dates[$item.event_date][$event_time_index]['events'].push( $item );
 
 				});
 
@@ -81,32 +102,39 @@
 					var $day_display = '';
 
 					// Sort through events by the time
-					$.each( $day_by_time, function( $time, $day_items ) {
+					$.each( $day_by_time, function( $time, $time_items ) {
 
-						// Will hold the time for display
-						var $time_display = '';
+						// Make sure we have events
+						if ( $time_items.events === undefined
+							|| typeof $time_items.events != 'object'
+							|| $time_items.events.length == 0 ) {
+							return false;
+						}
+
+						// Will hold the row time for display
+						var $row_time_display = '';
 
 						// Build events HTML
-						var $row_events = '';
+						var $row_events = [];
 
 						// Get event types
 						var $event_types = [];
 
 						// Add the events
-						$.each( $day_items, function ($index, $item) {
+						$.each( $time_items.events, function( $index, $item ) {
 
 							// Get the date
 							if ( $day_display == '' && $item.event_date_display ) {
 								$day_display = $item.event_date_display;
 							}
 
-							// Get the time
-							if ( $time_display == '' && $item.event_time_display ) {
-								$time_display = $item.event_time_display;
+							// Set the time display to the default time display
+							if ( $row_time_display == '' && $item.event_time_display ) {
+								$row_time_display = $item.event_time_display;
 							}
 
 							// Render the templates
-							$row_events += $conf_sch_templ( $item );
+							$row_events.push( $conf_sch_templ( $item ) );
 
 							// Store event types
 							if ( $item.event_types && $.isArray( $item.event_types ) ) {
@@ -119,17 +147,22 @@
 
 						});
 
-						// Will hold the row HTML - start with the time
-						var $schedule_row_html = '<div class="schedule-row-item time">' + $time_display + '</div>';
+						// If we have events, add a row
+						if ( $row_events.length >= 1 ) {
 
-						// Add the events
-						$schedule_row_html += '<div class="schedule-row-item events">' + $row_events + '</div>';
+							// Will hold the row HTML - start with the time
+							var $schedule_row_html = '<div class="schedule-row-item time">' + $row_time_display + '</div>';
 
-						// Wrap the row
-						$schedule_row_html = '<div class="schedule-row ' + $event_types.join(' ') + '">' + $schedule_row_html + '</div>';
+							// Add the events
+							$schedule_row_html += '<div class="schedule-row-item events">' + $row_events.join( '' ) + '</div>';
 
-						// Add to the day
-						$schedule_day_html += $schedule_row_html;
+							// Wrap the row
+							$schedule_row_html = '<div class="schedule-row ' + $event_types.join( ' ' ) + '">' + $schedule_row_html + '</div>';
+
+							// Add to the day
+							$schedule_day_html += $schedule_row_html;
+
+						}
 
 					});
 
@@ -158,8 +191,36 @@
 				// Add the html
 				$conf_schedule.html( $schedule_html );
 
+			},
+			complete: function() {
+
+				// Process the children
+            	if ( $children_events.length >= 1 ) {
+            		$.each( $children_events, function( $index, $item ) {
+
+            			// Get the parent
+            			var $event_parent = $( '#conf-sch-event-' + $item.event_parent );
+            			if ( $event_parent.length > 0 ) {
+
+            				// Make sure the parent knows it's a parent
+            				$event_parent.addClass( 'event-parent' );
+
+            				// Make sure it has a child div
+            				var $event_children = $event_parent.find( '.event-children' );
+            				if ( $event_children.length == 0 ) {
+            					$event_children = $( '<div class="event-children"></div>' ).appendTo( $event_parent );
+            				}
+
+            				// Render the templates
+            				$event_children.append( $conf_sch_templ( $item ) );
+
+            			}
+
+            		});
+            	}
+
 			}
-		} );
+		});
 
 	}
 

@@ -1,7 +1,7 @@
 // Require all the things (that we need)
 var gulp = require('gulp');
 var sass = require('gulp-sass');
-var minify = require('gulp-minify');
+var uglify = require('gulp-uglify');
 var watch = require('gulp-watch');
 var autoprefixer = require('gulp-autoprefixer');
 var rename = require('gulp-rename');
@@ -21,7 +21,7 @@ var dest = {
 // I've got my eyes on you(r file changes)
 gulp.task('watch', function() {
 	gulp.watch(src.scss, ['sass']);
-	gulp.watch(src.js, ['compress']);
+	gulp.watch(src.js, ['js']);
 });
 
 // Sass is pretty awesome, right?
@@ -39,18 +39,20 @@ gulp.task('sass', function() {
 		.pipe(gulp.dest(dest.scss));
 });
 
-// Compress all the JS
-gulp.task('compress', function() {
-	return gulp.src(src.js)
-		.pipe(minify({
-			ext: '.min.js',
-			mangle: false
+// Minify the JS
+gulp.task('js', function() {
+    gulp.src(src.js)
+        .pipe(uglify({
+            mangle: false
+        }))
+        .pipe(rename({
+			suffix: '.min'
 		}))
-		.pipe(gulp.dest(dest.js))
+        .pipe(gulp.dest(dest.js))
 });
 
 // Let's get this party started
-gulp.task('default', ['sass','compress'], function() {
+gulp.task('default', ['sass','js'], function() {
 	gulp.watch(src.scss, ['sass']);
-	gulp.watch(src.js, ['compress']);
+	gulp.watch(src.js, ['js']);
 });

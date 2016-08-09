@@ -20,19 +20,17 @@
 
 }
 
-#conf-sch-combine-event-times {
+#conf-sch-event-children {
 	display: block;
 	background: #f3f3f3;
 	margin: 15px 0 0 0;
 	padding: 15px;
 
-	.description {
-		margin: 0 0 10px 0;
-	}
-
-	&.disabled {
-		opacity: 0.4;
-		pointer-events: none;
+	ul {
+		list-style: disc;
+		list-style-position: outside;
+		margin-left: 30px;
 	}
 
 }
+

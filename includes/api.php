@@ -32,15 +32,15 @@ class Conference_Schedule_API {
 
 		// Add event info
 		$event_fields = array(
+			'event_dt',
+			'event_dt_gmt',
 			'event_date',
-			'event_date_display',
 			'event_start_time',
 			'event_end_time',
-			'event_combine_start_time',
-			'event_combine_end_time',
-			'event_duration',
+			'event_date_display',
 			'event_time_display',
-			'event_combine_time_display',
+			'event_duration',
+			'event_parent',
 			'event_types',
 			'event_location',
 			'event_address',
@@ -92,7 +92,6 @@ class Conference_Schedule_API {
 
 		switch( $field_name ) {
 
-			case 'event_date':
 			case 'event_start_time':
 			case 'event_end_time':
 			case 'event_hashtag':
@@ -104,52 +103,108 @@ class Conference_Schedule_API {
 			case 'speaker_instagram':
 			case 'speaker_twitter':
 			case 'speaker_linkedin':
-				$field_value = get_post_meta( $object[ 'id' ], $field_meta_key, true );
+				if ( ! empty( $object[ $field_name ] ) ) {
+					$field_value = $object[ $field_name ];
+				} else {
+					$field_value = get_post_meta( $object['id'], $field_meta_key, true );
+				}
 				return ! empty( $field_value ) ? $field_value : null;
 
-			// Only get the combine start time if enabled
-			case 'event_combine_start_time':
-				if ( get_post_meta( $object[ 'id' ], 'conf_sch_combine_event', true ) ) {
-					$event_combine_start_time = get_post_meta( $object['id'], $field_meta_key, true );
-					return ! empty( $event_combine_start_time ) ? $event_combine_start_time : null;
+			// Get the event date/time
+			case 'event_dt':
+
+				// Get the event date
+				if ( empty( $object['event_date'] ) ) {
+					$object['event_date'] = get_post_meta( $object['id'], 'conf_sch_event_date', true );
 				}
-				return null;
 
-			// Only get the combine end time if we have a start time, which means it's enabled
-			case 'event_combine_end_time':
-				if ( ! empty( $object[ 'event_combine_start_time' ] ) ) {
-					$event_combine_end_time = get_post_meta( $object['id'], $field_meta_key, true );
-					return ! empty( $event_combine_end_time ) ? $event_combine_end_time : null;
-				}
-				return null;
+				// If we have an event date, get the start date
+				if ( ! empty( $object['event_date'] ) ) {
 
-			case 'event_date_display':
-				$event_date = get_post_meta( $object[ 'id' ], 'conf_sch_event_date', true );
-				return ! empty( $event_date ) ? date( 'l, F j, Y', strtotime( $event_date ) ) : null;
+					// Store in variable
+					$event_date = $object['event_date'];
 
-			case 'event_duration':
-			case 'event_time_display':
-			case 'event_combine_time_display':
+					// Get the start time, if we have one
+					if ( empty( $object['event_start_time'] ) ) {
+						$object['event_start_time'] = get_post_meta( $object['id'], 'conf_sch_event_start_time', true );
+					}
 
-				// Get the time data
-				$start_time = $end_time = '';
-
-				// Get start and end time for the combine time
-				if ( 'event_combine_time_display' == $field_name ) {
-
-					// Only get the combine time display if we have a start time, which means it's enabled
-					if ( ! empty( $object[ 'event_combine_start_time' ] ) ) {
-						$start_time = $object[ 'event_combine_start_time' ];
-						$end_time = $object[ 'event_combine_end_time' ];
+					// If we have a start time, add to date
+					if ( ! empty( $object['event_start_time'] ) ) {
+						$event_date .= 'T' . $object['event_start_time'];
 					}
 
 				}
 
-				// Rest of the fields use the same start and end time
-				else {
-					$start_time = $object['event_start_time'];
-					$end_time = $object['event_end_time'];
+				return ! empty( $event_date ) ? $event_date : null;
+
+			// Get the event date/time in GMT
+			case 'event_dt_gmt':
+
+				// Get the event date
+				if ( empty( $object['event_dt'] ) ) {
+					$object['event_dt'] = get_post_meta( $object['id'], 'conf_sch_event_date', true );
 				}
+
+				// If we have a date...
+				if ( ! empty( $object['event_dt'] ) ) {
+
+					// Get this site's timezone
+					$timezone = get_option( 'timezone_string' );
+					if ( empty( $timezone ) ) {
+						$timezone = 'UTC';
+					}
+
+					// Store in date object
+					$date = new DateTime( $object['event_dt'], new DateTimeZone( $timezone ) );
+
+					// Convert to UTC/GMT
+					$utc_timezone = new DateTimeZone( 'UTC' );
+					$date->setTimezone( $utc_timezone );
+
+					// Store GMT
+					return $date->format( 'Y-m-d\TH:i' );
+
+				}
+
+				return null;
+
+			// Get the event date
+			case 'event_date':
+
+				// Get the event date
+				if ( empty( $object['event_date'] ) ) {
+					$object['event_date'] = get_post_meta( $object['id'], 'conf_sch_event_date', true );
+				}
+				return ! empty( $object['event_date'] ) ? $object['event_date'] : null;
+
+			// Get the event parent
+			case 'event_parent':
+				return get_post_field( 'post_parent', $object['id'] );
+
+			case 'event_date_display':
+				if ( empty( $object['event_date'] ) ) {
+					$object['event_date'] = get_post_meta( $object['id'], 'conf_sch_event_date', true );
+				}
+				return ! empty( $object['event_date'] ) ? date( 'l, F j, Y', strtotime( $object['event_date'] ) ) : null;
+
+			case 'event_duration':
+			case 'event_time_display':
+
+				// Get the time data
+				$start_time = $end_time = '';
+
+				// Get the start time
+				if ( empty( $object['event_start_time'] ) ) {
+					$object['event_start_time'] = get_post_meta( $object['id'], 'conf_sch_event_start_time', true );
+				}
+				$start_time = $object['event_start_time'];
+
+				// Get the end time
+				if ( empty( $object['event_end_time'] ) ) {
+					$object['event_end_time'] = get_post_meta( $object['id'], 'conf_sch_event_end_time', true );
+				}
+				$end_time = $object['event_end_time'];
 
 				// Only proceed if we have a start time
 				if ( ! $start_time ) {
@@ -273,7 +328,7 @@ class Conference_Schedule_API {
 				return null;
 
 			/**
-			 * Livestream URL will only show up 10 minutes before the session starts.
+			 * Livestream URL will only show up 10 minutes before the session starts and stay until it ends.
 			 *
 			 * @TODO make setting
 			 */
@@ -282,50 +337,39 @@ class Conference_Schedule_API {
 				$livestream_url = get_post_meta( $object[ 'id' ], 'conf_sch_event_livestream_url', true );
 				if ( ! empty( $livestream_url ) ) {
 
-					// Get this site's timezone
-					$timezone = get_option( 'timezone_string' );
-					if ( empty( $timezone ) ) {
-						$timezone = 'UTC';
-					}
+					// What time is it in UTC?
+					$current_time = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
 
-					// What time is it?
-					$current_time = new DateTime( 'now', new DateTimeZone( $timezone ) );
-
-					// Get date
-					$session_date = ! empty( $object[ 'event_date' ] ) ? $object[ 'event_date' ] : get_post_meta( $object[ 'id' ], 'conf_sch_event_date', true );
+					// Get date in UTC
+					// @TODO create function to get event date and event date GMT
+					$session_date = ! empty( $object[ 'event_dt_gmt' ] ) ? $object[ 'event_dt_gmt' ] : '';
 
 					// Make sure we have a date
 					if ( empty( $session_date ) ) {
 						return null;
 					}
 
-					// Get start time
-					$session_start_time = ! empty( $object[ 'event_start_time' ] ) ? $object[ 'event_start_time' ] : get_post_meta( $object[ 'id' ], 'conf_sch_event_start_time', true );
-
-					// Make sure we have a start time
-					if ( empty( $session_start_time ) ) {
-						return null;
-					}
-
 					// Will show up 10 minutes before start
 					$session_livestream_reveal_delay_seconds = 600;
 
-					// Build date string
-					$session_date_string = $session_date ? $session_date : null;
-
 					// Send URL if time is valid
-					if ( strtotime( $session_date_string ) !== false ) {
+					if ( strtotime( $session_date ) !== false ) {
 
-						// Add the start time
-						if ( $session_start_time && strtotime( "{$session_date_string} {$session_start_time}" ) !== false ) {
-							$session_date_string .= " {$session_start_time}";
-						}
+						// Build session start date time
+						$event_start_dt = new DateTime( $session_date, new DateTimeZone( 'UTC' ) );
 
-						// Build session date time
-						$session_date_time = new DateTime( $session_date_string, new DateTimeZone( $timezone ) );
+						// When will the livestream URL show up?
+						if ( ( $event_start_dt->getTimestamp() - $current_time->getTimestamp() ) <= $session_livestream_reveal_delay_seconds ) {
 
-						// Feedback URL will only show up 30 minutes after the session has started
-						if ( ( $session_date_time->getTimestamp() - $current_time->getTimestamp() ) <= $session_livestream_reveal_delay_seconds ) {
+							// Get the duration
+							// @TODO create function to get duration
+							$event_duration = ! empty( $object['event_duration'] ) ? $object['event_duration'] : 0;
+
+							// Remove when the event ends
+							if ( $current_time->getTimestamp() > ( $event_start_dt->getTimestamp() + $event_duration ) ) {
+								return null;
+							}
+
 							return $livestream_url;
 						}
 
@@ -367,40 +411,31 @@ class Conference_Schedule_API {
 
 				if ( $feedback_url ) {
 
-					// Get this site's timezone
-					$timezone = get_option('timezone_string');
-
 					// What time is it?
-					$current_time = new DateTime( 'now', new DateTimeZone( $timezone ) );
+					$current_time = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
 
-					// Get date and start time and reveal delay
-					$session_date = get_post_meta( $object[ 'id' ], 'conf_sch_event_date', true );
-					$session_start_time = get_post_meta( $object[ 'id' ], 'conf_sch_event_start_time', true );
-					$session_feedback_reveal_delay_seconds = get_post_meta( $object[ 'id' ], 'conf_sch_event_feedback_reveal_delay_seconds', true );
-
-					// Set the default delay to 30 minutes
-					if ( ! empty( $session_feedback_reveal_delay_seconds ) && $session_feedback_reveal_delay_seconds > 0 ) {
-						$session_feedback_reveal_delay_seconds = intval( $session_feedback_reveal_delay_seconds );
-					} else {
-						$session_feedback_reveal_delay_seconds = 1800;
-					}
-
-					// Build date string
-					$session_date_string = $session_date ? $session_date : null;
+					// Get date in UTC
+					// @TODO create function to get event date and event date GMT
+					$event_date = ! empty( $object[ 'event_dt_gmt' ] ) ? $object[ 'event_dt_gmt' ] : '';
 
 					// Send URL if time is not valid
-					if ( $session_date_string && strtotime( $session_date_string ) !== false ) {
+					if ( ! empty( $event_date ) && strtotime( $event_date ) !== false ) {
 
-						// Add the start time
-						if ( $session_start_time && strtotime( "{$session_date_string} {$session_start_time}" ) !== false ) {
-							$session_date_string .= " {$session_start_time}";
+						// Build event start date
+						$event_start = new DateTime( $event_date, new DateTimeZone( 'UTC' ) );
+
+						// Get reveal delay
+						$session_feedback_reveal_delay_seconds = get_post_meta( $object[ 'id' ], 'conf_sch_event_feedback_reveal_delay_seconds', true );
+
+						// Set the default delay to 30 minutes
+						if ( ! empty( $session_feedback_reveal_delay_seconds ) && $session_feedback_reveal_delay_seconds > 0 ) {
+							$session_feedback_reveal_delay_seconds = intval( $session_feedback_reveal_delay_seconds );
+						} else {
+							$session_feedback_reveal_delay_seconds = 1800;
 						}
 
-						// Build session date time
-						$session_date_time = new DateTime( $session_date_string, new DateTimeZone( $timezone ) );
-
-						// Feedback URL will only show up 30 minutes after the session has started
-						if ( ( $current_time->getTimestamp() - $session_date_time->getTimestamp() ) >= $session_feedback_reveal_delay_seconds ) {
+						// Feedback URL will only show up 30 minutes after the event has started
+						if ( ( $current_time->getTimestamp() - $event_start->getTimestamp() ) >= $session_feedback_reveal_delay_seconds ) {
 							return $feedback_url;
 						}
 
@@ -408,8 +443,9 @@ class Conference_Schedule_API {
 
 					}
 
-					// If no valid session time, well show URL
+					// If no valid event time, well show URL
 					return $feedback_url;
+
 				}
 				return null;
 

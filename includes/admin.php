@@ -101,7 +101,7 @@ class Conference_Schedule_Admin {
 	 * @param	string - $hook_suffix - the ID of the current page
 	 */
 	public function enqueue_styles_scripts( $hook_suffix ) {
-		global $post_type;
+		global $post_type, $post_id;
 
 		// Only for the settings page
 		if ( $this->settings_page_id == $hook_suffix ) {
@@ -143,7 +143,8 @@ class Conference_Schedule_Admin {
 			
 			// Pass info to the script
 			wp_localize_script( 'conf-schedule-admin-post', 'conf_sch', array(
-				'wp_api_route' => $wp_rest_api_route,
+				'post_id'       => $post_id,
+				'wp_api_route'  => $wp_rest_api_route,
 			));
 
 		}
@@ -305,7 +306,7 @@ class Conference_Schedule_Admin {
 						</tr>
 						<tr>
 							<td>
-								<label for="conf-schedule-schedule-add-page"><strong><?php _e( 'Add the schedule to a page', 'conf-schedule' ); ?></strong></label>
+								<label for="conf-schedule-schedule-add-page"><strong><?php _e( 'Add the schedule to a page:', 'conf-schedule' ); ?></strong></label>
 								<select name="conf_schedule[schedule_add_page]" id="conf-schedule-schedule-add-page">
 									<option value=""><?php _e( 'Do not add to a page', 'conf-schedule' ); ?></option>
 									<?php foreach( $pages as $page ) { ?>
@@ -546,7 +547,7 @@ class Conference_Schedule_Admin {
 							}
 
 							// Make sure times are set
-							foreach ( array( 'start_time', 'end_time', 'combine_start_time', 'combine_end_time' ) as $time_key ) {
+							foreach ( array( 'start_time', 'end_time' ) as $time_key ) {
 
 								// If we have a value, store it
 								if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ $time_key ] ) ) {
@@ -651,16 +652,6 @@ class Conference_Schedule_Admin {
 							// Clear out speakers meta
 							else {
 								update_post_meta( $post_id, 'conf_sch_event_speakers', null );
-							}
-
-							// Make sure 'conf_sch_combine_event' is set
-							if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'combine_event' ] ) ) {
-								update_post_meta( $post_id, 'conf_sch_combine_event', true );
-							}
-
-							// Clear out 'sch_link_to_post' meta
-							else {
-								update_post_meta( $post_id, 'conf_sch_combine_event', null );
 							}
 
 							// Make sure 'sch_link_to_post' is set
@@ -907,14 +898,6 @@ class Conference_Schedule_Admin {
 			$sch_link_to_post = get_post_meta( $post_id, 'conf_sch_link_to_post', true );
 		}
 
-		// Should we combine this event with other events?
-		$sch_combine_event = get_post_meta( $post_id, 'conf_sch_combine_event', true );
-		$sch_combine_event_enabled = isset( $sch_combine_event ) && $sch_combine_event;
-
-		// Get combined time block
-		$event_combine_start_time = get_post_meta( $post_id, 'conf_sch_event_combine_start_time', true );
-		$event_combine_end_time = get_post_meta( $post_id, 'conf_sch_event_combine_end_time', true );
-
 		// Convert event date to m/d/Y
 		$event_date_mdy = $event_date ? date( 'm/d/Y', strtotime( $event_date ) ) : null;
 
@@ -925,6 +908,64 @@ class Conference_Schedule_Admin {
 					<td>
 						<input type="text" id="conf-sch-date" value="<?php echo esc_attr( $event_date_mdy ); ?>" class="conf-sch-date-field" />
 						<input name="conf_schedule[event][date]" type="hidden" id="conf-sch-date-alt" value="<?php echo esc_attr( $event_date ); ?>" />
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="conf-sch-event-parent"><?php _e( 'Group with other events', 'conf-schedule' ); ?></label></th>
+					<td>
+						<select id="conf-sch-event-parent" name="parent_id" data-default="<?php _e( 'Select the event parent', 'conf-schedule' ); ?>" disabled="disabled">
+							<option value=""><?php _e( 'Select the event parent', 'conf-schedule' ); ?></option>
+						</select>
+						<p class="description">
+							<a class="conf-sch-refresh-events" href="#"><?php _e( 'Refresh events', 'conf-schedule' ); ?></a> |
+							<a href="<?php echo admin_url( 'edit.php?post_type=schedule' ); ?>" target="_blank"><?php _e( 'Manage events', 'conf-schedule' ); ?></a>
+						</p>
+						<p class="description"><strong><?php _e( 'Group this event by selecting the event parent.', 'conf-schedule' ); ?></strong><br /><?php _e( 'For example, lightning talks are usually events where multiple sessions equal one block on the schedule. To group events, create a "parent" event and assign them all under the same parent.', 'conf-schedule' ); ?></p>
+						<?php
+
+						// See if this event has a parent
+						$event_parent = wp_get_post_parent_id( $post_id );
+
+						// Does this event have children or siblings?
+						// @TODO make sure they display in order and show time
+						$event_children = get_children( array(
+							'post_parent' => $event_parent > 0 ? $event_parent : $post_id,
+							'post_type'   => 'schedule',
+							'numberposts' => -1,
+							'post_status' => 'any'
+						));
+
+						if ( ! empty( $event_children ) ) { ?>
+							<div id="conf-sch-event-children">
+								<p class="description"><strong><?php
+
+									if ( $event_parent > 0 ) {
+										_e( 'This event has the following sibling events:', 'conf-schedule' );
+									} else {
+										_e( 'This event is a parent to the following events:', 'conf-schedule' );
+									}
+
+								?></p>
+								<ul>
+								<?php
+
+								foreach( $event_children as $child ) {
+
+									// Don't show the current event
+									if ( $child->ID == $post_id ) {
+										continue;
+									}
+									
+									?>
+									<li><a href="<?php echo get_edit_post_link( $child->ID ); ?>"><?php echo $child->post_title; ?></a></li>
+								<?php }
+
+								?>
+								</ul>
+							</div>
+						<?php }
+
+						?>
 					</td>
 				</tr>
 				<tr>
@@ -940,58 +981,51 @@ class Conference_Schedule_Admin {
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><?php _e( 'Combine with other events', 'conf-schedule' ); ?></th>
-					<td>
-						<label for="conf-sch-combine-event"><input name="conf_schedule[event][combine_event]" type="checkbox" id="conf-sch-combine-event" value="1"<?php checked( $sch_combine_event_enabled ); ?> /> <?php _e( "If checked, this event will be combined with other events on the schedule", 'conf-schedule' ); ?></label>
-						<p class="description"><?php _e( 'For example, lightning talks are usually events where multiple sessions equal one block on the schedule. This setting helps combines these sessions on the schedule.', 'conf-schedule' ); ?></p>
-
-						<span id="conf-sch-combine-event-times"<?php echo ! $sch_combine_event_enabled ? ' class="disabled"' : ''; ?>>
-							<p class="description"><strong><?php _e( 'Please provide the time block for the combined events.', 'conf-schedule' ); ?></strong></p>
-
-							<label class="label-block" for="conf-sch-combine-start-time"><?php _e( 'Start Time', 'conf-schedule' ); ?></label>
-							<input name="conf_schedule[event][combine_start_time]" type="text" id="conf-sch-combine-start-time" value="<?php echo esc_attr( $event_combine_start_time ); ?>" class="regular-text conf-sch-time-field" />
-
-							<br /><br />
-							<label class="label-block" for="conf-sch-combine-end-time"><?php _e( 'End Time', 'conf-schedule' ); ?></label>
-							<input name="conf_schedule[event][combine_end_time]" type="text" id="conf-sch-combine-end-time" value="<?php echo esc_attr( $event_combine_end_time ); ?>" class="regular-text conf-sch-time-field" />
-						</span>
-
-					</td>
-				</tr>
-				<tr>
 					<th scope="row"><label for="conf-sch-event-types"><?php _e( 'Event Types', 'conf-schedule' ); ?></label></th>
 					<td>
-						<select id="conf-sch-event-types" name="conf_schedule[event][event_types][]" multiple="multiple">
+						<select id="conf-sch-event-types" name="conf_schedule[event][event_types][]" multiple="multiple" disabled="disabled">
 							<option value=""><?php _e( 'No event types', 'conf-schedule' ); ?></option>
 						</select>
-						<p class="description"><a class="conf-sch-reload-event-types" href="<?php echo admin_url( 'edit-tags.php?taxonomy=event_types&post_type=schedule' ); ?>" target="_blank"><?php _e( 'Manage the event types', 'conf-schedule' ); ?></a></p>
+						<p class="description">
+							<a class="conf-sch-refresh-event-types" href="#"><?php _e( 'Refresh event types', 'conf-schedule' ); ?></a> |
+							<a href="<?php echo admin_url( 'edit-tags.php?taxonomy=event_types&post_type=schedule' ); ?>" target="_blank"><?php _e( 'Manage event types', 'conf-schedule' ); ?></a>
+						</p>
 					</td>
 				</tr>
 				<tr>
 					<th scope="row"><label for="conf-sch-session-categories"><?php _e( 'Session Categories', 'conf-schedule' ); ?></label></th>
 					<td>
-						<select id="conf-sch-session-categories" name="conf_schedule[event][session_categories][]" multiple="multiple">
+						<select id="conf-sch-session-categories" name="conf_schedule[event][session_categories][]" multiple="multiple" disabled="disabled">
 							<option value=""><?php _e( 'No session categories', 'conf-schedule' ); ?></option>
 						</select>
-						<p class="description"><a class="conf-sch-reload-session-categories" href="<?php echo admin_url( 'edit-tags.php?taxonomy=session_categories&post_type=schedule' ); ?>" target="_blank"><?php _e( 'Manage the session categories', 'conf-schedule' ); ?></a></p>
+						<p class="description">
+							<a class="conf-sch-refresh-session-categories" href="#"><?php _e( 'Refresh categories', 'conf-schedule' ); ?></a> |
+							<a href="<?php echo admin_url( 'edit-tags.php?taxonomy=session_categories&post_type=schedule' ); ?>" target="_blank"><?php _e( 'Manage categories', 'conf-schedule' ); ?></a>
+						</p>
 					</td>
 				</tr>
 				<tr>
 					<th scope="row"><label for="conf-sch-location"><?php _e( 'Location', 'conf-schedule' ); ?></label></th>
 					<td>
-						<select id="conf-sch-location" name="conf_schedule[event][location]" data-default="<?php _e( 'No location', 'conf-schedule' ); ?>">
+						<select id="conf-sch-location" name="conf_schedule[event][location]" data-default="<?php _e( 'No location', 'conf-schedule' ); ?>" disabled="disabled">
 							<option value=""><?php _e( 'No location', 'conf-schedule' ); ?></option>
 						</select>
-						<p class="description"><a class="conf-sch-reload-locations" href="<?php echo admin_url( 'edit.php?post_type=locations' ); ?>" target="_blank"><?php _e( 'Manage the locations', 'conf-schedule' ); ?></a></p>
+						<p class="description">
+							<a class="conf-sch-refresh-locations" href="#"><?php _e( 'Refresh locations', 'conf-schedule' ); ?></a> |
+							<a href="<?php echo admin_url( 'edit.php?post_type=locations' ); ?>" target="_blank"><?php _e( 'Manage locations', 'conf-schedule' ); ?></a>
+						</p>
 					</td>
 				</tr>
 				<tr>
 					<th scope="row"><label for="conf-sch-speakers"><?php _e( 'Speakers', 'conf-schedule' ); ?></label></th>
 					<td>
-						<select id="conf-sch-speakers" name="conf_schedule[event][speakers][]" multiple="multiple">
+						<select id="conf-sch-speakers" name="conf_schedule[event][speakers][]" multiple="multiple" disabled="disabled">
 							<option value=""><?php _e( 'No speakers', 'conf-schedule' ); ?></option>
 						</select>
-						<p class="description"><a class="conf-sch-reload-speakers" href="<?php echo admin_url( 'edit.php?post_type=speakers' ); ?>" target="_blank"><?php _e( 'Manage the speakers', 'conf-schedule' ); ?></a></p>
+						<p class="description">
+							<a class="conf-sch-refresh-speakers" href="#"><?php _e( 'Refresh speakers', 'conf-schedule' ); ?></a> |
+							<a href="<?php echo admin_url( 'edit.php?post_type=speakers' ); ?>" target="_blank"><?php _e( 'Manage speakers', 'conf-schedule' ); ?></a>
+						</p>
 					</td>
 				</tr>
 				<tr>

@@ -110,6 +110,7 @@ class Conference_Schedule {
 		add_action( 'upgrader_process_complete', array( $this, 'upgrader_process_complete' ), 1, 2 );
 
 		// Adjust the schedule query
+		add_filter( 'query_vars', array( $this, 'add_query_vars' ) );
 		add_action( 'pre_get_posts', array( $this, 'filter_pre_get_posts' ), 20 );
 		add_filter( 'posts_clauses', array( $this, 'filter_posts_clauses' ), 20, 2 );
 
@@ -215,6 +216,17 @@ class Conference_Schedule {
 	}
 
 	/**
+	 * Add custom query vars.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 */
+	public function add_query_vars( $vars ) {
+		$vars[] = 'conf_sch_ignore_clause_filter';
+		return $vars;
+	}
+
+	/**
 	 * Adjust the schedule query.
 	 *
 	 * @access  public
@@ -235,6 +247,10 @@ class Conference_Schedule {
 			// Always get all schedule items
 			$query->set( 'posts_per_page' , '-1' );
 
+			// Default order is by title asc
+			$query->set( 'orderby', 'title' );
+			$query->set( 'order', 'ASC' );
+
 		}
 
 	}
@@ -250,6 +266,11 @@ class Conference_Schedule {
 
 		// Not in admin
 		if ( is_admin() ) {
+			return $pieces;
+		}
+
+		// If we pass a filter telling it to ignore our filter
+		if ( '1' == $query->get( 'conf_sch_ignore_clause_filter' ) ) {
 			return $pieces;
 		}
 
@@ -469,7 +490,7 @@ class Conference_Schedule {
 			'description'           => __( 'The schedule content for your conference.', 'conf-schedule' ),
 			'labels'                => $schedule_labels,
 			'public'                => true,
-			'hierarchical'          => false,
+			'hierarchical'          => true,
 			'supports'              => array( 'title', 'editor', 'thumbnail', 'excerpt', 'revisions' ),
 			'has_archive'           => false,
 			'menu_icon'             => 'dashicons-calendar',
@@ -688,7 +709,7 @@ class Conference_Schedule {
 
 		// Add the template ?>
 		<script id="conference-schedule-template" type="text/x-handlebars-template">
-			<div id="conf-sch-event-{{id}}" class="schedule-event{{#event_types}} {{.}}{{/event_types}}">
+			<div id="conf-sch-event-{{id}}" class="schedule-event{{#if event_parent}} event-child{{/if}}{{#event_types}} {{.}}{{/event_types}}">
 				{{#event_time_display}}<div class="event-time">{{.}}</div>{{/event_time_display}}
 				{{#title}}{{body}}{{/title}}
 				{{#event_location}}<div class="event-location">{{post_title}}</div>{{/event_location}}
