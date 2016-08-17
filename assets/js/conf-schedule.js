@@ -265,14 +265,19 @@
 			});
 		}
 
-		// Do we have a slides URL?
-		if ( this.session_slides_url !== undefined && this.session_slides_url ) {
+		// Do we have a slides URL and is it enabled?
+		if ( conf_sch.view_slides !== undefined && conf_sch.view_slides != '' && this.session_slides_url !== undefined && this.session_slides_url ) {
 			$event_links_string += '<li class="event-slides"><a href="' + this.session_slides_url + '">' + conf_sch.view_slides + '</span></a></li>';
 		}
 
 		// Do we have a feedback URL?
-		if ( this.session_feedback_url !== undefined && this.session_feedback_url ) {
+		if ( conf_sch.give_feedback !== undefined && conf_sch.give_feedback != '' && this.session_feedback_url !== undefined && this.session_feedback_url ) {
 			$event_links_string += '<li class="event-feedback"><a href="' + this.session_feedback_url + '">' + conf_sch.give_feedback + '</span></a></li>';
+		}
+
+		// Do we have a video URL?
+		if ( conf_sch.watch_video !== undefined && conf_sch.watch_video != '' && this.session_video_url !== undefined && this.session_video_url ) {
+			$event_links_string += '<li class="event-video"><a href="' + this.session_video_url + '">' + conf_sch.watch_video + '</span></a></li>';
 		}
 
 		if ( $event_links_string ) {

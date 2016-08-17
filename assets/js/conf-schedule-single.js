@@ -119,13 +119,18 @@
 		}
 
 		// Do we have a slides URL?
-		if ( this.session_slides_url !== undefined && this.session_slides_url ) {
+		if ( conf_sch.view_slides !== undefined && conf_sch.view_slides != '' && this.session_slides_url !== undefined && this.session_slides_url ) {
 			$event_links_string += '<li class="event-slides"><a href="' + this.session_slides_url + '">' + conf_sch.view_slides + '</span></a></li>';
 		}
 
 		// Do we have a feedback URL?
-		if ( this.session_feedback_url !== undefined && this.session_feedback_url ) {
+		if ( conf_sch.give_feedback !== undefined && conf_sch.give_feedback != '' && this.session_feedback_url !== undefined && this.session_feedback_url ) {
 			$event_links_string += '<li class="event-feedback"><a href="' + this.session_feedback_url + '">' + conf_sch.give_feedback + '</span></a></li>';
+		}
+
+		// Do we have a video URL?
+		if ( conf_sch.watch_video !== undefined && conf_sch.watch_video != '' && this.session_video_url !== undefined && this.session_video_url ) {
+			$event_links_string += '<li class="event-video"><a href="' + this.session_video_url + '">' + conf_sch.watch_video + '</span></a></li>';
 		}
 
 		if ( $event_links_string ) {
@@ -137,36 +142,41 @@
 	// Format the speaker position
 	Handlebars.registerHelper( 'speaker_meta', function( $options ) {
 
-		// Make sure we at least have a position
-		if ( this.speaker_position !== undefined && this.speaker_position != '' ) {
+		// Build string
+		var $speaker_pos_string = '';
 
-			// Build string
-			var $speaker_pos_string = '<span class="speaker-position">' + this.speaker_position + '</span>';
+		// Get position
+		if ( this.speaker_position !== undefined && this.speaker_position != null ) {
+			$speaker_pos_string += '<span class="speaker-position">' + this.speaker_position + '</span>';
+		}
 
-			// Get company
-			if ( this.speaker_company !== undefined && this.speaker_company != '' ) {
+		// Get company
+		if ( this.speaker_company !== undefined && this.speaker_company != '' ) {
 
-				// Add company name
-				var $speaker_company = this.speaker_company;
+			// Add company name
+			var $speaker_company = this.speaker_company;
 
-				// Get company URL
-				if ( this.speaker_company_url !== undefined && this.speaker_company_url != '' ) {
-					$speaker_company = '<a href="' + this.speaker_company_url + '">' + $speaker_company + '</a>';
-				}
-
-				// Add to main string
-				$speaker_pos_string += ', <span class="speaker-company">' + $speaker_company + '</span>';
-
-				// Add speaker URL
-				/*if ( this.speaker_url !== undefined && this.speaker_url != '' ) {
-					$speaker_pos_string += ' <span class="speaker-url"><a href="' + this.speaker_url + '">' + this.speaker_url + '</a></span>';
-				}*/
-
+			// Get company URL
+			if ( this.speaker_company_url !== undefined && this.speaker_company_url != '' ) {
+				$speaker_company = '<a href="' + this.speaker_company_url + '">' + $speaker_company + '</a>';
 			}
 
-			return new Handlebars.SafeString( '<div class="speaker-meta">' + $speaker_pos_string + '</div>' );
+			// If we have a position, add a comma
+			if ( $speaker_pos_string ) {
+				$speaker_pos_string += ', ';
+			}
+
+			// Add to main string
+			$speaker_pos_string += '<span class="speaker-company">' + $speaker_company + '</span>';
+
+			// Add speaker URL
+			/*if ( this.speaker_url !== undefined && this.speaker_url != '' ) {
+				$speaker_pos_string += ' <span class="speaker-url"><a href="' + this.speaker_url + '">' + this.speaker_url + '</a></span>';
+			}*/
+
 		}
-		return null;
+
+		return new Handlebars.SafeString( '<div class="speaker-meta">' + $speaker_pos_string + '</div>' );
 	});
 
 	// Format the speaker social media

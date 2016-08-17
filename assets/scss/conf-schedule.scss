@@ -139,6 +139,21 @@ $linkedin-blue: #0077b5;
 
         }
 
+	    &.event-video {
+		    font-weight: bold;
+
+		    a {
+			    background-color: #662d91;
+			    color: #fff;
+
+			    &:hover {
+				    background-color: darken( #662d91, 10% );
+			    }
+
+		    }
+
+	    }
+
     }
 
 }
@@ -187,6 +202,19 @@ $linkedin-blue: #0077b5;
         min-width: 300px;
         max-width: 350px;
     }
+
+}
+
+// Customize the video on the single schedule pages
+$session-video-height: 450px;
+#conf-sch-single-video {
+	width: 100%;
+	margin: 0 0 20px 0;
+
+	iframe {
+		width: 100%;
+		height: $session-video-height;
+	}
 
 }
 

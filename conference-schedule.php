@@ -14,15 +14,16 @@
  */
 
 // @TODO Add language files
+// @TODO check all filter names to make sure they make sense
 // @TODO make sure, when multiple sessions in a row, they're always in same room order
 // @TODO add settings:
 	// Need a way to know if they want track labels or not
-	// If they want to designate a page to automatically add to
 // @TODO allow for shortcode to only show specific days or time ranges
 // @TODO set it up so that past days collapse
 // @TODO add button to go to current event?
 // @TODO stylize current event(s)
 // @TODO setup media library integration with slides file
+// @TODO disable saving a post until all API fields load
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -35,6 +36,8 @@ define( 'CONFERENCE_SCHEDULE_PLUGIN_URL', 'https://github.com/bamadesigner/confe
 define( 'CONFERENCE_SCHEDULE_PLUGIN_FILE', 'conference-schedule/conference-schedule.php' );
 
 // Require the files we need
+require_once plugin_dir_path( __FILE__ ) . 'includes/speakers.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/events.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/api.php';
 
 // We only need admin functionality in the admin
@@ -63,7 +66,25 @@ class Conference_Schedule {
 	 * @access	private
 	 * @var		array
 	 */
-	private static $settings;
+	private $settings;
+
+	/**
+	 * Will hold the enabled session fields.
+	 *
+	 * @since	1.0.0
+	 * @access	private
+	 * @var		array
+	 */
+	private $session_fields;
+
+	/**
+	 * Will hold the enabled schedule display fields.
+	 *
+	 * @since	1.0.0
+	 * @access	private
+	 * @var		array
+	 */
+	private $schedule_display_fields;
 
 	/**
 	 * Holds the class instance.
@@ -196,23 +217,80 @@ class Conference_Schedule {
 	public function get_settings() {
 
 		// If already set, return the settings
-		if ( isset( self::$settings ) ) {
-			return self::$settings;
+		if ( isset( $this->settings ) ) {
+			return $this->settings;
 		}
 
 		// Define the default settings
 		$default_settings = array(
 			'schedule_add_page' => '',
+			'session_fields'    => array(
+				'slides_url',
+			),
+			'schedule_display_fields' => array(
+				'view_slides',
+				'watch_video',
+			)
 		);
 
+		// Get/store the settings
+		return $this->settings = get_option( 'conf_schedule', $default_settings );
+	}
+
+	/**
+	 * Returns array of enabled session fields.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 * @return  array - the enabled session fields
+	 */
+	public function get_session_fields() {
+
+		// If already set, return the settings
+		if ( isset( $this->session_fields ) ) {
+			return $this->session_fields;
+		}
+
 		// Get settings
-		$settings = get_option( 'conf_schedule' );
+		$settings = $this->get_settings();
 
-		// Merge with defaults
-		$settings = wp_parse_args( $settings, $default_settings );
+		// Get enabled session fields
+		$session_fields = isset( $settings['session_fields'] ) ? $settings['session_fields'] : array();
 
-		// Store the settings
-		return self::$settings = $settings;
+		// Make sure its an array
+		if ( ! is_array( $session_fields ) ) {
+			$session_fields = explode( ', ', $session_fields );
+		}
+
+		return $this->session_fields = apply_filters( 'conf_schedule_session_fields', $session_fields );
+	}
+
+	/**
+	 * Returns array of enabled schedule display fields.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 * @return  array - the enabled session fields
+	 */
+	public function get_schedule_display_fields() {
+
+		// If already set, return the settings
+		if ( isset( $this->schedule_display_fields ) ) {
+			return $this->schedule_display_fields;
+		}
+
+		// Get settings
+		$settings = $this->get_settings();
+
+		// Get enabled schedule display fields
+		$display_fields = isset( $settings['schedule_display_fields'] ) ? $settings['schedule_display_fields'] : array();
+
+		// Make sure its an array
+		if ( ! is_array( $display_fields ) ) {
+			$display_fields = explode( ', ', $display_fields );
+		}
+
+		return $this->schedule_display_fields = apply_filters( 'conf_schedule_display_fields', $display_fields );
 	}
 
 	/**
@@ -336,13 +414,37 @@ class Conference_Schedule {
 			// Enqueue the schedule script
 			wp_enqueue_script( 'conf-schedule-single', trailingslashit( plugin_dir_url( __FILE__ ) . 'assets/js' ) . 'conf-schedule-single.min.js', array( 'jquery', 'handlebars' ), CONFERENCE_SCHEDULE_VERSION, true );
 
-			// Pass some data
-			wp_localize_script( 'conf-schedule-single', 'conf_sch', array(
+			// Build data
+			$conf_sch_data = array(
 				'post_id'       => $post->ID,
-				'view_slides'   => __( 'View Slides', 'conf-schedule' ),
-				'give_feedback' => __( 'Give Feedback', 'conf-schedule' ),
 				'wp_api_route'  => $wp_rest_api_route,
-			));
+			);
+
+			// Get display field settings
+			$display_fields = conference_schedule()->get_schedule_display_fields();
+
+			// Figure out which fields to display
+			if ( ! empty( $display_fields ) ) {
+
+				// If we're set to view slides...
+				if ( in_array( 'view_slides', $display_fields ) ) {
+					$conf_sch_data['view_slides'] = __( 'View Slides', 'conf-schedule' );
+				}
+
+				// If we're set to give feedback
+				if ( in_array( 'give_feedback', $display_fields ) ) {
+					$conf_sch_data['give_feedback'] = __( 'Give Feedback', 'conf-schedule' );
+				}
+
+				// If we're set to watch the video
+				if ( in_array( 'watch_video', $display_fields ) ) {
+					$conf_sch_data['watch_video'] = __( 'Watch Session', 'conf-schedule' );
+				}
+
+			}
+
+			// Pass some data
+			wp_localize_script( 'conf-schedule-single', 'conf_sch', $conf_sch_data );
 
 		} else {
 
@@ -361,12 +463,36 @@ class Conference_Schedule {
 				// Enqueue the schedule script
 				wp_enqueue_script( 'conf-schedule', trailingslashit( plugin_dir_url( __FILE__ ) . 'assets/js' ) . 'conf-schedule.min.js', array( 'jquery', 'handlebars' ), CONFERENCE_SCHEDULE_VERSION, true );
 
-				// Pass some translations
-				wp_localize_script( 'conf-schedule', 'conf_sch', array(
-					'view_slides'   => __( 'View Slides', 'conf-schedule' ),
-					'give_feedback' => __( 'Give Feedback', 'conf-schedule' ),
+				// Build data
+				$conf_sch_data = array(
 					'wp_api_route'  => $wp_rest_api_route,
-				) );
+				);
+
+				// Get display field settings
+				$display_fields = conference_schedule()->get_schedule_display_fields();
+
+				// Figure out which fields to display
+				if ( ! empty( $display_fields ) ) {
+
+					// If we're set to view slides...
+					if ( in_array( 'view_slides', $display_fields ) ) {
+						$conf_sch_data['view_slides'] = __( 'View Slides', 'conf-schedule' );
+					}
+
+					// If we're set to give feedback
+					if ( in_array( 'give_feedback', $display_fields ) ) {
+						$conf_sch_data['give_feedback'] = __( 'Give Feedback', 'conf-schedule' );
+					}
+
+					// If we're set to watch the video
+					if ( in_array( 'watch_video', $display_fields ) ) {
+						$conf_sch_data['watch_video'] = __( 'Watch Session', 'conf-schedule' );
+					}
+
+				}
+
+				// Pass some translations
+				wp_localize_script( 'conf-schedule', 'conf_sch', $conf_sch_data );
 
 			}
 
@@ -394,9 +520,6 @@ class Conference_Schedule {
 			// Get post type's archive title
 			$speakers_archive_title = apply_filters( 'post_type_archive_title', $speakers_post_type_obj->labels->name, 'speakers' );
 
-			// Get livestream URL
-			$livestream_url = get_post_meta( $post->ID, 'conf_sch_event_livestream_url', true );
-
 			ob_start();
 
 			// Add livestream holder ?>
@@ -405,13 +528,42 @@ class Conference_Schedule {
 
 			// Add the livestream template ?>
 			<script id="conf-sch-single-ls-template" type="text/x-handlebars-template">
-				{{#if session_livestream_url}}<div class="callout"><a href="{{session_livestream_url}}">Watch the livestream</a></div>{{/if}}
+				{{#if session_livestream_url}}<div class="callout"><a href="{{session_livestream_url}}"><?php _e( 'Watch the livestream', 'conf-schedule' ); ?></a></div>{{/if}}
 			</script>
 			<?php
 
 			// Add the info holders ?>
 			<div id="conf-sch-single-meta"></div>
-			<?php echo $the_content; ?>
+			<?php
+
+			// Print the content
+			echo $the_content;
+
+			// Embed the video
+			$video_url = get_post_meta( $post->ID, 'conf_sch_event_video_url', true );
+			if ( ! empty( $video_url ) ) {
+
+				// Get embed
+				$video_html = wp_oembed_get( $video_url, array(
+					'height' => 450,
+				));
+
+				// Filter video html
+				$video_html = apply_filters( 'conf_schedule_session_video_html', $video_html, $video_url, $post->ID );
+				if ( ! empty( $video_html ) ) {
+
+					// Print embed ?>
+					<div id="conf-sch-single-video">
+						<h2><?php _e( 'Watch The Session', 'conf-schedule' ); ?></h2>
+						<?php echo ! empty( $video_html ) ? $video_html : ''; ?>
+					</div>
+					<?php
+
+				}
+
+			}
+
+			?>
 			<div id="conf-sch-single-speakers">
 				<h2 class="conf-sch-single-speakers-title"><?php echo $speakers_archive_title; ?></h2>
 			</div>
@@ -465,79 +617,6 @@ class Conference_Schedule {
 	 * @since   1.0.0
 	 */
 	public function register_custom_post_types() {
-
-		// Define the labels for the schedule CPT
-		$schedule_labels = apply_filters( 'conf_schedule_CPT_labels', array(
-			'name'                  => _x( 'Schedule', 'Post Type General Name', 'conf-schedule' ),
-			'singular_name'         => _x( 'Event', 'Post Type Singular Name', 'conf-schedule' ),
-			'menu_name'             => __( 'Schedule', 'conf-schedule' ),
-			'name_admin_bar'        => __( 'Schedule', 'conf-schedule' ),
-			'archives'              => __( 'Schedule', 'conf-schedule' ),
-			'all_items'             => __( 'All Events', 'conf-schedule' ),
-			'add_new_item'          => __( 'Add New Event', 'conf-schedule' ),
-			'new_item'              => __( 'New Event', 'conf-schedule' ),
-			'edit_item'             => __( 'Edit Event', 'conf-schedule' ),
-			'update_item'           => __( 'Update Event', 'conf-schedule' ),
-			'view_item'             => __( 'View Event', 'conf-schedule' ),
-			'search_items'          => __( 'Search Events', 'conf-schedule' ),
-			'not_found'             => __( 'No events found.', 'conf-schedule' ),
-			'not_found_in_trash'    => __( 'No events found in the trash.', 'conf-schedule' ),
-		));
-
-		// Define the args for the schedule CPT
-		$schedule_args = apply_filters( 'conf_schedule_CPT_args', array(
-			'label'                 => __( 'Schedule', 'conf-schedule' ),
-			'description'           => __( 'The schedule content for your conference.', 'conf-schedule' ),
-			'labels'                => $schedule_labels,
-			'public'                => true,
-			'hierarchical'          => true,
-			'supports'              => array( 'title', 'editor', 'thumbnail', 'excerpt', 'revisions' ),
-			'has_archive'           => false,
-			'menu_icon'             => 'dashicons-calendar',
-			'can_export'            => true,
-			'capability_type'       => 'post',
-			'show_in_rest'			=> true,
-		));
-
-		// Register the schedule custom post type
-		register_post_type( 'schedule', $schedule_args );
-
-		// Define the labels for the speakers CPT
-		$speakers_labels = apply_filters( 'conf_schedule_speakers_CPT_labels', array(
-			'name'                  => _x( 'Speakers', 'Post Type General Name', 'conf-schedule' ),
-			'singular_name'         => _x( 'Speaker', 'Post Type Singular Name', 'conf-schedule' ),
-			'menu_name'             => __( 'Speakers', 'conf-schedule' ),
-			'name_admin_bar'        => __( 'Speakers', 'conf-schedule' ),
-			'archives'              => __( 'Speakers', 'conf-schedule' ),
-			'all_items'             => __( 'All Speakers', 'conf-schedule' ),
-			'add_new_item'          => __( 'Add New Speaker', 'conf-schedule' ),
-			'new_item'              => __( 'New Speaker', 'conf-schedule' ),
-			'edit_item'             => __( 'Edit Speaker', 'conf-schedule' ),
-			'update_item'           => __( 'Update Speaker', 'conf-schedule' ),
-			'view_item'             => __( 'View Speaker', 'conf-schedule' ),
-			'search_items'          => __( 'Search Speakers', 'conf-schedule' ),
-			'not_found'             => __( 'No speakers found.', 'conf-schedule' ),
-			'not_found_in_trash'    => __( 'No speakers found in the trash.', 'conf-schedule' ),
-		));
-
-		// Define the args for the speakers CPT
-		$speakers_args = apply_filters( 'conf_schedule_speakers_CPT_args', array(
-			'label'                 => __( 'Speakers', 'conf-schedule' ),
-			'description'           => __( 'The speakers content for your conference.', 'conf-schedule' ),
-			'labels'                => $speakers_labels,
-			'public'                => true,
-			'hierarchical'          => false,
-			'supports'              => array( 'title', 'editor', 'thumbnail', 'excerpt', 'revisions' ),
-			'has_archive'           => true,
-			'menu_icon'             => 'dashicons-admin-users',
-			'can_export'            => true,
-			'capability_type'       => 'post',
-			'show_in_menu'			=> 'edit.php?post_type=schedule',
-			'show_in_rest'			=> true,
-		));
-
-		// Register the speakers custom post type
-		register_post_type( 'speakers', $speakers_args );
 
 		// Define the labels for the locations CPT
 		$locations_labels = apply_filters( 'conf_schedule_locations_CPT_labels', array(

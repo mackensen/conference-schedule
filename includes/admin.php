@@ -250,14 +250,44 @@ class Conference_Schedule_Admin {
 	 */
 	public function add_settings_meta_boxes() {
 
+		// Get the settings
+		$settings = conference_schedule()->get_settings();
+
 		// About this Plugin
-		add_meta_box( 'conf-schedule-about-mb', __( 'About this Plugin', 'conf-schedule' ), array( $this, 'print_settings_meta_boxes' ), $this->settings_page_id, 'side', 'core', array( 'id' => 'about' ) );
+		add_meta_box( 'conf-schedule-about-mb', __( 'About this Plugin', 'conf-schedule' ), array(
+			$this,
+			'print_settings_meta_boxes'
+		), $this->settings_page_id, 'side', 'core', array(
+			'id' => 'about',
+			'settings' => $settings,
+		));
 
 		// Spread the Love
-		add_meta_box( 'conf-schedule-promote-mb', __( 'Spread the Love', 'conf-schedule' ), array( $this, 'print_settings_meta_boxes' ), $this->settings_page_id, 'side', 'core', array( 'id' => 'promote' ) );
+		add_meta_box( 'conf-schedule-promote-mb', __( 'Spread the Love', 'conf-schedule' ), array(
+			$this,
+			'print_settings_meta_boxes'
+		), $this->settings_page_id, 'side', 'core', array(
+			'id' => 'promote',
+			'settings' => $settings,
+		));
+
+		// Session Fields
+		add_meta_box( 'conf-schedule-fields-mb', __( 'Session Fields', 'conf-schedule' ), array(
+			$this,
+			'print_settings_meta_boxes'
+		), $this->settings_page_id, 'normal', 'core', array(
+			'id' => 'fields',
+			'settings' => $settings,
+		));
 
 		// Displaying the Schedule
-		add_meta_box( 'conf-schedule-display-schedule-mb', __( 'Displaying The Schedule', 'conf-schedule' ), array( $this, 'print_settings_meta_boxes' ), $this->settings_page_id, 'normal', 'core', array( 'id' => 'display-schedule' ) );
+		add_meta_box( 'conf-schedule-display-schedule-mb', __( 'Displaying The Schedule', 'conf-schedule' ), array(
+			$this,
+			'print_settings_meta_boxes'
+		), $this->settings_page_id, 'normal', 'core', array(
+			'id' => 'display-schedule',
+			'settings' => $settings,
+		));
 
 	}
 
@@ -274,10 +304,13 @@ class Conference_Schedule_Admin {
 		switch( $metabox[ 'args' ][ 'id' ] ) {
 
 			// About meta box
+			// @TODO add link to repo for ratings
 			case 'about':
 				?><p><?php _e( 'Helps you build a simple schedule for your conference website.', 'conf-schedule' ); ?></p>
-				<p><strong><a href="<?php echo CONFERENCE_SCHEDULE_PLUGIN_URL; ?>" target="_blank"><?php _e( 'Conference Schedule', 'conf-schedule' ); ?></a></strong><br />
-				<strong><?php _e( 'Version', 'conf-schedule' ); ?>:</strong> <?php echo CONFERENCE_SCHEDULE_VERSION; ?><br /><strong><?php _e( 'Author', 'conf-schedule' ); ?>:</strong> <a href="https://bamadesigner.com/" target="_blank">Rachel Carden</a></p><?php
+				<p>
+					<strong><a href="<?php echo CONFERENCE_SCHEDULE_PLUGIN_URL; ?>" target="_blank"><?php _e( 'Conference Schedule', 'conf-schedule' ); ?></a></strong><br />
+					<strong><?php _e( 'Version', 'conf-schedule' ); ?>:</strong> <?php echo CONFERENCE_SCHEDULE_VERSION; ?><br /><strong><?php _e( 'Author', 'conf-schedule' ); ?>:</strong> <a href="https://bamadesigner.com/" target="_blank">Rachel Carden</a>
+				</p><?php
 				break;
 
 			// Promote meta box
@@ -286,17 +319,55 @@ class Conference_Schedule_Admin {
 				<p class="donate"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ZCAN2UX7QHZPL&lc=US&item_name=Rachel%20Carden%20%28Conference%20Schedule%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted" title="<?php esc_attr_e( 'Donate a few bucks to the plugin', 'conf-schedule' ); ?>" target="_blank"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" alt="<?php esc_attr_e( 'Donate', 'conf-schedule' ); ?>" /> <span class="promote-text"><?php _e( 'and buy me a coffee', 'conf-schedule' ); ?></span></a></p><?php
 				break;
 
+			// Session fields meta box
+			case 'fields':
+
+				// Get settings
+				$settings = ! empty( $metabox['args']['settings'] ) ? $metabox['args']['settings'] : array();
+
+				// Get field settings
+				$fields = isset( $settings['session_fields'] ) ? $settings['session_fields'] : array();
+
+				// Make sure its an array
+				if ( ! is_array( $fields ) ) {
+					$fields = explode( ', ', $fields );
+				}
+
+				// Print the settings table
+				?><table id="conf-schedule-fields" class="form-table conf-schedule-settings">
+					<tbody>
+						<tr>
+							<td>
+								<fieldset>
+									<legend><strong><?php _e( 'Which session fields would you like to enable?', 'conf-schedule' ); ?></strong></legend>
+									<label for="conf-sch-fields-livestream"><input type="checkbox" name="conf_schedule[session_fields][]" id="conf-sch-fields-livestream" value="livestream"<?php checked( is_array( $fields ) && in_array( 'livestream', $fields ) ); ?> /> <?php _e( 'Livestream', 'conf-schedule' ); ?></label><br />
+									<label for="conf-sch-fields-slides"><input type="checkbox" name="conf_schedule[session_fields][]" id="conf-sch-fields-slides" value="slides"<?php checked( is_array( $fields ) && in_array( 'slides', $fields ) ); ?> /> <?php _e( 'Slides', 'conf-schedule' ); ?></label><br />
+									<label for="conf-sch-fields-feedback"><input type="checkbox" name="conf_schedule[session_fields][]" id="conf-sch-fields-feedback" value="feedback"<?php checked( is_array( $fields ) && in_array( 'feedback', $fields ) ); ?> /> <?php _e( 'Feedback', 'conf-schedule' ); ?></label><br />
+									<label for="conf-sch-fields-follow-up"><input type="checkbox" name="conf_schedule[session_fields][]" id="conf-sch-fields-follow-up" value="follow_up"<?php checked( is_array( $fields ) && in_array( 'follow_up', $fields ) ); ?> /> <?php _e( 'Follow Up', 'conf-schedule' ); ?></label><br />
+									<label for="conf-sch-fields-video"><input type="checkbox" name="conf_schedule[session_fields][]" id="conf-sch-fields-video" value="video"<?php checked( is_array( $fields ) && in_array( 'video', $fields ) ); ?> /> <?php _e( 'Video', 'conf-schedule' ); ?></label>
+								</fieldset>
+							</td>
+						</tr>
+					</tbody>
+				</table><?php
+				break;
+
+				break;
+
 			// Displaying The Schedule meta box
 			case 'display-schedule':
 
 				// Get the settings
-				$settings = conference_schedule()->get_settings();
+				$settings = ! empty( $metabox['args']['settings'] ) ? $metabox['args']['settings'] : array();
+
+				// Get display field settings
+				$display_fields = isset( $settings['schedule_display_fields'] ) ? $settings['schedule_display_fields'] : array();
 
 				// Get the existing pages
 				$pages = get_pages();
 
 				// Print the settings table
-				?><table id="conf-schedule-settings" class="form-table conf-schedule-settings">
+				?><table id="conf-schedule-display-schedule" class="form-table conf-schedule-settings">
 					<tbody>
 						<tr>
 							<td>
@@ -314,6 +385,16 @@ class Conference_Schedule_Admin {
 									<?php } ?>
 								</select>
 								<p class="description"><?php _e( 'If defined, will automatically add the schedule to the end of the selected page. Otherwise, you can add the schedule with the [print_conference_schedule] shortcode.', 'conf-schedule' ); ?></p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<fieldset>
+									<legend><strong><?php _e( 'Display the following fields on the main schedule:', 'conf-schedule' ); ?></strong></legend>
+									<label for="conf-schedule-display-slides"><input type="checkbox" name="conf_schedule[schedule_display_fields][]" id="conf-schedule-display-slides" value="view_slides"<?php checked( is_array( $display_fields ) && in_array( 'view_slides', $display_fields ) ); ?> /> <?php _e( 'View Slides', 'conf-schedule' ); ?></label><br />
+									<label for="conf-schedule-display-feedback"><input type="checkbox" name="conf_schedule[schedule_display_fields][]" id="conf-schedule-display-feedback" value="give_feedback"<?php checked( is_array( $display_fields ) && in_array( 'give_feedback', $display_fields ) ); ?> /> <?php _e( 'Give Feedback', 'conf-schedule' ); ?></label><br />
+									<label for="conf-schedule-display-video"><input type="checkbox" name="conf_schedule[schedule_display_fields][]" id="conf-schedule-display-video" value="watch_video"<?php checked( is_array( $display_fields ) && in_array( 'watch_video', $display_fields ) ); ?> /> <?php _e( 'Watch Session', 'conf-schedule' ); ?></label>
+								</fieldset>
 							</td>
 						</tr>
 					</tbody>
@@ -379,15 +460,20 @@ class Conference_Schedule_Admin {
 					'high'
 				);
 
+				// Get session fields
+				$session_fields = conference_schedule()->get_session_fields();
+
 				// Session Details
-				add_meta_box(
-					'conf-schedule-session-details',
-					__( 'Session Details', 'conf-schedule' ),
-					array( $this, 'print_meta_boxes' ),
-					$post_type,
-					'normal',
-					'high'
-				);
+				if ( ! empty( $session_fields ) ) {
+					add_meta_box(
+						'conf-schedule-session-details',
+						__( 'Session Details', 'conf-schedule' ),
+						array( $this, 'print_meta_boxes' ),
+						$post_type,
+						'normal',
+						'high'
+					);
+				}
 
 				// Social Media
 				add_meta_box(
@@ -675,7 +761,7 @@ class Conference_Schedule_Admin {
 						if ( wp_verify_nonce( $_POST[ 'conf_schedule_save_session_details_nonce' ], 'conf_schedule_save_session_details' ) ) {
 
 							// Process each field
-							foreach ( array( 'livestream_url', 'slides_url', 'feedback_url', 'feedback_reveal_delay_seconds', 'follow_up_url' ) as $field_name ) {
+							foreach ( array( 'livestream_url', 'slides_url', 'feedback_url', 'feedback_reveal_delay_seconds', 'follow_up_url', 'video_url' ) as $field_name ) {
 								if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ $field_name ] ) ) {
 
 									// Sanitize the value
@@ -1051,88 +1137,150 @@ class Conference_Schedule_Admin {
 		// Add a session details nonce field so we can check for it when saving the data
 		wp_nonce_field( 'conf_schedule_save_session_details', 'conf_schedule_save_session_details_nonce' );
 
-		// Get saved event details
-		$livestream_url = get_post_meta( $post_id, 'conf_sch_event_livestream_url', true );
-		$slides_url = get_post_meta( $post_id, 'conf_sch_event_slides_url', true );
-		$slides_file = get_post_meta( $post_id, 'conf_sch_event_slides_file', true );
-		$feedback_url = get_post_meta( $post_id, 'conf_sch_event_feedback_url', true );
-		$feedback_reveal_delay_seconds = get_post_meta( $post_id, 'conf_sch_event_feedback_reveal_delay_seconds', true );
-		$follow_up_url = get_post_meta( $post_id, 'conf_sch_event_follow_up_url', true );
+		// Get the session fields
+		$session_fields = conference_schedule()->get_session_fields();
 
 		?><table class="form-table conf-schedule-post">
 			<tbody>
-				<tr>
-					<th scope="row"><label for="conf-sch-livestream-url"><?php _e( 'Livestream URL', 'conf-schedule' ); ?></label></th>
-					<td>
-						<input type="text" id="conf-sch-livestream-url" name="conf_schedule[event][livestream_url]" value="<?php echo esc_attr( $livestream_url ); ?>" />
-						<p class="description"><?php _e( "Please provide the URL for users to view the livestream.", 'conf-schedule' ); ?></p>
-					</td>
-				</tr>
-				<tr>
-					<th scope="row"><label for="conf-sch-slides-url"><?php _e( 'Slides URL', 'conf-schedule' ); ?></label></th>
-					<td>
-						<input type="url" id="conf-sch-slides-url" name="conf_schedule[event][slides_url]" value="<?php echo esc_attr( $slides_url ); ?>" />
-						<p class="description"><?php _e( "Please provide the URL (or file below) for users to download or view this session's slides. <strong>If a URL and file are provided, the URL will priority.</strong>", 'conf-schedule' ); ?></p>
-					</td>
-				</tr>
-				<tr>
-					<th scope="row"><label for="conf-sch-slides-file-input"><?php _e( 'Slides File', 'conf-schedule' ); ?></label></th>
-					<td><?php
+				<?php
 
-						// Should we hide the input?
-						$slides_file_hide_input = false;
+				// Print livestream field(s)
+				if ( in_array( 'livestream', $session_fields ) ) {
 
-						// If selected file...
-						if ( $slides_file > 0 ) {
+					// Get field information
+					$livestream_url = get_post_meta( $post_id, 'conf_sch_event_livestream_url', true );
 
-							// Confirm the file still exists
-							if ( $slides_file_post = get_post( $slides_file ) ) {
+					?>
+					<tr>
+						<th scope="row"><label for="conf-sch-livestream-url"><?php _e( 'Livestream URL', 'conf-schedule' ); ?></label></th>
+						<td>
+							<input type="text" id="conf-sch-livestream-url" name="conf_schedule[event][livestream_url]" value="<?php echo esc_attr( $livestream_url ); ?>" />
+							<p class="description"><?php _e( "Please provide the URL for users to view the livestream.", 'conf-schedule' ); ?></p>
+						</td>
+					</tr>
+					<?php
 
-								// Get URL
-								$attached_slides_url = wp_get_attachment_url( $slides_file );
+				}
 
-								// Hide the file input
-								$slides_file_hide_input = true;
+				// Print slides field(s)
+				if ( in_array( 'slides', $session_fields ) ) {
 
-								?><div id="conf-sch-slides-file-info" style="margin:0 0 10px 0;">
+					// Get field information
+					$slides_url = get_post_meta( $post_id, 'conf_sch_event_slides_url', true );
+					$slides_file = get_post_meta( $post_id, 'conf_sch_event_slides_file', true );
+
+					?>
+					<tr>
+						<th scope="row"><label for="conf-sch-slides-url"><?php _e( 'Slides URL', 'conf-schedule' ); ?></label></th>
+						<td>
+							<input type="url" id="conf-sch-slides-url" name="conf_schedule[event][slides_url]" value="<?php echo esc_attr( $slides_url ); ?>" />
+							<p class="description"><?php _e( "Please provide the URL (or file below) for users to download or view this session's slides. <strong>If a URL and file are provided, the URL will priority.</strong>", 'conf-schedule' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="conf-sch-slides-file-input"><?php _e( 'Slides File', 'conf-schedule' ); ?></label></th>
+						<td><?php
+
+							// Should we hide the input?
+							$slides_file_hide_input = false;
+
+							// If selected file...
+							if ( $slides_file > 0 ) {
+
+								// Confirm the file still exists
+								if ( $slides_file_post = get_post( $slides_file ) ) {
+
+									// Get URL
+									$attached_slides_url = wp_get_attachment_url( $slides_file );
+
+									// Hide the file input
+									$slides_file_hide_input = true;
+
+									?><div id="conf-sch-slides-file-info" style="margin:0 0 10px 0;">
 									<a style="display:block;margin:0 0 10px 0;" href="<?php echo $attached_slides_url; ?>" target="_blank"><?php echo $attached_slides_url; ?></a>
 									<span class="button conf-sch-slides-file-remove" style="clear:both;padding-left:5px;"><span class="dashicons dashicons-no" style="line-height:inherit"></span> <?php _e( 'Remove the file', 'conf-schedule' ); ?></span>
-								</div><?php
+									</div><?php
+
+								}
+
+								// Otherwise clear the meta
+								else {
+									update_post_meta( $post_id, 'conf_sch_event_slides_file', null );
+								}
 
 							}
 
-							// Otherwise clear the meta
-							else {
-								update_post_meta( $post_id, 'conf_sch_event_slides_file', null );
-							}
+							?><input type="file" accept="application/pdf" id="conf-sch-slides-file-input" style="width:75%;<?php echo $slides_file_hide_input ? 'display:none;' : null; ?>" size="25" name="conf_schedule_event_slides_file" value="" />
+							<p class="description"><?php _e( "You may also upload a file if you wish to host the session's slides for users to download or view. <strong>Only PDF files are allowed.</strong>", 'conf-schedule' ); ?></p>
+						</td>
+					</tr>
+					<?php
 
-						}
+				}
 
-						?><input type="file" accept="application/pdf" id="conf-sch-slides-file-input" style="width:75%;<?php echo $slides_file_hide_input ? 'display:none;' : null; ?>" size="25" name="conf_schedule_event_slides_file" value="" />
-						<p class="description"><?php _e( "You may also upload a file if you wish to host the session's slides for users to download or view. <strong>Only PDF files are allowed.</strong>", 'conf-schedule' ); ?></p>
-					</td>
-				</tr>
-				<tr>
-					<th scope="row"><label for="conf-sch-feedback-url"><?php _e( 'Feedback URL', 'conf-schedule' ); ?></label></th>
-					<td>
-						<input type="url" id="conf-sch-feedback-url" name="conf_schedule[event][feedback_url]" value="<?php echo esc_attr( $feedback_url ); ?>" />
-						<p class="description"><?php _e( 'Please provide the URL you wish to provide to gather session feedback. <strong>It will display 30 minutes after the session has started, unless you provide a value below.</strong>', 'conf-schedule' ); ?></p>
-					</td>
-				</tr>
-				<tr>
-					<th scope="row"><label for="conf-sch-feedback-reveal-delay-seconds"><?php _e( 'Feedback Reveal Delay Seconds', 'conf-schedule' ); ?></label></th>
-					<td>
-						<input type="text" id="conf-sch-feedback-reveal-delay-seconds" name="conf_schedule[event][feedback_reveal_delay_seconds]" value="<?php echo esc_attr( $feedback_reveal_delay_seconds ); ?>" />
-						<p class="description"><?php _e( 'Please provide the number of seconds after the start of the session after which the feedback button will be revealed.  1800 is the default (30 minutes).', 'conf-schedule' ); ?></p>
-					</td>
-				</tr>
-				<tr>
-					<th scope="row"><label for="conf-sch-follow-up-url"><?php _e( 'Follow Up/Materials URL', 'conf-schedule' ); ?></label></th>
-					<td>
-						<input type="url" id="conf-sch-follow-up-url" name="conf_schedule[event][follow_up_url]" value="<?php echo esc_attr( $follow_up_url ); ?>" />
-						<p class="description"><?php _e( 'Please provide the URL you wish to provide for session follow-up materials.', 'conf-schedule' ); ?></p>
-					</td>
-				</tr>
+				// Print feedback field(s)
+				if ( in_array( 'feedback', $session_fields ) ) {
+
+					// Get field information
+					$feedback_url = get_post_meta( $post_id, 'conf_sch_event_feedback_url', true );
+					$feedback_reveal_delay_seconds = get_post_meta( $post_id, 'conf_sch_event_feedback_reveal_delay_seconds', true );
+
+					?>
+					<tr>
+						<th scope="row"><label for="conf-sch-feedback-url"><?php _e( 'Feedback URL', 'conf-schedule' ); ?></label></th>
+						<td>
+							<input type="url" id="conf-sch-feedback-url" name="conf_schedule[event][feedback_url]" value="<?php echo esc_attr( $feedback_url ); ?>" />
+							<p class="description"><?php _e( 'Please provide the URL you wish to provide to gather session feedback. <strong>It will display 30 minutes after the session has started, unless you provide a value below.</strong>', 'conf-schedule' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="conf-sch-feedback-reveal-delay-seconds"><?php _e( 'Feedback Reveal Delay Seconds', 'conf-schedule' ); ?></label></th>
+						<td>
+							<input type="text" id="conf-sch-feedback-reveal-delay-seconds" name="conf_schedule[event][feedback_reveal_delay_seconds]" value="<?php echo esc_attr( $feedback_reveal_delay_seconds ); ?>" />
+							<p class="description"><?php _e( 'Please provide the number of seconds after the start of the session after which the feedback button will be revealed.  1800 is the default (30 minutes).', 'conf-schedule' ); ?></p>
+						</td>
+					</tr>
+					<?php
+
+				}
+
+				// Print follow up field(s)
+				if ( in_array( 'follow_up', $session_fields ) ) {
+
+					// Get field information
+					$follow_up_url = get_post_meta( $post_id, 'conf_sch_event_follow_up_url', true );
+
+					?>
+					<tr>
+						<th scope="row"><label for="conf-sch-follow-up-url"><?php _e( 'Follow Up URL', 'conf-schedule' ); ?></label></th>
+						<td>
+							<input type="url" id="conf-sch-follow-up-url" name="conf_schedule[event][follow_up_url]" value="<?php echo esc_attr( $follow_up_url ); ?>"/>
+							<p class="description"><?php _e( 'Please provide the URL you wish to provide for session follow-up materials.', 'conf-schedule' ); ?></p>
+						</td>
+					</tr>
+					<?php
+
+				}
+
+				// Print video field(s)
+				if ( in_array( 'video', $session_fields ) ) {
+
+					// Get field information
+					$video_url = get_post_meta( $post_id, 'conf_sch_event_video_url', true );
+
+					?>
+					<tr>
+						<th scope="row"><label for="conf-sch-video-url"><?php _e( 'Video URL', 'conf-schedule' ); ?></label></th>
+						<td>
+							<input type="url" id="conf-sch-video-url" name="conf_schedule[event][video_url]" value="<?php echo esc_attr( $video_url ); ?>"/>
+							<p class="description"><?php _e( 'Please provide the URL you wish to provide for the session recording.', 'conf-schedule' ); ?></p>
+						</td>
+					</tr>
+					<?php
+
+				}
+
+				?>
 			</tbody>
 		</table><?php
 
