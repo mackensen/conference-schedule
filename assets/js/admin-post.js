@@ -5,11 +5,10 @@
 	$(document).ready(function() {
 
 		// Set our date picker
-		$( '.conf-sch-date-field' ).datepicker();
-
-		// Setup alt field and format for event date picker
-		$( '#conf-sch-date' ).datepicker( 'option', 'altField', '#conf-sch-date-alt' );
-		$( '#conf-sch-date' ).datepicker( 'option', 'altFormat', 'yy-mm-dd' );
+		$( '.conf-sch-date-field' ).datepicker({
+			altField: '#conf-sch-date-alt',
+			altFormat: 'yy-mm-dd'
+		});
 
 		// When date is cleared, be sure to clear the altField
 		$( '#conf-sch-date' ).on( 'change', function() {
