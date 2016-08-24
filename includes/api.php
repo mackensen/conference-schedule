@@ -3,12 +3,36 @@
 class Conference_Schedule_API {
 
 	/**
+	 * Holds the class instance.
+	 *
+	 * @since	1.0.0
+	 * @access	private
+	 * @var		Conference_Schedule_API
+	 */
+	private static $instance;
+
+	/**
+	 * Returns the instance of this class.
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 * @return	Conference_Schedule_API
+	 */
+	public static function instance() {
+		if ( ! isset( self::$instance ) ) {
+			$className = __CLASS__;
+			self::$instance = new $className;
+		}
+		return self::$instance;
+	}
+
+	/**
 	 * Warming things up.
 	 *
 	 * @access  public
 	 * @since   1.0.0
 	 */
-	public function __construct() {
+	protected function __construct() {
 
 		// Register any REST fields
 		add_action( 'rest_api_init', array( $this, 'register_rest_fields' ), 20 );
@@ -18,7 +42,7 @@ class Conference_Schedule_API {
 	/**
 	 * Get the selected event.
 	 */
-	public function get_event( $event_id ) {
+	private function get_event( $event_id ) {
 		return conference_schedule_events()->get_event( $event_id );
 	}
 
@@ -308,5 +332,19 @@ class Conference_Schedule_API {
 
 }
 
+/**
+ * Returns the instance of our Conference_Schedule_API class.
+ *
+ * Will come in handy when we need to access the
+ * class to retrieve data throughout the plugin.
+ *
+ * @since	1.0.0
+ * @access	public
+ * @return	Conference_Schedule_API
+ */
+function conference_schedule_api() {
+	return Conference_Schedule_API::instance();
+}
+
 // Let's get this show on the road
-new Conference_Schedule_API;
+conference_schedule_api();

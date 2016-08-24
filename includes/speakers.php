@@ -1,6 +1,53 @@
 <?php
 
 /**
+ * Powers individuals speakers.
+ *
+ * Class Conference_Schedule_Speaker
+ */
+class Conference_Schedule_Speaker {
+
+	/**
+	 * Will hold the speaker's
+	 * post ID if a valid speaker.
+	 *
+	 * @since   1.0.0
+	 * @access  private
+	 * @var     int
+	 */
+	private $ID;
+
+	/**
+	 * Will hold the speaker' post data.
+	 *
+	 * @since   1.0.0
+	 * @access  private
+	 * @var     WP_Post
+	 */
+	private $post;
+
+	/**
+	 * Did we just construct a person?
+	 *
+	 * @access  public
+	 * @since   1.0.0
+	 * @param   $post_id - the speaker post ID
+	 */
+	public function __construct( $post_id ) {
+
+		// Get the post data
+		$this->post = get_post( $post_id );
+
+		// Store the ID
+		if ( ! empty( $this->post->ID ) ) {
+			$this->ID = $this->post->ID;
+		}
+
+	}
+
+}
+
+/**
  * Powers our speakers. It's pretty impressive.
  *
  * Class Conference_Schedule_Speakers
@@ -139,48 +186,18 @@ class Conference_Schedule_Speakers {
 }
 
 /**
- * Powers individuals speakers.
+ * Returns the instance of our Conference_Schedule_Speakers class.
  *
- * Class Conference_Schedule_Speaker
+ * Will come in handy when we need to access the
+ * class to retrieve data throughout the plugin.
+ *
+ * @since	1.0.0
+ * @access	public
+ * @return	Conference_Schedule_Speakers
  */
-class Conference_Schedule_Speaker {
-
-	/**
-	 * Will hold the speaker's
-	 * post ID if a valid speaker.
-	 *
-	 * @since   1.0.0
-	 * @access  private
-	 * @var     int
-	 */
-	private $ID;
-
-	/**
-	 * Will hold the speaker' post data.
-	 *
-	 * @since   1.0.0
-	 * @access  private
-	 * @var     WP_Post
-	 */
-	private $post;
-
-	/**
-	 * Did we just construct a person?
-	 *
-	 * @access  public
-	 * @since   1.0.0
-	 * @param   $post_id - the speaker post ID
-	 */
-	public function __construct( $post_id ) {
-
-		// Get the post data
-		$this->post = get_post( $post_id );
-
-		// Store the ID
-		if ( ! empty( $this->post->ID ) ) {
-			$this->ID = $this->post->ID;
-		}
-
-	}
-
+function conference_schedule_speakers() {
+	return Conference_Schedule_Speakers::instance();
 }
+
+// Let's get this show on the road
+conference_schedule_speakers();

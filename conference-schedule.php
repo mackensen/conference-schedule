@@ -512,7 +512,7 @@ class Conference_Schedule {
 		global $post;
 
 		// For tweaking the single schedule pages
-		if ( 'schedule' == $post->post_type ) {
+		if ( 'schedule' == get_query_var( 'post_type' ) ) {
 
 			// Get post type object
 			$speakers_post_type_obj = get_post_type_object( 'speakers' );
