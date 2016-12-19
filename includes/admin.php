@@ -878,7 +878,7 @@ class Conference_Schedule_Admin {
 						if ( wp_verify_nonce( $_POST[ 'conf_schedule_save_speaker_details_nonce' ], 'conf_schedule_save_speaker_details' ) ) {
 
 							// Process each field
-							foreach ( array( 'position', 'url', 'company', 'company_url' ) as $field_name ) {
+							foreach ( array( 'user_id', 'position', 'url', 'company', 'company_url' ) as $field_name ) {
 								if ( isset( $_POST[ 'conf_schedule' ][ 'speaker' ][ $field_name ] ) ) {
 
 									// Sanitize the value
@@ -1345,13 +1345,41 @@ class Conference_Schedule_Admin {
 		wp_nonce_field( 'conf_schedule_save_speaker_details', 'conf_schedule_save_speaker_details_nonce' );
 
 		// Get saved speaker details
+		$speaker_user_id = get_post_meta( $post_id, 'conf_sch_speaker_user_id', true );
 		$speaker_position = get_post_meta( $post_id, 'conf_sch_speaker_position', true );
 		$speaker_url = get_post_meta( $post_id, 'conf_sch_speaker_url', true );
 		$speaker_company = get_post_meta( $post_id, 'conf_sch_speaker_company', true );
 		$speaker_company_url = get_post_meta( $post_id, 'conf_sch_speaker_company_url', true );
 
+		// Get list of users.
+		$users = get_users( array(
+			'orderby' => 'display_name',
+		));
+
 		?><table class="form-table conf-schedule-post">
 			<tbody>
+				<tr>
+					<th scope="row"><label for="conf-sch-user"><?php _e( 'WordPress User', 'conf-schedule' ); ?></label></th>
+					<td>
+						<select name="conf_schedule[speaker][user_id]" id="conf-sch-user">
+							<option value=""><?php _e( 'Do not assign to a user', 'conf-schedule' ); ?></option>
+							<?php
+
+							if ( ! empty( $users ) ) :
+								foreach( $users as $user ) :
+
+									?>
+									<option value="<?php echo $user->ID; ?>"<?php selected( $user->ID == $speaker_user_id ); ?>><?php echo $user->data->display_name . ' (' . $user->data->user_login , ')'; ?></option>
+									<?php
+
+								endforeach;
+							endif;
+
+							?>
+						</select>
+						<p class="description"><?php _e( 'Assign this speaker to a WordPress user.', 'conf-schedule' ); ?></p>
+					</td>
+				</tr>
 				<tr>
 					<th scope="row"><label for="conf-sch-position"><?php _e( 'Position', 'conf-schedule' ); ?></label></th>
 					<td>
