@@ -428,6 +428,23 @@ class Conference_Schedule_Admin {
 	 * @since   1.1.0
 	 */
 	public function print_admin_notice() {
+		global $hook_suffix, $post_type;
+
+		// Only need for certain screens.
+		if ( ! in_array( $hook_suffix, array( 'edit.php', 'plugins.php' ) ) ) {
+			return;
+		}
+
+		// Only for the schedule post type.
+		if ( 'edit.php' == $hook_suffix && 'schedule' != $post_type ) {
+			return;
+		}
+
+		// Only for version < 4.7, when API was introduced.
+		$version = get_bloginfo( 'version' );
+		if ( $version >= 4.7 ) {
+			return;
+		}
 
 		// Let us know if the REST API plugin, which we depend on, is not active
 		if ( ! is_plugin_active( 'WP-API/plugin.php' ) && ! is_plugin_active( 'rest-api/plugin.php' ) ) {
