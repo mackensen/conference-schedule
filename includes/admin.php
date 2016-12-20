@@ -186,7 +186,7 @@ class Conference_Schedule_Admin {
 					wp_register_script( 'select2', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/js' ) . 'select2.min.js', array( 'jquery' ), CONFERENCE_SCHEDULE_VERSION, true );
 
 					// Enqueue the post script.
-					wp_enqueue_script( 'conf-schedule-admin-schedule', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/js' ) . 'admin-post.min.js', array( 'jquery', 'jquery-ui-datepicker', 'timepicker', 'select2' ), CONFERENCE_SCHEDULE_VERSION, true );
+					wp_enqueue_script( 'conf-schedule-admin-schedule', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/js' ) . 'admin-post-schedule.min.js', array( 'jquery', 'jquery-ui-datepicker', 'timepicker', 'select2' ), CONFERENCE_SCHEDULE_VERSION, true );
 
 					// Get the API route.
 					$wp_rest_api_route = function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : '';
