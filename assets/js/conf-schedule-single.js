@@ -114,22 +114,22 @@
 		var $event_links_string = '';
 
 		// Do we have a hashtag?
-		if ( this.event_hashtag !== undefined && this.event_hashtag ) {
+		if ( this.event_hashtag !== null && this.event_hashtag ) {
 			$event_links_string += '<li class="event-twitter"><a href="https://twitter.com/search?q=%23' + this.event_hashtag + '"><i class="conf-sch-icon conf-sch-icon-twitter"></i> <span class="icon-label">#' + this.event_hashtag + '</span></a></li>';
 		}
 
 		// Do we have a slides URL?
-		if ( conf_sch.view_slides !== undefined && conf_sch.view_slides != '' && this.session_slides_url !== undefined && this.session_slides_url ) {
+		if ( conf_sch.view_slides !== null && conf_sch.view_slides != '' && this.session_slides_url !== null && this.session_slides_url ) {
 			$event_links_string += '<li class="event-slides"><a href="' + this.session_slides_url + '">' + conf_sch.view_slides + '</span></a></li>';
 		}
 
 		// Do we have a feedback URL?
-		if ( conf_sch.give_feedback !== undefined && conf_sch.give_feedback != '' && this.session_feedback_url !== undefined && this.session_feedback_url ) {
+		if ( conf_sch.give_feedback !== null && conf_sch.give_feedback != '' && this.session_feedback_url !== null && this.session_feedback_url ) {
 			$event_links_string += '<li class="event-feedback"><a href="' + this.session_feedback_url + '">' + conf_sch.give_feedback + '</span></a></li>';
 		}
 
 		// Do we have a video URL?
-		if ( conf_sch.watch_video !== undefined && conf_sch.watch_video != '' && this.session_video_url !== undefined && this.session_video_url ) {
+		if ( conf_sch.watch_video !== null && conf_sch.watch_video != '' && this.session_video_url !== null && this.session_video_url ) {
 			$event_links_string += '<li class="event-video"><a href="' + this.session_video_url + '">' + conf_sch.watch_video + '</span></a></li>';
 		}
 
@@ -146,18 +146,18 @@
 		var $speaker_pos_string = '';
 
 		// Get position
-		if ( this.speaker_position !== undefined && this.speaker_position != null ) {
+		if ( this.speaker_position !== null && this.speaker_position != null ) {
 			$speaker_pos_string += '<span class="speaker-position">' + this.speaker_position + '</span>';
 		}
 
 		// Get company
-		if ( this.speaker_company !== undefined && this.speaker_company != '' ) {
+		if ( this.speaker_company !== null && this.speaker_company != '' ) {
 
 			// Add company name
 			var $speaker_company = this.speaker_company;
 
 			// Get company URL
-			if ( this.speaker_company_url !== undefined && this.speaker_company_url != '' ) {
+			if ( this.speaker_company_url !== null && this.speaker_company_url != '' ) {
 				$speaker_company = '<a href="' + this.speaker_company_url + '">' + $speaker_company + '</a>';
 			}
 
@@ -170,7 +170,7 @@
 			$speaker_pos_string += '<span class="speaker-company">' + $speaker_company + '</span>';
 
 			// Add speaker URL
-			/*if ( this.speaker_url !== undefined && this.speaker_url != '' ) {
+			/*if ( this.speaker_url !== null && this.speaker_url != '' ) {
 				$speaker_pos_string += ' <span class="speaker-url"><a href="' + this.speaker_url + '">' + this.speaker_url + '</a></span>';
 			}*/
 
@@ -186,22 +186,22 @@
 		var $social_media_string = '';
 
 		// Add Facebook
-		if ( this.speaker_facebook !== undefined && this.speaker_facebook ) {
+		if ( this.speaker_facebook !== null && this.speaker_facebook ) {
 			$social_media_string += '<li class="social-media facebook"><a href="' + this.speaker_facebook + '"><i class="conf-sch-icon conf-sch-icon-facebook-square"></i> <span class="icon-label">Facebook</span></a></li>';
 		}
 
 		// Add Twitter
-		if ( this.speaker_twitter !== undefined && this.speaker_twitter ) {
+		if ( this.speaker_twitter !== null && this.speaker_twitter ) {
 			$social_media_string += '<li class="social-media twitter"><a href="https://twitter.com/' + this.speaker_twitter + '"><i class="conf-sch-icon conf-sch-icon-twitter"></i> <span class="icon-label">Twitter</span></a></li>';
 		}
 
 		// Add Instagram
-		if ( this.speaker_instagram !== undefined && this.speaker_instagram ) {
+		if ( this.speaker_instagram !== null && this.speaker_instagram ) {
 			$social_media_string += '<li class="social-media instagram"><a href="https://www.instagram.com/' + this.speaker_instagram + '"><i class="conf-sch-icon conf-sch-icon-instagram"></i> <span class="icon-label">Instagram</span></a></li>';
 		}
 
 		// Add LinkedIn
-		if ( this.speaker_linkedin !== undefined && this.speaker_linkedin ) {
+		if ( this.speaker_linkedin !== null && this.speaker_linkedin ) {
 			$social_media_string += '<li class="social-media linkedin"><a href="' + this.speaker_linkedin + '"><i class="conf-sch-icon conf-sch-icon-linkedin-square"></i> <span class="icon-label">LinkedIn</span></a></li>';
 		}
 

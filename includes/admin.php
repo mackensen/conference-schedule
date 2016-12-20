@@ -43,7 +43,8 @@ class Conference_Schedule_Admin {
 	 */
 	protected function __construct() {
 
-		// Return users to AJAX.
+		// Return data to AJAX.
+		add_action( 'wp_ajax_conf_sch_get_speakers', array( $this, 'ajax_get_speakers' ) );
 		add_action( 'wp_ajax_conf_sch_get_users', array( $this, 'ajax_get_users' ) );
 
 		// Add styles and scripts for the tools page.
@@ -95,6 +96,51 @@ class Conference_Schedule_Admin {
 	 * @return	void
 	 */
 	private function __wakeup() {}
+
+	/**
+	 * Print list of speakers in JSON for AJAX.
+	 */
+	public function ajax_get_speakers() {
+
+		// Get list of speakers.
+		$speakers = get_posts( array(
+			'post_type'         => 'speakers',
+			'posts_per_page'    => -1,
+			'orderby'           => 'title',
+			'order'             => 'ASC',
+		));
+		if ( ! empty( $speakers ) ) {
+
+			// Build speakers data.
+			$speakers_data = array(
+				'selected'  => array(),
+				'speakers'  => $speakers,
+			);
+
+			/*
+			 * If we passed a schedule post ID,
+			 * get the selected speakers.
+			 */
+			$schedule_post_id = isset( $_GET['schedule_post_id'] ) ? $_GET['schedule_post_id'] : 0;
+			if ( $schedule_post_id > 0 ) {
+
+				// Get the selected speakers.
+				$selected_speakers = get_post_meta( $schedule_post_id, 'conf_sch_event_speakers', true );
+				if ( ! empty( $selected_speakers ) ) {
+					if ( ! is_array( $selected_speakers ) ) {
+						$selected_speakers = explode( ',', $selected_speakers );
+					}
+					$speakers_data['selected'] = $selected_speakers;
+				}
+			}
+
+			// Print the speakers data.
+			echo json_encode( $speakers_data );
+
+		}
+
+		wp_die();
+	}
 
 	/**
 	 * Print list of users in JSON for AJAX.
@@ -1156,10 +1202,16 @@ class Conference_Schedule_Admin {
 					</td>
 				</tr>
 				<tr>
+					<?php
+
+					// The default/blank option label.
+					$select_default = __( 'No event types', 'conf-schedule' );
+
+					?>
 					<th scope="row"><label for="conf-sch-event-types"><?php _e( 'Event Types', 'conf-schedule' ); ?></label></th>
 					<td>
-						<select id="conf-sch-event-types" name="conf_schedule[event][event_types][]" multiple="multiple" disabled="disabled">
-							<option value=""><?php _e( 'No event types', 'conf-schedule' ); ?></option>
+						<select id="conf-sch-event-types" name="conf_schedule[event][event_types][]" data-default="<?php echo $select_default; ?>" multiple="multiple" disabled="disabled">
+							<option value=""><?php echo $select_default; ?></option>
 						</select>
 						<p class="description">
 							<a class="conf-sch-refresh-event-types" href="#"><?php _e( 'Refresh event types', 'conf-schedule' ); ?></a> |
@@ -1168,10 +1220,16 @@ class Conference_Schedule_Admin {
 					</td>
 				</tr>
 				<tr>
+					<?php
+
+					// The default/blank option label.
+					$select_default = __( 'No session categories', 'conf-schedule' );
+
+					?>
 					<th scope="row"><label for="conf-sch-session-categories"><?php _e( 'Session Categories', 'conf-schedule' ); ?></label></th>
 					<td>
-						<select id="conf-sch-session-categories" name="conf_schedule[event][session_categories][]" multiple="multiple" disabled="disabled">
-							<option value=""><?php _e( 'No session categories', 'conf-schedule' ); ?></option>
+						<select id="conf-sch-session-categories" name="conf_schedule[event][session_categories][]" data-default="<?php echo $select_default; ?>" multiple="multiple" disabled="disabled">
+							<option value=""><?php echo $select_default; ?></option>
 						</select>
 						<p class="description">
 							<a class="conf-sch-refresh-session-categories" href="#"><?php _e( 'Refresh categories', 'conf-schedule' ); ?></a> |
@@ -1192,10 +1250,16 @@ class Conference_Schedule_Admin {
 					</td>
 				</tr>
 				<tr>
+					<?php
+
+					// The default/blank option label.
+					$select_default = __( 'No speakers', 'conf-schedule' );
+
+					?>
 					<th scope="row"><label for="conf-sch-speakers"><?php _e( 'Speakers', 'conf-schedule' ); ?></label></th>
 					<td>
-						<select id="conf-sch-speakers" name="conf_schedule[event][speakers][]" multiple="multiple" disabled="disabled">
-							<option value=""><?php _e( 'No speakers', 'conf-schedule' ); ?></option>
+						<select id="conf-sch-speakers" name="conf_schedule[event][speakers][]" data-default="<?php echo $select_default; ?>" multiple="multiple" disabled="disabled">
+							<option value=""><?php echo $select_default; ?></option>
 						</select>
 						<p class="description">
 							<a class="conf-sch-refresh-speakers" href="#"><?php _e( 'Refresh speakers', 'conf-schedule' ); ?></a> |

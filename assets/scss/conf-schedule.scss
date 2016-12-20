@@ -91,7 +91,6 @@ $linkedin-blue: #0077b5;
             &:hover {
                 background-color: rgba( #000, 0.2 );
             }
-
         }
 
         &.event-twitter {
@@ -119,9 +118,7 @@ $linkedin-blue: #0077b5;
                 &:hover {
                     background-color: darken( #02528d, 20% );
                 }
-
             }
-
         }
 
         &.event-feedback {
@@ -134,9 +131,7 @@ $linkedin-blue: #0077b5;
                 &:hover {
                     background-color: darken( #46852b, 10% );
                 }
-
             }
-
         }
 
 	    &.event-video {
@@ -149,13 +144,9 @@ $linkedin-blue: #0077b5;
 			    &:hover {
 				    background-color: darken( #662d91, 10% );
 			    }
-
 		    }
-
 	    }
-
     }
-
 }
 
 // Customize the single schedule pages
@@ -186,11 +177,8 @@ $linkedin-blue: #0077b5;
             a {
                 display: block;
             }
-
         }
-
     }
-
 }
 
 // Move meta to the right when screen gets larger
@@ -202,7 +190,6 @@ $linkedin-blue: #0077b5;
         min-width: 300px;
         max-width: 350px;
     }
-
 }
 
 // Customize the video on the single schedule pages
@@ -215,7 +202,6 @@ $session-video-height: 450px;
 		width: 100%;
 		height: $session-video-height;
 	}
-
 }
 
 // Customize the speakers on single schedule pages
@@ -230,7 +216,7 @@ $speaker-thumb-top: 5px;
     }
 
     .event-speaker {
-        clear: both;
+        clear: left;
         margin: 0 0 20px 0;
 
         .speaker-name {
@@ -245,7 +231,6 @@ $speaker-thumb-top: 5px;
             .speaker-url {
                 display: block;
             }
-
         }
 
         .speaker-social-media {
@@ -280,7 +265,6 @@ $speaker-thumb-top: 5px;
                     &:hover {
                         background-color: rgba(#000, 0.2);
                     }
-
                 }
 
                 &.twitter {
@@ -293,9 +277,7 @@ $speaker-thumb-top: 5px;
                         &:hover {
                             background-color: darken($twitter-blue, 20%);
                         }
-
                     }
-
                 }
 
                 &.facebook {
@@ -308,9 +290,7 @@ $speaker-thumb-top: 5px;
                         &:hover {
                             background-color: darken($facebook-blue, 20%);
                         }
-
                     }
-
                 }
 
                 &.instagram {
@@ -323,9 +303,7 @@ $speaker-thumb-top: 5px;
                         &:hover {
                             background-color: darken($instagram-blue, 20%);
                         }
-
                     }
-
                 }
 
                 &.linkedin {
@@ -338,13 +316,9 @@ $speaker-thumb-top: 5px;
                         &:hover {
                             background-color: darken($linkedin-blue, 20%);
                         }
-
                     }
-
                 }
-
             }
-
          }
 
         .speaker-bio {
@@ -360,18 +334,14 @@ $speaker-thumb-top: 5px;
                     margin: 10px 0 10px 0;
                     border: 0;
                 }
-
             }
-
         }
 
         // There's already enough space with the social media
         .speaker-social-media + .speaker-bio {
             margin-top: 0;
         }
-
     }
-
 }
 
 // Set schedule variables
@@ -455,7 +425,6 @@ $conf-sch-events-width: 85%;
                     & > *:last-child {
                         margin-bottom: 0;
                     }
-
                 }
 
                 & > *:last-child {
@@ -480,13 +449,9 @@ $conf-sch-events-width: 85%;
 		                        font-size: 0.9em;
 		                        line-height: 1.7;
 	                        }
-
                         }
-
                     }
-
                 }
-
             }
 
             .schedule-row-item {
@@ -506,15 +471,12 @@ $conf-sch-events-width: 85%;
                     .schedule-event:last-child {
                         margin-bottom: 0;
                     }
-
                 }
-
             }
 
             /*&.current {
                 @include schedule_row_with_bg( rgba( #f9ff00, 0.2 ) );
             }*/
-
         }
 
         .schedule-row.current + .schedule-row {
@@ -522,11 +484,8 @@ $conf-sch-events-width: 85%;
             .schedule-row-item {
                 border-top: 0;
             }
-
         }
-
     }
-
 }
 
 /*.collapsible-schedule-block {
@@ -560,7 +519,6 @@ $conf-sch-events-width: 85%;
             cursor: pointer;
             z-index: -1;
         }
-
     }
 
     .schedule-table {
@@ -574,7 +532,6 @@ $conf-sch-events-width: 85%;
             &:before {
                 content: 'Close';
             }
-
         }
 
         .schedule-table {
@@ -582,9 +539,7 @@ $conf-sch-events-width: 85%;
             margin: 0;
             padding: 0;
         }
-
     }
-
 }*/
 
 // Tweak the schedule page
@@ -615,7 +570,6 @@ $conf-sch-events-width: 85%;
             &:hover {
                 background: darken($heweb-blue, 8%);
             }
-
         }
 
         .btn.go-to-current-event + .schedule-header {
@@ -627,11 +581,8 @@ $conf-sch-events-width: 85%;
             .btn + .btn {
                 margin-top: 10px;
             }
-
         }
-
     }
-
 }*/
 
 // Screens larger than 600px
@@ -656,13 +607,9 @@ $conf-sch-events-width: 85%;
                         height: auto;
                         margin: 0 0 20px 0;
                     }
-
                 }
-
             }
-
         }
-
     }
 
     /*// Tweak the schedule page
@@ -682,7 +629,6 @@ $conf-sch-events-width: 85%;
                     float: right;
                     margin-left: 20px !important;
                 }
-
             }
 
             &.has-go-to-event {
@@ -691,13 +637,9 @@ $conf-sch-events-width: 85%;
                     width: auto;
                     float: left;
                 }
-
             }
-
         }
-
     }*/
-
 }
 
 // Screens larger than 1000px
@@ -758,13 +700,9 @@ $conf-sch-events-width: 85%;
                             &:last-child {
                                 padding-right: 0;
                             }
-
                         }
-
                     }
-
                 }
-
             }
 
             .schedule-row {
@@ -788,7 +726,6 @@ $conf-sch-events-width: 85%;
                     .event-time {
                         display: none;
                     }
-
                 }
 
                 .schedule-row-item {
@@ -838,17 +775,10 @@ $conf-sch-events-width: 85%;
                             &:last-child {
                                 padding-right: 0;
                             }
-
                         }
-
                     }
-
                 }
-
             }
-
         }
-
     }
-
 }

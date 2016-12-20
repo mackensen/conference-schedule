@@ -75,7 +75,7 @@
 				});
 
 				// Enable the select.
-				$users_select.prop( 'disabled', false );
+				$users_select.prop( 'disabled', false ).trigger( 'change' );
 
 			}
 		});
