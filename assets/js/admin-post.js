@@ -4,13 +4,16 @@
 	// When the document is ready...
 	$(document).ready(function() {
 
-		// Set our date picker
-		$( '.conf-sch-date-field' ).datepicker({
-			altField: '#conf-sch-date-alt',
-			altFormat: 'yy-mm-dd'
-		});
+		// Set our date picker.
+		var sch_date_field = $( '.conf-sch-date-field' );
+		if ( sch_date_field.length > 0 ) {
+			sch_date_field.datepicker({
+				altField: '#conf-sch-date-alt',
+				altFormat: 'yy-mm-dd'
+			});
+		}
 
-		// When date is cleared, be sure to clear the altField
+		// When date is cleared, be sure to clear the altField.
 		$( '#conf-sch-date' ).on( 'change', function() {
 			if ( '' == $(this).val() ) {
 				$( '#conf-sch-date-alt' ).val( '' );
@@ -18,23 +21,32 @@
 		});
 
 		// Set our time picker
-		$( '.conf-sch-time-field' ).timepicker({
-			step: 15,
-			timeFormat: 'g:i a',
-			minTime: '5:00 am',
-		});
+		var sch_time_field = $( '.conf-sch-time-field' );
+		if ( sch_time_field.length > 0 ) {
+			sch_time_field.timepicker({
+				step: 15,
+				timeFormat: 'g:i a',
+				minTime: '5:00 am',
+			});
+		}
 
-		// Run some code when the start time changes
-		$( '#conf-sch-start-time' ).on( 'changeTime', function() {
+		// Take care of the end time field.
+		var sch_end_time = $( '#conf-sch-end-time' );
+		if ( sch_end_time.length > 0 ) {
+
+			// Run some code when the start time changes
+			$( '#conf-sch-start-time' ).on( 'changeTime', function() {
+
+				// Change settings for end time
+				sch_end_time.timepicker( 'option', 'minTime', $(this).val() );
+
+			});
 
 			// Change settings for end time
-			$( '#conf-sch-end-time' ).timepicker( 'option', 'minTime', $(this).val() );
+			sch_end_time.timepicker( 'option', 'showDuration', true );
+			sch_end_time.timepicker( 'option', 'durationTime', function() { return $( '#conf-sch-start-time' ).val() } );
 
-		});
-
-		// Change settings for end time
-		$( '#conf-sch-end-time' ).timepicker( 'option', 'showDuration', true );
-		$( '#conf-sch-end-time' ).timepicker( 'option', 'durationTime', function() { return $( '#conf-sch-start-time' ).val() } );
+		}
 
 		// Setup the select2 fields
 		$( '#conf-sch-event-types' ).select2();
@@ -99,10 +111,18 @@
 	// Populate the event
 	function conf_sch_populate_events() {
 
-		// Set the <select> field and disable
-		var $events_select = $( '#conf-sch-event-parent' ).prop( 'disabled', 'disabled' );
+		// Set the <select> field and disable.
+		var $events_select = $( '#conf-sch-event-parent' );
 
-		// Get the field information
+		// Only if the select exists.
+		if ( 0 == $events_select.length ) {
+			return;
+		}
+
+		// Disable the select until it loads.
+		$events_select.prop( 'disabled', 'disabled' );
+
+		// Get the field information.
 		$.ajax({
 			url: conf_sch.wp_api_route + 'schedule?filter[posts_per_page]=-1&filter[conf_sch_ignore_clause_filter]=1',
 			success: function( $select_data ) {
@@ -121,18 +141,18 @@
 				}
 
 				// Add the options
-				$.each( $select_data, function( $index, $value ) {
+				$.each( $select_data, function( index, value ) {
 
 					// Don't include current event
-					if ( undefined !== conf_sch.post_id && conf_sch.post_id == $value.id ) {
+					if ( undefined !== conf_sch.post_id && conf_sch.post_id == value.id ) {
 						return;
 					}
 
 					// Build title string
-					var $event_title = $value.title.rendered;
+					var $event_title = value.title.rendered;
 
 					// Add the option
-					$events_select.append( '<option value="' + $value.id + '">' + $event_title + '</option>' );
+					$events_select.append( '<option value="' + value.id + '">' + $event_title + '</option>' );
 
 				});
 
@@ -148,7 +168,7 @@
 							}
 
 							// Mark the location as selected
-							$events_select.find( 'option[value="' + $event.event_parent + '"]' ).attr( 'selected', true).trigger( 'change' );
+							$events_select.find( 'option[value="' + $event.event_parent + '"]' ).attr( 'selected', true ).trigger( 'change' );
 
 						}
 					});
@@ -165,10 +185,18 @@
 	// Populate the event types
 	function conf_sch_populate_event_types() {
 
-		// Set the <select> and disable
-    	var $event_types_select = $( '#conf-sch-event-types' ).prop( 'disabled', 'disabled' );
+		// Set the <select> and disable.
+    	var $event_types_select = $( '#conf-sch-event-types' );
 
-		// Get the event types information
+    	// Only if the select exists.
+		if ( 0 == $event_types_select.length ) {
+			return;
+		}
+
+		// Disable the select until it loads.
+    	$event_types_select.prop( 'disabled', 'disabled' );
+
+		// Get the event types information.
 		$.ajax({
 			url: conf_sch.wp_api_route + 'event_types?number=-1',
 			success: function( $types ) {
@@ -182,8 +210,8 @@
 				$event_types_select.empty();
 
 				// Add the options
-				$.each( $types, function( $index, $value ) {
-					$event_types_select.append( '<option value="' + $value.id + '">' + $value.name + '</option>' );
+				$.each( $types, function( index, value ) {
+					$event_types_select.append( '<option value="' + value.id + '">' + value.name + '</option>' );
 				});
 
 				// See what event types are selected for this particular post
@@ -198,8 +226,8 @@
 							}
 
 							// Mark the options selected
-							$.each( $selected_event_types, function( $index, $value ) {
-								$event_types_select.find( 'option[value="' + $value.id + '"]' ).attr( 'selected', true).trigger( 'change' );
+							$.each( $selected_event_types, function( index, value ) {
+								$event_types_select.find( 'option[value="' + value.id + '"]' ).attr( 'selected', true ).trigger( 'change' );
 							});
 
 						}
@@ -217,8 +245,16 @@
 	// Populate the session categories
 	function conf_sch_populate_session_categories() {
 
-		// Set the <select> and disable
-		var $categories_select = $( '#conf-sch-session-categories' ).prop( 'disabled', 'disabled' );
+		// Set the <select> and disable.
+		var $categories_select = $( '#conf-sch-session-categories' );
+
+		// Only if the select exists.
+		if ( 0 == $categories_select.length ) {
+			return;
+		}
+
+		// Disable the select until it loads.
+		$categories_select.prop( 'disabled', 'disabled' );
 
 		// Get the session categories information
 		$.ajax({
@@ -234,8 +270,8 @@
 				$categories_select.empty();
 
 				// Add the options
-				$.each( $categories, function( $index, $value ) {
-					$categories_select.append( '<option value="' + $value.id + '">' + $value.name + '</option>' );
+				$.each( $categories, function( index, value ) {
+					$categories_select.append( '<option value="' + value.id + '">' + value.name + '</option>' );
 				});
 
 				// See what session categories are selected for this particular post
@@ -250,8 +286,8 @@
 							}
 
 							// Mark the options selected
-							$.each( $selected_categories, function( $index, $value ) {
-								$categories_select.find( 'option[value="' + $value.id + '"]' ).attr( 'selected', true).trigger( 'change' );
+							$.each( $selected_categories, function( index, value ) {
+								$categories_select.find( 'option[value="' + value.id + '"]' ).attr( 'selected', true ).trigger( 'change' );
 							});
 
 						}
@@ -269,10 +305,18 @@
 	// Populate the locations
 	function conf_sch_populate_locations() {
 
-		// Set the <select> and disable
-		var $locations_select = $( '#conf-sch-location' ).prop( 'disabled', 'disabled' );
+		// Set the <select> and disable.
+		var $locations_select = $( '#conf-sch-location' );
 
-		// Get the field information
+		// Only if the select exists.
+		if ( 0 == $locations_select.length ) {
+			return;
+		}
+
+		// Disable the select until it loads.
+		$locations_select.prop( 'disabled', 'disabled' );
+
+		// Get the field information.
 		$.ajax({
 			url: conf_sch.wp_api_route + 'locations?filter[posts_per_page]=-1',
 			success: function( $select_data ) {
@@ -291,8 +335,8 @@
 				}
 
 				// Add the options
-				$.each( $select_data, function( $index, $value ) {
-					$locations_select.append( '<option value="' + $value.id + '">' + $value.title.rendered + '</option>' );
+				$.each( $select_data, function( index, value ) {
+					$locations_select.append( '<option value="' + value.id + '">' + value.title.rendered + '</option>' );
 				});
 
 				// See what is selected for this particular post
@@ -307,7 +351,7 @@
 							}
 
 							// Mark the location as selected
-							$locations_select.find( 'option[value="' + $event.event_location.ID + '"]' ).attr( 'selected', true).trigger( 'change' );
+							$locations_select.find( 'option[value="' + $event.event_location.ID + '"]' ).attr( 'selected', true ).trigger( 'change' );
 
 						}
 					});
@@ -324,8 +368,16 @@
 	// Populate the speakers field
 	function conf_sch_populate_speakers() {
 
-		// Set the <select> and disable
-		var $speakers_select = $( '#conf-sch-speakers' ).prop( 'disabled', 'disabled' );
+		// Set the <select> and disable.
+		var $speakers_select = $( '#conf-sch-speakers' );
+
+		// Only if the select exists.
+		if ( 0 == $speakers_select.length ) {
+			return;
+		}
+
+		// Disable the select until it loads.
+		$speakers_select.prop( 'disabled', 'disabled' );
 
 		// Get the speakers information
 		$.ajax({
@@ -341,8 +393,8 @@
 				$speakers_select.empty();
 
 				// Add the options
-				$.each( $speakers, function( $index, $value ) {
-					$speakers_select.append( '<option value="' + $value.id + '">' + $value.title.rendered + '</option>' );
+				$.each( $speakers, function( index, value ) {
+					$speakers_select.append( '<option value="' + value.id + '">' + value.title.rendered + '</option>' );
 				});
 
 				// See what is selected for this particular post
@@ -357,8 +409,8 @@
 							}
 
 							// Mark the speaker(s) as selected
-							$.each( $event.event_speakers, function( $index, $value ) {
-								$speakers_select.find( 'option[value="' + $value.ID + '"]' ).attr( 'selected', true).trigger( 'change' );
+							$.each( $event.event_speakers, function( index, value ) {
+								$speakers_select.find( 'option[value="' + value.ID + '"]' ).attr( 'selected', true ).trigger( 'change' );
 							});
 
 						}

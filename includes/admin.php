@@ -43,34 +43,37 @@ class Conference_Schedule_Admin {
 	 */
 	protected function __construct() {
 
-		// Add styles and scripts for the tools page
+		// Return users to AJAX.
+		add_action( 'wp_ajax_conf_sch_get_users', array( $this, 'ajax_get_users' ) );
+
+		// Add styles and scripts for the tools page.
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ), 20 );
 
-		// Add regular settings page
+		// Add regular settings page.
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
 
-		// Register our settings
+		// Register our settings.
 		add_action( 'admin_init', array( $this, 'register_settings' ), 1 );
 
-		// Add our settings meta boxes
+		// Add our settings meta boxes.
 		add_action( 'admin_head-schedule_page_conf-schedule-settings', array( $this, 'add_settings_meta_boxes' ) );
 
-		// Add instructions to thumbnail admin meta box
+		// Add instructions to thumbnail admin meta box.
 		add_filter( 'admin_post_thumbnail_html', array( $this, 'filter_admin_post_thumbnail_html' ), 1, 2 );
 
-		// Add admin notices
+		// Add admin notices.
 		add_action( 'admin_notices', array( $this, 'print_admin_notice' ) );
 
-		// Add meta boxes
+		// Add meta boxes.
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 1, 2 );
 
-		// Remove meta boxes
+		// Remove meta boxes.
 		add_action( 'admin_menu', array( $this, 'remove_meta_boxes' ), 100 );
 
-		// Save meta box data
+		// Save meta box data.
 		add_action( 'save_post', array( $this, 'save_meta_box_data' ), 20, 3 );
 
-		// Set it up so we can do file uploads
+		// Set it up so we can do file uploads.
 		add_action( 'post_edit_form_tag' , array( $this, 'post_edit_form_tag' ) );
 
 	}
@@ -94,6 +97,43 @@ class Conference_Schedule_Admin {
 	private function __wakeup() {}
 
 	/**
+	 * Print list of users in JSON for AJAX.
+	 */
+	public function ajax_get_users() {
+
+		// Get list of users.
+		$users = get_users( array( 'orderby' => 'display_name' ) );
+		if ( ! empty( $users ) ) {
+
+			// Build user data.
+			$user_data = array(
+				'selected'  => 0,
+				'users'     => $users,
+			);
+
+			/*
+			 * If we passed a speaker post ID, get the
+			 * user ID assigned to the speaker post ID.
+			 */
+			$speaker_post_id = isset( $_GET['speaker_post_id'] ) ? $_GET['speaker_post_id'] : 0;
+			if ( $speaker_post_id > 0 ) {
+
+				// Get the assigned user ID for the speaker.
+				$speaker_user_id = get_post_meta( $speaker_post_id, 'conf_sch_speaker_user_id', true );
+				if ( $speaker_user_id > 0 ) {
+					$user_data['selected'] = $speaker_user_id;
+				}
+			}
+
+			// Print the user data.
+			echo json_encode( $user_data );
+
+		}
+
+		wp_die();
+	}
+
+	/**
 	 * Add styles and scripts in the admin.
 	 *
 	 * @access  public
@@ -115,40 +155,63 @@ class Conference_Schedule_Admin {
 
 		}
 
-		// Only for the post pages
-		if ( 'schedule' == $post_type && in_array( $hook_suffix, array( 'post.php', 'post-new.php' ) ) ) {
+		// Only for the post pages.
+		if ( in_array( $hook_suffix, array( 'post.php', 'post-new.php' ) ) ) {
 
-			// Register the UI style
-			wp_register_style( 'jquery-ui', '//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', array(), CONFERENCE_SCHEDULE_VERSION );
+			// Build the style dependencies for the schedule.
+			$admin_style_dep = array();
 
-			// Register the time picker
-			wp_register_style( 'timepicker', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/css' ) . 'timepicker.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
-			wp_register_script( 'timepicker', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/js' ) . 'timepicker.min.js', array( 'jquery' ), CONFERENCE_SCHEDULE_VERSION, true );
+			// We only need extras for the schedule.
+			if ( 'schedule' == $post_type ) {
 
-			// Register select2
-			wp_register_style( 'select2', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/css' ) . 'select2.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
-			wp_register_script( 'select2', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/js' ) . 'select2.min.js', array( 'jquery' ), CONFERENCE_SCHEDULE_VERSION, true );
+				// Register the various style dependencies.
+				wp_register_style( 'jquery-ui', '//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css', array(), CONFERENCE_SCHEDULE_VERSION );
+				wp_register_style( 'timepicker', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/css' ) . 'timepicker.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
+				wp_register_style( 'select2', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/css' ) . 'select2.min.css', array(), CONFERENCE_SCHEDULE_VERSION );
 
-			// Enqueue the post styles
-			wp_enqueue_style( 'conf-schedule-admin-post', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/css' ) . 'admin-post-schedule.min.css', array( 'jquery-ui', 'timepicker', 'select2' ), CONFERENCE_SCHEDULE_VERSION );
+				array_push( $admin_style_dep, 'jquery-ui', 'timepicker', 'select2' );
 
-			// Enqueue the post script
-			wp_enqueue_script( 'conf-schedule-admin-post', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/js' ) . 'admin-post.min.js', array( 'jquery', 'jquery-ui-datepicker', 'timepicker', 'select2' ), CONFERENCE_SCHEDULE_VERSION, true );
-
-			// Get the API route
-			$wp_rest_api_route = function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : '';
-			if ( ! empty( $wp_rest_api_route ) ) {
-				$wp_rest_api_route = "/{$wp_rest_api_route}/wp/v2/";
 			}
-			
-			// Pass info to the script
-			wp_localize_script( 'conf-schedule-admin-post', 'conf_sch', array(
-				'post_id'       => $post_id,
-				'wp_api_route'  => $wp_rest_api_route,
-			));
+
+			// Enqueue the post styles.
+			wp_enqueue_style( 'conf-schedule-admin-post', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/css' ) . 'admin-post.min.css', $admin_style_dep, CONFERENCE_SCHEDULE_VERSION );
+
+			// Load assets for the speakers page.
+			switch( $post_type ) {
+
+				case 'schedule':
+
+					// Register the various script dependencies.
+					wp_register_script( 'timepicker', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/js' ) . 'timepicker.min.js', array( 'jquery' ), CONFERENCE_SCHEDULE_VERSION, true );
+					wp_register_script( 'select2', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/js' ) . 'select2.min.js', array( 'jquery' ), CONFERENCE_SCHEDULE_VERSION, true );
+
+					// Enqueue the post script.
+					wp_enqueue_script( 'conf-schedule-admin-schedule', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/js' ) . 'admin-post.min.js', array( 'jquery', 'jquery-ui-datepicker', 'timepicker', 'select2' ), CONFERENCE_SCHEDULE_VERSION, true );
+
+					// Get the API route.
+					$wp_rest_api_route = function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : '';
+					if ( ! empty( $wp_rest_api_route ) ) {
+						$wp_rest_api_route = "/{$wp_rest_api_route}/wp/v2/";
+					}
+
+					// Pass info to the script.
+					wp_localize_script( 'conf-schedule-admin-schedule', 'conf_sch', array(
+						'post_id'       => $post_id,
+						'wp_api_route'  => $wp_rest_api_route,
+					));
+
+					break;
+
+				case 'speakers':
+
+					// Enqueue the post script.
+					wp_enqueue_script( 'conf-schedule-admin-speakers', trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) . 'assets/js' ) . 'admin-post-speakers.min.js', array( 'jquery' ), CONFERENCE_SCHEDULE_VERSION, true );
+
+					break;
+
+			}
 
 		}
-
 	}
 
 	/**
@@ -380,9 +443,17 @@ class Conference_Schedule_Admin {
 								<label for="conf-schedule-schedule-add-page"><strong><?php _e( 'Add the schedule to a page:', 'conf-schedule' ); ?></strong></label>
 								<select name="conf_schedule[schedule_add_page]" id="conf-schedule-schedule-add-page">
 									<option value=""><?php _e( 'Do not add to a page', 'conf-schedule' ); ?></option>
-									<?php foreach( $pages as $page ) { ?>
+									<?php
+
+									foreach( $pages as $page ) :
+
+										?>
 										<option value="<?php echo $page->ID; ?>"<?php selected( ! empty( $settings['schedule_add_page'] ) && $page->ID == $settings['schedule_add_page'] ); ?>><?php echo $page->post_title; ?></option>
-									<?php } ?>
+										<?php
+
+									endforeach;
+
+									?>
 								</select>
 								<p class="description"><?php _e( 'If defined, will automatically add the schedule to the end of the selected page. Otherwise, you can add the schedule with the [print_conference_schedule] shortcode.', 'conf-schedule' ); ?></p>
 							</td>
@@ -1004,7 +1075,8 @@ class Conference_Schedule_Admin {
 		// Convert event date to m/d/Y
 		$event_date_mdy = $event_date ? date( 'm/d/Y', strtotime( $event_date ) ) : null;
 
-		?><table class="form-table conf-schedule-post">
+		?>
+		<table class="form-table conf-schedule-post">
 			<tbody>
 				<tr>
 					<th scope="row"><label for="conf-sch-date"><?php _e( 'Date', 'conf-schedule' ); ?></label></th>
@@ -1138,7 +1210,8 @@ class Conference_Schedule_Admin {
 					</td>
 				</tr>
 			</tbody>
-		</table><?php
+		</table>
+		<?php
 
 	}
 
@@ -1345,38 +1418,30 @@ class Conference_Schedule_Admin {
 		wp_nonce_field( 'conf_schedule_save_speaker_details', 'conf_schedule_save_speaker_details_nonce' );
 
 		// Get saved speaker details
-		$speaker_user_id = get_post_meta( $post_id, 'conf_sch_speaker_user_id', true );
 		$speaker_position = get_post_meta( $post_id, 'conf_sch_speaker_position', true );
 		$speaker_url = get_post_meta( $post_id, 'conf_sch_speaker_url', true );
 		$speaker_company = get_post_meta( $post_id, 'conf_sch_speaker_company', true );
 		$speaker_company_url = get_post_meta( $post_id, 'conf_sch_speaker_company_url', true );
 
-		// Get list of users.
-		$users = get_users( array(
-			'orderby' => 'display_name',
-		));
-
-		?><table class="form-table conf-schedule-post">
+		?>
+		<table class="form-table conf-schedule-post">
 			<tbody>
 				<tr>
-					<th scope="row"><label for="conf-sch-user"><?php _e( 'WordPress User', 'conf-schedule' ); ?></label></th>
+					<th scope="row"><label for="conf-sch-users"><?php _e( 'WordPress User', 'conf-schedule' ); ?></label></th>
 					<td>
-						<select name="conf_schedule[speaker][user_id]" id="conf-sch-user">
-							<option value=""><?php _e( 'Do not assign to a user', 'conf-schedule' ); ?></option>
-							<?php
+						<?php
 
-							if ( ! empty( $users ) ) :
-								foreach( $users as $user ) :
+						// The default/blank option label.
+						$select_default = __( 'Do not assign to a user', 'conf-schedule' );
 
-									?>
-									<option value="<?php echo $user->ID; ?>"<?php selected( $user->ID == $speaker_user_id ); ?>><?php echo $user->data->display_name . ' (' . $user->data->user_login , ')'; ?></option>
-									<?php
-
-								endforeach;
-							endif;
-
-							?>
+						?>
+						<select name="conf_schedule[speaker][user_id]" id="conf-sch-users" data-default="<?php echo $select_default; ?>" disabled="disabled">
+							<option value=""><?php echo $select_default; ?></option>
 						</select>
+						<p class="description">
+							<a class="conf-sch-refresh-users" href="#"><?php _e( 'Refresh users', 'conf-schedule' ); ?></a> |
+							<a href="<?php echo admin_url( 'users.php' ); ?>" target="_blank"><?php _e( 'Manage users', 'conf-schedule' ); ?></a>
+						</p>
 						<p class="description"><?php _e( 'Assign this speaker to a WordPress user.', 'conf-schedule' ); ?></p>
 					</td>
 				</tr>
@@ -1409,7 +1474,8 @@ class Conference_Schedule_Admin {
 					</td>
 				</tr>
 			</tbody>
-		</table><?php
+		</table>
+		<?php
 
 	}
 
