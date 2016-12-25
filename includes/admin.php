@@ -285,47 +285,48 @@ class Conference_Schedule_Admin {
 	 */
 	public function print_settings_page() {
 
-		?><div class="wrap">
-			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1><?php
+		?>
+		<div class="wrap">
+			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+			<form method="post" action="options.php" novalidate="novalidate">
+				<?php
 
-			// Print the settings form
-			?><form method="post" action="options.php" novalidate="novalidate"><?php
-
-				// Setup fields
+				// Setup fields.
 				settings_fields( 'conf_schedule' );
 
-				?><div id="poststuff">
+				?>
+				<div id="poststuff">
 					<div id="post-body" class="metabox-holder columns-2">
 
 						<div id="postbox-container-1" class="postbox-container">
-
-							<div id="side-sortables" class="meta-box-sortables"><?php
-								do_meta_boxes( $this->settings_page_id, 'side', array() );
-							?></div> <!-- #side-sortables -->
-
-						</div> <!-- #postbox-container-1 -->
+							<div id="side-sortables" class="meta-box-sortables">
+								<?php do_meta_boxes( $this->settings_page_id, 'side', array() ); ?>
+							</div>
+						</div>
 
 						<div id="postbox-container-2" class="postbox-container">
 
-							<div id="normal-sortables" class="meta-box-sortables"><?php
-								do_meta_boxes( $this->settings_page_id, 'normal', array() );
-								?></div> <!-- #normal-sortables -->
+							<div id="normal-sortables" class="meta-box-sortables">
+								<?php do_meta_boxes( $this->settings_page_id, 'normal', array() ); ?>
+							</div>
 
-							<div id="advanced-sortables" class="meta-box-sortables"><?php
-								do_meta_boxes( $this->settings_page_id, 'advanced', array() );
-								?></div> <!-- #advanced-sortables --><?php
+							<div id="advanced-sortables" class="meta-box-sortables">
+								<?php do_meta_boxes( $this->settings_page_id, 'advanced', array() ); ?>
+							</div>
+							<?php
 
-							// Print save button
+							// Print save button.
 							submit_button( 'Save Changes', 'primary', 'conf_schedule_save_changes', false );
 
-						?></div> <!-- #postbox-container-2 -->
+							?>
+						</div>
 
-					</div> <!-- #post-body -->
+					</div>
 					<br class="clear" />
-				</div> <!-- #poststuff -->
-
+				</div>
 			</form>
-		</div> <!-- .wrap --><?php
+		</div>
+		<?php
 
 	}
 
@@ -359,43 +360,43 @@ class Conference_Schedule_Admin {
 	 */
 	public function add_settings_meta_boxes() {
 
-		// Get the settings
+		// Get the settings.
 		$settings = conference_schedule()->get_settings();
 
-		// About this Plugin
+		// About this Plugin.
 		add_meta_box( 'conf-schedule-about-mb', __( 'About this Plugin', 'conf-schedule' ), array(
 			$this,
 			'print_settings_meta_boxes'
 		), $this->settings_page_id, 'side', 'core', array(
-			'id' => 'about',
-			'settings' => $settings,
+			'id'        => 'about',
+			'settings'  => $settings,
 		));
 
-		// Spread the Love
+		// Spread the Love.
 		add_meta_box( 'conf-schedule-promote-mb', __( 'Spread the Love', 'conf-schedule' ), array(
 			$this,
 			'print_settings_meta_boxes'
 		), $this->settings_page_id, 'side', 'core', array(
-			'id' => 'promote',
-			'settings' => $settings,
+			'id'        => 'promote',
+			'settings'  => $settings,
 		));
 
-		// Session Fields
+		// Session Fields.
 		add_meta_box( 'conf-schedule-fields-mb', __( 'Session Fields', 'conf-schedule' ), array(
 			$this,
 			'print_settings_meta_boxes'
 		), $this->settings_page_id, 'normal', 'core', array(
-			'id' => 'fields',
-			'settings' => $settings,
+			'id'        => 'fields',
+			'settings'  => $settings,
 		));
 
-		// Displaying the Schedule
+		// Displaying the Schedule.
 		add_meta_box( 'conf-schedule-display-schedule-mb', __( 'Displaying The Schedule', 'conf-schedule' ), array(
 			$this,
 			'print_settings_meta_boxes'
 		), $this->settings_page_id, 'normal', 'core', array(
-			'id' => 'display-schedule',
-			'settings' => $settings,
+			'id'        => 'display-schedule',
+			'settings'  => $settings,
 		));
 
 	}
@@ -412,38 +413,49 @@ class Conference_Schedule_Admin {
 
 		switch( $metabox[ 'args' ][ 'id' ] ) {
 
-			// About meta box
-			// @TODO add link to repo for ratings
+			/*
+			 * About meta box.
+			 *
+			 * @TODO add link to repo for ratings.
+			 */
 			case 'about':
-				?><p><?php _e( 'Helps you build a simple schedule for your conference website.', 'conf-schedule' ); ?></p>
+
+				?>
+				<p><?php _e( 'Helps you build a simple schedule for your conference website.', 'conf-schedule' ); ?></p>
 				<p>
 					<strong><a href="<?php echo CONFERENCE_SCHEDULE_PLUGIN_URL; ?>" target="_blank"><?php _e( 'Conference Schedule', 'conf-schedule' ); ?></a></strong><br />
 					<strong><?php _e( 'Version', 'conf-schedule' ); ?>:</strong> <?php echo CONFERENCE_SCHEDULE_VERSION; ?><br /><strong><?php _e( 'Author', 'conf-schedule' ); ?>:</strong> <a href="https://bamadesigner.com/" target="_blank">Rachel Carden</a>
-				</p><?php
+				</p>
+				<?php
+
 				break;
 
-			// Promote meta box
+			// Promote meta box.
 			case 'promote':
-				?><p class="twitter"><a href="https://twitter.com/bamadesigner" title="<?php _e( 'Follow bamadesigner on Twitter', 'conf-schedule' ); ?>" target="_blank"><span class="dashicons dashicons-twitter"></span> <span class="promote-text"><?php _e( 'Follow me on Twitter', 'conf-schedule' ); ?></span></a></p>
-				<p class="donate"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ZCAN2UX7QHZPL&lc=US&item_name=Rachel%20Carden%20%28Conference%20Schedule%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted" title="<?php esc_attr_e( 'Donate a few bucks to the plugin', 'conf-schedule' ); ?>" target="_blank"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" alt="<?php esc_attr_e( 'Donate', 'conf-schedule' ); ?>" /> <span class="promote-text"><?php _e( 'and buy me a coffee', 'conf-schedule' ); ?></span></a></p><?php
+
+				?>
+				<p class="twitter"><a href="https://twitter.com/bamadesigner" title="<?php _e( 'Follow bamadesigner on Twitter', 'conf-schedule' ); ?>" target="_blank"><span class="dashicons dashicons-twitter"></span> <span class="promote-text"><?php _e( 'Follow me on Twitter', 'conf-schedule' ); ?></span></a></p>
+				<p class="donate"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ZCAN2UX7QHZPL&lc=US&item_name=Rachel%20Carden%20%28Conference%20Schedule%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted" title="<?php esc_attr_e( 'Donate a few bucks to the plugin', 'conf-schedule' ); ?>" target="_blank"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" alt="<?php esc_attr_e( 'Donate', 'conf-schedule' ); ?>" /> <span class="promote-text"><?php _e( 'and buy me a coffee', 'conf-schedule' ); ?></span></a></p>
+				<?php
+
 				break;
 
-			// Session fields meta box
+			// Session fields meta box.
 			case 'fields':
 
-				// Get settings
+				// Get settings.
 				$settings = ! empty( $metabox['args']['settings'] ) ? $metabox['args']['settings'] : array();
 
-				// Get field settings
+				// Get field settings.
 				$fields = isset( $settings['session_fields'] ) ? $settings['session_fields'] : array();
 
-				// Make sure its an array
+				// Make sure its an array.
 				if ( ! is_array( $fields ) ) {
 					$fields = explode( ', ', $fields );
 				}
 
-				// Print the settings table
-				?><table id="conf-schedule-fields" class="form-table conf-schedule-settings">
+				?>
+				<table id="conf-schedule-fields" class="form-table conf-schedule-settings">
 					<tbody>
 						<tr>
 							<td>
@@ -458,25 +470,27 @@ class Conference_Schedule_Admin {
 							</td>
 						</tr>
 					</tbody>
-				</table><?php
-				break;
+				</table>
+				<?php
 
 				break;
 
-			// Displaying The Schedule meta box
+				break;
+
+			// Displaying The Schedule meta box.
 			case 'display-schedule':
 
-				// Get the settings
+				// Get the settings.
 				$settings = ! empty( $metabox['args']['settings'] ) ? $metabox['args']['settings'] : array();
 
-				// Get display field settings
+				// Get display field settings.
 				$display_fields = isset( $settings['schedule_display_fields'] ) ? $settings['schedule_display_fields'] : array();
 
-				// Get the existing pages
+				// Get the existing pages.
 				$pages = get_pages();
 
-				// Print the settings table
-				?><table id="conf-schedule-display-schedule" class="form-table conf-schedule-settings">
+				?>
+				<table id="conf-schedule-display-schedule" class="form-table conf-schedule-settings">
 					<tbody>
 						<tr>
 							<td>
@@ -491,7 +505,7 @@ class Conference_Schedule_Admin {
 									<option value=""><?php _e( 'Do not add to a page', 'conf-schedule' ); ?></option>
 									<?php
 
-									foreach( $pages as $page ) :
+									foreach ( $pages as $page ) :
 
 										?>
 										<option value="<?php echo $page->ID; ?>"<?php selected( ! empty( $settings['schedule_add_page'] ) && $page->ID == $settings['schedule_add_page'] ); ?>><?php echo $page->post_title; ?></option>
@@ -514,8 +528,44 @@ class Conference_Schedule_Admin {
 								</fieldset>
 							</td>
 						</tr>
+						<tr>
+							<td>
+								<label for="conf-schedule-schedule-pre-html" style="margin-bottom:15px;"><strong><?php _e( 'Content to add before the schedule:', 'conf-schedule' ); ?></strong></label>
+								<?php
+
+								// @TODO add to front-end output
+								$pre_html = ! empty( $settings['pre_html]'] ) ? $settings['pre_html]'] : '';
+								wp_editor( $pre_html, 'conf-schedule-schedule-pre-html', array(
+									'wpautop'       => true,
+									'media_buttons' => true,
+									'textarea_name' => 'conf_schedule[pre_html]',
+									'editor_height' => '200px',
+								) );
+
+								?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="conf-schedule-schedule-post-html" style="margin-bottom:15px;"><strong><?php _e( 'Content to add after the schedule:', 'conf-schedule' ); ?></strong></label>
+								<?php
+
+								// @TODO add to front-end output
+								$post_html = ! empty( $settings['post_html]'] ) ? $settings['post_html]'] : '';
+								wp_editor( $post_html, 'conf-schedule-schedule-post-html', array(
+									'wpautop'       => true,
+									'media_buttons' => true,
+									'textarea_name' => 'conf_schedule[post_html]',
+									'editor_height' => '200px',
+								));
+
+								?>
+							</td>
+						</tr>
 					</tbody>
-				</table><?php
+				</table>
+				<?php
+
 				break;
 
 		}
@@ -563,12 +613,16 @@ class Conference_Schedule_Admin {
 			return;
 		}
 
-		// Let us know if the REST API plugin, which we depend on, is not active
-		if ( ! is_plugin_active( 'WP-API/plugin.php' ) && ! is_plugin_active( 'rest-api/plugin.php' ) ) {
-			?><div class="updated notice">
+		// Let us know if the REST API plugin, which we depend on, is not active.
+		if ( ! is_plugin_active( 'WP-API/plugin.php' ) && ! is_plugin_active( 'rest-api/plugin.php' ) ) :
+
+			?>
+			<div class="updated notice">
 				<p><?php _e( 'The Conference Schedule plugin depends on the REST API plugin, version 2.0. <a href="' . admin_url('plugins.php') . '">Please activate this plugin</a>. ', 'conf-schedule' ); ?></p>
-			</div><?php
-		}
+			</div>
+			<?php
+
+		endif;
 
 	}
 
@@ -584,7 +638,7 @@ class Conference_Schedule_Admin {
 
 			case 'schedule':
 
-				// Event Details
+				// Event Details.
 				add_meta_box(
 					'conf-schedule-event-details',
 					__( 'Event Details', 'conf-schedule' ),
@@ -594,10 +648,10 @@ class Conference_Schedule_Admin {
 					'high'
 				);
 
-				// Get session fields
+				// Get session fields.
 				$session_fields = conference_schedule()->get_session_fields();
 
-				// Session Details
+				// Session Details.
 				if ( ! empty( $session_fields ) ) {
 					add_meta_box(
 						'conf-schedule-session-details',
@@ -609,7 +663,7 @@ class Conference_Schedule_Admin {
 					);
 				}
 
-				// Social Media
+				// Social Media.
 				add_meta_box(
 					'conf-schedule-social-media',
 					__( 'Social Media', 'conf-schedule' ),
@@ -623,7 +677,7 @@ class Conference_Schedule_Admin {
 
 			case 'speakers':
 
-				// Speaker Details
+				// Speaker Details.
 				add_meta_box(
 					'conf-schedule-speaker-details',
 					__( 'Speaker Details', 'conf-schedule' ),
@@ -633,7 +687,7 @@ class Conference_Schedule_Admin {
 					'high'
 				);
 
-				// Social Media
+				// Social Media.
 				add_meta_box(
 					'conf-schedule-speaker-social-media',
 					__( 'Social Media', 'conf-schedule' ),
@@ -647,7 +701,7 @@ class Conference_Schedule_Admin {
 
 			case 'locations':
 
-				// Location Details
+				// Location Details.
 				add_meta_box(
 					'conf-schedule-location-details',
 					__( 'Location Details', 'conf-schedule' ),
@@ -671,10 +725,10 @@ class Conference_Schedule_Admin {
 	 */
 	public function remove_meta_boxes() {
 
-		// Remove the event types taxonomy meta box
+		// Remove the event types taxonomy meta box.
 		remove_meta_box( 'tagsdiv-event_types', 'schedule', 'side' );
 
-		// Remove the session categories taxonomy meta box
+		// Remove the session categories taxonomy meta box.
 		remove_meta_box( 'tagsdiv-session_categories', 'schedule', 'side' );
 
 	}
@@ -728,12 +782,12 @@ class Conference_Schedule_Admin {
 	 */
 	function save_meta_box_data( $post_id, $post, $update ) {
 
-		// Disregard on autosave
+		// Disregard on autosave.
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
 		}
 
-		// Make sure user has permissions
+		// Make sure user has permissions.
 		$post_type_object = get_post_type_object( $post->post_type );
 		$user_has_cap = $post_type_object && isset( $post_type_object->cap->edit_post ) ? current_user_can( $post_type_object->cap->edit_post ) : false;
 
@@ -741,339 +795,346 @@ class Conference_Schedule_Admin {
 			return;
 		}
 
-		// Proceed depending on post type
+		// Proceed depending on post type.
 		switch( $post->post_type ) {
 
 			case 'schedule':
 
-				// Make sure fields are set
+				// Make sure fields are set.
 				if ( isset( $_POST[ 'conf_schedule' ] ) && isset( $_POST[ 'conf_schedule' ][ 'event' ] ) ) {
 
-					// Check if our nonce is set because the 'save_post' action can be triggered at other times
+					// Check if our nonce is set because the 'save_post' action can be triggered at other times.
 					if ( isset( $_POST[ 'conf_schedule_save_event_details_nonce' ] ) ) {
 
-						// Verify the nonce
+						// Verify the nonce.
 						if ( wp_verify_nonce( $_POST[ 'conf_schedule_save_event_details_nonce' ], 'conf_schedule_save_event_details' ) ) {
 
-							// Make sure date is set
+							// Make sure date is set.
 							if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'date' ] ) ) {
 
-								// Sanitize the value
+								// Sanitize the value.
 								$event_date = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ 'date' ] );
 
-								// Update/save value
+								// Update/save value.
 								update_post_meta( $post_id, 'conf_sch_event_date', $event_date );
 
 							}
 
-							// Make sure times are set
+							// Make sure times are set.
 							foreach ( array( 'start_time', 'end_time' ) as $time_key ) {
 
-								// If we have a value, store it
+								/*
+								 * If we have a value, store it.
+								 *
+								 * Otherwise, clear it out.
+								 */
 								if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ $time_key ] ) ) {
 
-									// Sanitize the value
+									// Sanitize the value.
 									$time_value = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ $time_key ] );
 
-									// If we have a time, format it
+									// If we have a time, format it.
 									if ( ! empty( $time_value ) ) {
 										$time_value = date( 'H:i', strtotime( $time_value ) );
 									}
 
-									// Update/save value
+									// Update/save value.
 									update_post_meta( $post_id, "conf_sch_event_{$time_key}", $time_value );
 
-								}
-
-								// Otherwise, clear it out
-								else {
+								} else {
 									update_post_meta( $post_id, "conf_sch_event_{$time_key}", null );
 								}
-
 							}
 
-							// Make sure type is set
+							/*
+							 * Set the event type relationships.
+							 */
 							if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'event_types' ] ) ) {
+
 								$event_types = $_POST[ 'conf_schedule' ][ 'event' ][ 'event_types' ];
 
-								// Make sure its an array
+								// Make sure its an array.
 								if ( ! is_array( $event_types ) ) {
 									$event_types = explode( ',', $event_types );
 								}
 
-								// Make sure it has only IDs
+								// Make sure it has only IDs.
 								$event_types = array_filter( $event_types, 'is_numeric' );
 
-								// Convert to integer
+								// Convert to integer.
 								$event_types = array_map( 'intval', $event_types );
 
-								// Set the terms
+								// Set the terms.
 								wp_set_object_terms( $post_id, $event_types, 'event_types', false );
 
-							} // Clear out event types meta
-							else {
+							} else {
 								wp_delete_object_term_relationships( $post_id, 'event_types' );
 							}
 
-							// Make sure session categories are set
+							/*
+							 * Make sure session categories are set.
+							 */
 							if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'session_categories' ] ) ) {
+
 								$session_categories = $_POST[ 'conf_schedule' ][ 'event' ][ 'session_categories' ];
 
-								// Make sure its an array
+								// Make sure its an array.
 								if ( ! is_array( $session_categories ) ) {
 									$session_categories = explode( ',', $session_categories );
 								}
 
-								// Make sure it has only IDs
+								// Make sure it has only IDs.
 								$session_categories = array_filter( $session_categories, 'is_numeric' );
 
-								// Convert to integer
+								// Convert to integer.
 								$session_categories = array_map( 'intval', $session_categories );
 
-								// Set the terms
+								// Set the terms.
 								wp_set_object_terms( $post_id, $session_categories, 'session_categories', false );
 
-							} // Clear out session categories meta
-							else {
+							} else {
 								wp_delete_object_term_relationships( $post_id, 'session_categories' );
 							}
 
-							// Make sure location is set
+							// Make sure location is set.
 							if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'location' ] ) ) {
 
-								// Sanitize the value
+								// Sanitize the value.
 								$event_location = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ 'location' ] );
 
-								// Update/save value
+								// Update/save value.
 								update_post_meta( $post_id, 'conf_sch_event_location', $event_location );
 
 							}
 
-							// Make sure speakers are set
+							/*
+							 * Make sure speakers are set.
+							 */
 							if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'speakers' ] ) ) {
+
 								$event_speakers = $_POST[ 'conf_schedule' ][ 'event' ][ 'speakers' ];
 
-								// Make sure its an array
+								// Make sure its an array.
 								if ( ! is_array( $event_speakers ) ) {
 									$event_speakers = explode( ',', $event_speakers );
 								}
 
-								// Make sure it has only IDs
+								// Make sure it has only IDs.
 								$event_speakers = array_filter( $event_speakers, 'is_numeric' );
 
-								// Convert to integer
+								// Convert to integer.
 								$event_speakers = array_map( 'intval', $event_speakers );
 
-								// Update/save value
+								// Update/save value.
 								update_post_meta( $post_id, 'conf_sch_event_speakers', $event_speakers );
 
-							}
-
-							// Clear out speakers meta
-							else {
+							} else {
 								update_post_meta( $post_id, 'conf_sch_event_speakers', null );
 							}
 
-							// Make sure 'sch_link_to_post' is set
+							/*
+							 * Make sure 'sch_link_to_post' is set.
+							 */
 							if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ 'sch_link_to_post' ] ) ) {
 								update_post_meta( $post_id, 'conf_sch_link_to_post', '1' );
-							}
-
-							// Clear out 'sch_link_to_post' meta
-							else {
+							} else {
 								update_post_meta( $post_id, 'conf_sch_link_to_post', '0' );
 							}
-
 						}
-
 					}
 
-					// Check if our session details nonce is set because the 'save_post' action can be triggered at other times
+					/*
+					 * Check if our session details nonce is set because
+					 * the 'save_post' action can be triggered at other times.
+					 */
 					if ( isset( $_POST[ 'conf_schedule_save_session_details_nonce' ] ) ) {
 
-						// Verify the nonce
+						// Verify the nonce.
 						if ( wp_verify_nonce( $_POST[ 'conf_schedule_save_session_details_nonce' ], 'conf_schedule_save_session_details' ) ) {
 
-							// Process each field
+							// Process each field.
 							foreach ( array( 'livestream_url', 'slides_url', 'feedback_url', 'feedback_reveal_delay_seconds', 'follow_up_url', 'video_url' ) as $field_name ) {
 								if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ $field_name ] ) ) {
 
-									// Sanitize the value
+									// Sanitize the value.
 									$field_value = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ $field_name ] );
 
-									// Update/save value
+									// Update/save value.
 									update_post_meta( $post_id, "conf_sch_event_{$field_name}", trim( $field_value ) );
 
 								}
 							}
 
-							// Process the session file
+							/*
+							 * Process the session file.
+							 *
+							 * Check to see if our
+							 * 'conf_schedule_event_delete_slides_file'
+							 * hidden input is included.
+							 */
 							if ( ! empty( $_FILES ) && isset( $_FILES[ 'conf_schedule_event_slides_file' ] ) && ! empty( $_FILES[ 'conf_schedule_event_slides_file' ][ 'name' ] ) ) {
 
-								// Upload the file to the server
+								// Upload the file to the server.
 								$upload_file = wp_handle_upload( $_FILES[ 'conf_schedule_event_slides_file' ], array( 'test_form' => false ) );
 
 								// If the upload was successful...
 								if ( $upload_file && ! isset( $upload_file[ 'error' ] ) ) {
 
-									// Should be the path to a file in the upload directory
+									// Should be the path to a file in the upload directory.
 									$file_name = $upload_file[ 'file' ];
 
-									// Get the file type
+									// Get the file type.
 									$file_type = wp_check_filetype( $file_name );
 
 									// Prepare an array of post data for the attachment.
 									$attachment = array( 'guid' => $upload_file[ 'url' ], 'post_mime_type' => $file_type[ 'type' ], 'post_title' => preg_replace( '/\.[^.]+$/', '', basename( $file_name ) ), 'post_content' => '', 'post_status' => 'inherit' );
 
-									// Insert the attachment
+									// Insert the attachment.
 									if ( $attachment_id = wp_insert_attachment( $attachment, $file_name, $post_id ) ) {
 
-										// Generate the metadata for the attachment and update the database record
+										// Generate the metadata for the attachment and update the database record.
 										if ( $attach_data = wp_generate_attachment_metadata( $attachment_id, $file_name ) ) {
 											wp_update_attachment_metadata( $attachment_id, $attach_data );
 										}
 
-										// Update/save value
+										// Update/save value.
 										update_post_meta( $post_id, 'conf_sch_event_slides_file', $attachment_id );
 
 									}
-
 								}
 
-							} // Check to see if our 'conf_schedule_event_delete_slides_file' hidden input is included
-							else if ( isset( $_POST[ 'conf_schedule_event_delete_slides_file' ] ) && $_POST[ 'conf_schedule_event_delete_slides_file' ] > 0 ) {
+							}  else if ( isset( $_POST[ 'conf_schedule_event_delete_slides_file' ] )
+								&& $_POST[ 'conf_schedule_event_delete_slides_file' ] > 0 ) {
 
-								// Clear out the meta
+								// Clear out the meta.
 								update_post_meta( $post_id, 'conf_sch_event_slides_file', null );
 
 							}
-
 						}
-
 					}
 
-					// Check if our social media nonce is set because the 'save_post' action can be triggered at other times
+					/*
+					 * Check if our social media nonce is set because
+					 * the 'save_post' action can be triggered at other times.
+					 */
 					if ( isset( $_POST[ 'conf_schedule_save_event_social_media_nonce' ] ) ) {
 
-						// Verify the nonce
+						// Verify the nonce.
 						if ( wp_verify_nonce( $_POST[ 'conf_schedule_save_event_social_media_nonce' ], 'conf_schedule_save_event_social_media' ) ) {
 
-							// Process each field
+							// Process each field.
 							foreach ( array( 'hashtag' ) as $field_name ) {
 								if ( isset( $_POST[ 'conf_schedule' ][ 'event' ][ $field_name ] ) ) {
 
-									// Sanitize the value
+									// Sanitize the value.
 									$field_value = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'event' ][ $field_name ] );
 
-									// Remove any possible hashtags
+									// Remove any possible hashtags.
 									$field_value = preg_replace( '/\#/i', '', $field_value );
 
-									// Update/save value
+									// Update/save value.
 									update_post_meta( $post_id, "conf_sch_event_{$field_name}", $field_value );
 
 								}
-
 							}
-
 						}
-
 					}
-
 				}
 
 				break;
 
 			case 'speakers':
 
-				// Make sure event fields are set
+				// Make sure event fields are set.
 				if ( isset( $_POST[ 'conf_schedule' ] ) && isset( $_POST[ 'conf_schedule' ][ 'speaker' ] ) ) {
 
-					// Check if our speaker details nonce is set because the 'save_post' action can be triggered at other times
+					/*
+					 * Check if our speaker details nonce is set because the
+					 * 'save_post' action can be triggered at other times.
+					 */
 					if ( isset( $_POST[ 'conf_schedule_save_speaker_details_nonce' ] ) ) {
 
-						// Verify the nonce
+						// Verify the nonce.
 						if ( wp_verify_nonce( $_POST[ 'conf_schedule_save_speaker_details_nonce' ], 'conf_schedule_save_speaker_details' ) ) {
 
-							// Process each field
+							// Process each field.
 							foreach ( array( 'user_id', 'position', 'url', 'company', 'company_url' ) as $field_name ) {
 								if ( isset( $_POST[ 'conf_schedule' ][ 'speaker' ][ $field_name ] ) ) {
 
-									// Sanitize the value
+									// Sanitize the value.
 									$field_value = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'speaker' ][ $field_name ] );
 
-									// Update/save value
+									// Update/save value.
 									update_post_meta( $post_id, "conf_sch_speaker_{$field_name}", $field_value );
 
 								}
 							}
-
 						}
-
 					}
 
-					// Check if our social media nonce is set because the 'save_post' action can be triggered at other times
+					/*
+					 * Check if our social media nonce is set because the
+					 * 'save_post' action can be triggered at other times.
+					 */
 					if ( isset( $_POST[ 'conf_schedule_save_speaker_social_media_nonce' ] ) ) {
 
-						// Verify the nonce
+						// Verify the nonce.
 						if ( wp_verify_nonce( $_POST[ 'conf_schedule_save_speaker_social_media_nonce' ], 'conf_schedule_save_speaker_social_media' ) ) {
 
-							// Process each field
+							// Process each field.
 							foreach ( array( 'facebook', 'instagram', 'twitter', 'linkedin' ) as $field_name ) {
 								if ( isset( $_POST[ 'conf_schedule' ][ 'speaker' ][ $field_name ] ) ) {
 
-									// Sanitize the value
+									// Sanitize the value.
 									$field_value = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'speaker' ][ $field_name ] );
 
-									// Update/save value
+									// Update/save value.
 									update_post_meta( $post_id, "conf_sch_speaker_{$field_name}", $field_value );
 
 								}
 							}
-
 						}
-
 					}
-
 				}
 
 				break;
 
 			case 'locations':
 
-				// Make sure location fields are set
+				// Make sure location fields are set.
 				if ( isset( $_POST[ 'conf_schedule' ] ) && isset( $_POST[ 'conf_schedule' ][ 'location' ] ) ) {
 
-					// Check if our location details nonce is set because the 'save_post' action can be triggered at other times
+					/*
+					 * Check if our location details nonce is set because the
+					 * 'save_post' action can be triggered at other times.
+					 */
 					if ( isset( $_POST[ 'conf_schedule_save_location_details_nonce' ] ) ) {
 
-						// Verify the nonce
+						// Verify the nonce.
 						if ( wp_verify_nonce( $_POST[ 'conf_schedule_save_location_details_nonce' ], 'conf_schedule_save_location_details' ) ) {
 
-							// Process each field
+							// Process each field.
 							foreach ( array( 'address', 'google_maps_url' ) as $field_name ) {
 
-								// If we have a value, update the value
+								/*
+								 * If we have a value, update the value.
+								 *
+								 * Otherwise, clear out the value.
+								 */
 								if ( isset( $_POST[ 'conf_schedule' ][ 'location' ][ $field_name ] ) ) {
 
-									// Sanitize the value
+									// Sanitize the value.
 									$field_value = sanitize_text_field( $_POST[ 'conf_schedule' ][ 'location' ][ $field_name ] );
 
-									// Update/save value
+									// Update/save value.
 									update_post_meta( $post_id, "conf_sch_location_{$field_name}", $field_value );
 
-								}
-
-								// Otherwise, clear out the value
-								else {
+								} else {
 									update_post_meta( $post_id, "conf_sch_location_{$field_name}", null );
 								}
-
 							}
-
 						}
-
 					}
-
 				}
 
 				break;
@@ -1092,15 +1153,15 @@ class Conference_Schedule_Admin {
 	public function print_event_details_form( $post_id ) {
 		global $wpdb;
 
-		// Add a nonce field so we can check for it when saving the data
+		// Add a nonce field so we can check for it when saving the data.
 		wp_nonce_field( 'conf_schedule_save_event_details', 'conf_schedule_save_event_details_nonce' );
 
-		// Get saved event details
+		// Get saved event details.
 		$event_date = get_post_meta( $post_id, 'conf_sch_event_date', true ); // Y-m-d
 		$event_start_time = get_post_meta( $post_id, 'conf_sch_event_start_time', true );
 		$event_end_time = get_post_meta( $post_id, 'conf_sch_event_end_time', true );
 
-		/**
+		/*
 		 * See if we need to link to the event post in the schedule.
 		 *
 		 * The default is true.
@@ -1110,15 +1171,15 @@ class Conference_Schedule_Admin {
 		 */
 		$sch_link_to_post = true;
 
-		// Check the database
+		// Check the database.
 		$sch_link_to_post_db = $wpdb->get_var( "SELECT meta_id FROM {$wpdb->postmeta} WHERE post_id = {$post_id} AND meta_key = 'conf_sch_link_to_post'" );
 
-		// If row exists, then check the value
+		// If row exists, then check the value.
 		if ( $sch_link_to_post_db ) {
 			$sch_link_to_post = get_post_meta( $post_id, 'conf_sch_link_to_post', true );
 		}
 
-		// Convert event date to m/d/Y
+		// Convert event date to m/d/Y.
 		$event_date_mdy = $event_date ? date( 'm/d/Y', strtotime( $event_date ) ) : null;
 
 		?>
@@ -1144,19 +1205,24 @@ class Conference_Schedule_Admin {
 						<p class="description"><strong><?php _e( 'Group this event by selecting the event parent.', 'conf-schedule' ); ?></strong><br /><?php _e( 'For example, lightning talks are usually events where multiple sessions equal one block on the schedule. To group events, create a "parent" event and assign them all under the same parent.', 'conf-schedule' ); ?></p>
 						<?php
 
-						// See if this event has a parent
+						// See if this event has a parent.
 						$event_parent = wp_get_post_parent_id( $post_id );
 
-						// Does this event have children or siblings?
-						// @TODO make sure they display in order and show time
+						/*
+						 * Does this event have children or siblings?
+						 *
+						 * @TODO make sure they display in order and show time.
+						 */
 						$event_children = get_children( array(
 							'post_parent' => $event_parent > 0 ? $event_parent : $post_id,
 							'post_type'   => 'schedule',
 							'numberposts' => -1,
-							'post_status' => 'any'
+							'post_status' => 'any',
 						));
 
-						if ( ! empty( $event_children ) ) { ?>
+						if ( ! empty( $event_children ) ) :
+							
+							?>
 							<div id="conf-sch-event-children">
 								<p class="description"><strong><?php
 
@@ -1168,23 +1234,27 @@ class Conference_Schedule_Admin {
 
 								?></p>
 								<ul>
-								<?php
+									<?php
 
-								foreach( $event_children as $child ) {
+									foreach ( $event_children as $child ) :
 
-									// Don't show the current event
-									if ( $child->ID == $post_id ) {
-										continue;
-									}
-									
+										// Don't show the current event.
+										if ( $child->ID == $post_id ) :
+											continue;
+										endif;
+
+										?>
+										<li><a href="<?php echo get_edit_post_link( $child->ID ); ?>"><?php echo $child->post_title; ?></a></li>
+										<?php
+
+									endforeach;
+
 									?>
-									<li><a href="<?php echo get_edit_post_link( $child->ID ); ?>"><?php echo $child->post_title; ?></a></li>
-								<?php }
-
-								?>
 								</ul>
 							</div>
-						<?php }
+							<?php
+
+						endif;
 
 						?>
 					</td>
@@ -1288,20 +1358,21 @@ class Conference_Schedule_Admin {
 	 */
 	public function print_session_details_form( $post_id ) {
 
-		// Add a session details nonce field so we can check for it when saving the data
+		// Add a session details nonce field so we can check for it when saving the data.
 		wp_nonce_field( 'conf_schedule_save_session_details', 'conf_schedule_save_session_details_nonce' );
 
-		// Get the session fields
+		// Get the session fields.
 		$session_fields = conference_schedule()->get_session_fields();
 
-		?><table class="form-table conf-schedule-post">
+		?>
+		<table class="form-table conf-schedule-post">
 			<tbody>
 				<?php
 
-				// Print livestream field(s)
-				if ( in_array( 'livestream', $session_fields ) ) {
+				// Print livestream field(s).
+				if ( in_array( 'livestream', $session_fields ) ) :
 
-					// Get field information
+					// Get field information.
 					$livestream_url = get_post_meta( $post_id, 'conf_sch_event_livestream_url', true );
 
 					?>
@@ -1314,12 +1385,12 @@ class Conference_Schedule_Admin {
 					</tr>
 					<?php
 
-				}
+				endif;
 
-				// Print slides field(s)
-				if ( in_array( 'slides', $session_fields ) ) {
+				// Print slides field(s).
+				if ( in_array( 'slides', $session_fields ) ) :
 
-					// Get field information
+					// Get field information.
 					$slides_url = get_post_meta( $post_id, 'conf_sch_event_slides_url', true );
 					$slides_file = get_post_meta( $post_id, 'conf_sch_event_slides_file', true );
 
@@ -1339,43 +1410,47 @@ class Conference_Schedule_Admin {
 							$slides_file_hide_input = false;
 
 							// If selected file...
-							if ( $slides_file > 0 ) {
+							if ( $slides_file > 0 ) :
 
-								// Confirm the file still exists
-								if ( $slides_file_post = get_post( $slides_file ) ) {
+								/*
+								 * Confirm the file still exists.
+								 *
+								 * Otherwise clear the meta.
+								 */
+								if ( $slides_file_post = get_post( $slides_file ) ) :
 
-									// Get URL
+									// Get URL.
 									$attached_slides_url = wp_get_attachment_url( $slides_file );
 
-									// Hide the file input
+									// Hide the file input.
 									$slides_file_hide_input = true;
 
-									?><div id="conf-sch-slides-file-info" style="margin:0 0 10px 0;">
-									<a style="display:block;margin:0 0 10px 0;" href="<?php echo $attached_slides_url; ?>" target="_blank"><?php echo $attached_slides_url; ?></a>
-									<span class="button conf-sch-slides-file-remove" style="clear:both;padding-left:5px;"><span class="dashicons dashicons-no" style="line-height:inherit"></span> <?php _e( 'Remove the file', 'conf-schedule' ); ?></span>
-									</div><?php
+									?>
+									<div id="conf-sch-slides-file-info" style="margin:0 0 10px 0;">
+										<a style="display:block;margin:0 0 10px 0;" href="<?php echo $attached_slides_url; ?>" target="_blank"><?php echo $attached_slides_url; ?></a>
+										<span class="button conf-sch-slides-file-remove" style="clear:both;padding-left:5px;"><span class="dashicons dashicons-no" style="line-height:inherit"></span> <?php _e( 'Remove the file', 'conf-schedule' ); ?></span>
+									</div>
+									<?php
 
-								}
-
-								// Otherwise clear the meta
-								else {
+								else :
 									update_post_meta( $post_id, 'conf_sch_event_slides_file', null );
-								}
+								endif;
 
-							}
+							endif;
 
-							?><input type="file" accept="application/pdf" id="conf-sch-slides-file-input" style="width:75%;<?php echo $slides_file_hide_input ? 'display:none;' : null; ?>" size="25" name="conf_schedule_event_slides_file" value="" />
+							?>
+							<input type="file" accept="application/pdf" id="conf-sch-slides-file-input" style="width:75%;<?php echo $slides_file_hide_input ? 'display:none;' : null; ?>" size="25" name="conf_schedule_event_slides_file" value="" />
 							<p class="description"><?php _e( "You may also upload a file if you wish to host the session's slides for users to download or view. <strong>Only PDF files are allowed.</strong>", 'conf-schedule' ); ?></p>
 						</td>
 					</tr>
 					<?php
 
-				}
+				endif;
 
-				// Print feedback field(s)
-				if ( in_array( 'feedback', $session_fields ) ) {
+				// Print feedback field(s).
+				if ( in_array( 'feedback', $session_fields ) ) :
 
-					// Get field information
+					// Get field information.
 					$feedback_url = get_post_meta( $post_id, 'conf_sch_event_feedback_url', true );
 					$feedback_reveal_delay_seconds = get_post_meta( $post_id, 'conf_sch_event_feedback_reveal_delay_seconds', true );
 
@@ -1396,12 +1471,12 @@ class Conference_Schedule_Admin {
 					</tr>
 					<?php
 
-				}
+				endif;
 
-				// Print follow up field(s)
-				if ( in_array( 'follow_up', $session_fields ) ) {
+				// Print follow up field(s).
+				if ( in_array( 'follow_up', $session_fields ) ) :
 
-					// Get field information
+					// Get field information.
 					$follow_up_url = get_post_meta( $post_id, 'conf_sch_event_follow_up_url', true );
 
 					?>
@@ -1414,12 +1489,12 @@ class Conference_Schedule_Admin {
 					</tr>
 					<?php
 
-				}
+				endif;
 
-				// Print video field(s)
-				if ( in_array( 'video', $session_fields ) ) {
+				// Print video field(s).
+				if ( in_array( 'video', $session_fields ) ) :
 
-					// Get field information
+					// Get field information.
 					$video_url = get_post_meta( $post_id, 'conf_sch_event_video_url', true );
 
 					?>
@@ -1432,11 +1507,12 @@ class Conference_Schedule_Admin {
 					</tr>
 					<?php
 
-				}
+				endif;
 
 				?>
 			</tbody>
-		</table><?php
+		</table>
+		<?php
 
 	}
 
@@ -1449,13 +1525,14 @@ class Conference_Schedule_Admin {
 	 */
 	public function print_event_social_media_form( $post_id ) {
 
-		// Add a nonce field so we can check for it when saving the data
+		// Add a nonce field so we can check for it when saving the data.
 		wp_nonce_field( 'conf_schedule_save_event_social_media', 'conf_schedule_save_event_social_media_nonce' );
 
-		// Get saved social media
+		// Get saved social media.
 		$event_hashtag = get_post_meta( $post_id, 'conf_sch_event_hashtag', true );
 
-		?><table class="form-table conf-schedule-post">
+		?>
+		<table class="form-table conf-schedule-post">
 			<tbody>
 				<tr>
 					<th scope="row"><label for="conf-sch-event-hashtag"><?php _e( 'Hashtag', 'conf-schedule' ); ?></label></th>
@@ -1465,7 +1542,8 @@ class Conference_Schedule_Admin {
 					</td>
 				</tr>
 			</tbody>
-		</table><?php
+		</table>
+		<?php
 
 	}
 
@@ -1478,10 +1556,10 @@ class Conference_Schedule_Admin {
 	 */
 	public function print_speaker_details_form( $post_id ) {
 
-		// Add a nonce field so we can check for it when saving the data
+		// Add a nonce field so we can check for it when saving the data.
 		wp_nonce_field( 'conf_schedule_save_speaker_details', 'conf_schedule_save_speaker_details_nonce' );
 
-		// Get saved speaker details
+		// Get saved speaker details.
 		$speaker_position = get_post_meta( $post_id, 'conf_sch_speaker_position', true );
 		$speaker_url = get_post_meta( $post_id, 'conf_sch_speaker_url', true );
 		$speaker_company = get_post_meta( $post_id, 'conf_sch_speaker_company', true );
@@ -1552,14 +1630,15 @@ class Conference_Schedule_Admin {
 	 */
 	public function print_location_details_form( $post_id ) {
 
-		// Add a nonce field so we can check for it when saving the data
+		// Add a nonce field so we can check for it when saving the data.
 		wp_nonce_field( 'conf_schedule_save_location_details', 'conf_schedule_save_location_details_nonce' );
 
-		// Get saved location details
+		// Get saved location details.
 		$location_address = get_post_meta( $post_id, 'conf_sch_location_address', true );
 		$location_google_maps_url = get_post_meta( $post_id, 'conf_sch_location_google_maps_url', true );
 
-		?><table class="form-table conf-schedule-post">
+		?>
+		<table class="form-table conf-schedule-post">
 			<tbody>
 				<tr>
 					<th scope="row"><label for="conf-sch-address"><?php _e( 'Address', 'conf-schedule' ); ?></label></th>
@@ -1576,7 +1655,8 @@ class Conference_Schedule_Admin {
 					</td>
 				</tr>
 			</tbody>
-		</table><?php
+		</table>
+		<?php
 
 	}
 
@@ -1589,16 +1669,17 @@ class Conference_Schedule_Admin {
 	 */
 	public function print_speaker_social_media_form( $post_id ) {
 
-		// Add a nonce field so we can check for it when saving the data
+		// Add a nonce field so we can check for it when saving the data.
 		wp_nonce_field( 'conf_schedule_save_speaker_social_media', 'conf_schedule_save_speaker_social_media_nonce' );
 
-		// Get saved speaker social media
+		// Get saved speaker social media.
 		$speaker_facebook = get_post_meta( $post_id, 'conf_sch_speaker_facebook', true );
 		$speaker_instagram = get_post_meta( $post_id, 'conf_sch_speaker_instagram', true );
 		$speaker_twitter = get_post_meta( $post_id, 'conf_sch_speaker_twitter', true );
 		$speaker_linkedin = get_post_meta( $post_id, 'conf_sch_speaker_linkedin', true );
 
-		?><table class="form-table conf-schedule-post">
+		?>
+		<table class="form-table conf-schedule-post">
 			<tbody>
 				<tr>
 					<th scope="row"><label for="conf-sch-facebook"><?php _e( 'Facebook', 'conf-schedule' ); ?></label></th>
@@ -1629,7 +1710,8 @@ class Conference_Schedule_Admin {
 					</td>
 				</tr>
 			</tbody>
-		</table><?php
+		</table>
+		<?php
 
 	}
 
@@ -1642,7 +1724,7 @@ class Conference_Schedule_Admin {
 	 */
 	public function post_edit_form_tag( $post ) {
 
-		// Only include when editing the schedule
+		// Only include when editing the schedule.
 		if ( 'schedule' == $post->post_type ) {
 			echo ' enctype="multipart/form-data"';
 		}
@@ -1665,5 +1747,5 @@ function conference_schedule_admin() {
 	return Conference_Schedule_Admin::instance();
 }
 
-// Let's get this show on the road
+// Let's get this show on the road.
 conference_schedule_admin();

@@ -463,7 +463,7 @@ class Conference_Schedule {
 				// Enqueue the schedule script
 				wp_enqueue_script( 'conf-schedule', trailingslashit( plugin_dir_url( __FILE__ ) . 'assets/js' ) . 'conf-schedule.min.js', array( 'jquery', 'handlebars' ), CONFERENCE_SCHEDULE_VERSION, true );
 
-				// Build data
+				// Build data.
 				$conf_sch_data = array(
 					'wp_api_route'  => $wp_rest_api_route,
 				);
@@ -786,7 +786,8 @@ class Conference_Schedule {
 	public function get_conference_schedule() {
 		ob_start();
 
-		// Add the template ?>
+		?>
+		<div id="conference-schedule"></div>
 		<script id="conference-schedule-template" type="text/x-handlebars-template">
 			<div id="conf-sch-event-{{id}}" class="schedule-event{{#if event_parent}} event-child{{/if}}{{#event_types}} {{.}}{{/event_types}}">
 				{{#event_time_display}}<div class="event-time">{{.}}</div>{{/event_time_display}}
@@ -798,10 +799,6 @@ class Conference_Schedule {
 				{{#event_links}}{{body}}{{/event_links}}
 			</div>
 		</script>
-		<?php
-
-		// Add the schedule holder ?>
-		<div id="conference-schedule"></div>
 		<?php
 
 		/*// What time is it?

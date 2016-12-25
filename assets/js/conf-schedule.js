@@ -174,13 +174,13 @@
 					$schedule_header += '<div class="schedule-header-event">RM B226</div>';
 					$schedule_header += '</div>';
 
-					// Add the column header row
+					// Add the column header row.
 					$schedule_day_html = '<div class="schedule-header-row">' + $schedule_header + '</div>' + $schedule_day_html;*/
 
-					// Wrap the day in the table
+					// Wrap the day in the table.
 					$schedule_day_html = '<div class="schedule-table">' + $schedule_day_html + '</div>';
 
-					// Prefix the date header
+					// Prefix the date header.
 					$schedule_day_html = '<h2 class="schedule-header">' + $day_display + '</h2>' + $schedule_day_html;
 
 					// Add to schedule
