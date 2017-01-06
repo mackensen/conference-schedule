@@ -1,26 +1,28 @@
 (function( $ ) {
 	'use strict';
 
-	// Will hold the template
+	// Will hold the template.
 	var $conf_sch_templ = false;
 
-	// Will hold the schedule
+	// Will hold the schedule and container.
 	var $conf_schedule = null;
+	var $conf_sch_container = null;
 
 	// When the document is ready...
 	$(document).ready(function() {
 
-		// Set the schedule container
+		// Set the schedule and container.
 		$conf_schedule = $( '#conference-schedule' );
+		$conf_sch_container = $( '#conference-schedule-container' );
 
-		// Get the templates
+		// Get the templates.
 		var $conf_sch_templ_content = $( '#conference-schedule-template' ).html();
 		if ( $conf_sch_templ_content !== undefined && $conf_sch_templ_content ) {
 
-			// Parse the template
+			// Parse the template.
 			$conf_sch_templ = Handlebars.compile( $conf_sch_templ_content );
 
-			// Render the schedule
+			// Render the schedule.
 			render_conference_schedule();
 
 		}
@@ -29,7 +31,7 @@
 
 	///// FUNCTIONS /////
 
-	// Get/update the schedule
+	// Get/update the schedule.
 	function render_conference_schedule() {
 
 		// Will hold all "children" events
@@ -188,7 +190,7 @@
 
 				});
 
-				// Add the html
+				// Add the html.
 				$conf_schedule.html( $schedule_html );
 
 			},
@@ -218,6 +220,11 @@
 
             		});
             	}
+
+				// Remove loading status and fade schedule in.
+				$conf_sch_container.children().fadeOut();
+				$conf_sch_container.removeClass( 'loading' );
+				$conf_sch_container.children().fadeIn( 1000 );
 
 			}
 		});

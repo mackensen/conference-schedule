@@ -347,7 +347,7 @@ $speaker-thumb-top: 5px;
 // Set schedule variables
 $conf-sch-time-width: 15%;
 $conf-sch-events-width: 85%;
-#conference-schedule {
+#conference-schedule-container {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -357,6 +357,11 @@ $conf-sch-events-width: 85%;
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
     }
+
+	// Is displayed when done loading
+	& > * {
+		display: none;
+	}
     
     .schedule-header {
 	    margin-top: 30px;
@@ -485,6 +490,11 @@ $conf-sch-events-width: 85%;
                 border-top: 0;
             }
         }
+    }
+
+    &.loading {
+        min-height: 200px;
+        background: url( '../images/loading.gif' ) center center no-repeat;
     }
 }
 
@@ -645,7 +655,7 @@ $conf-sch-events-width: 85%;
 // Screens larger than 1000px
 @media not all and (min-width: 0) and (max-width: 1000px) {
 
-    #conference-schedule {
+    #conference-schedule-container {
 
         .schedule-table {
 

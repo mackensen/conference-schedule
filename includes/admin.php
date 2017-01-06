@@ -300,7 +300,15 @@ class Conference_Schedule_Admin {
 
 						<div id="postbox-container-1" class="postbox-container">
 							<div id="side-sortables" class="meta-box-sortables">
-								<?php do_meta_boxes( $this->settings_page_id, 'side', array() ); ?>
+								<?php
+
+								// Print side boxes.
+								do_meta_boxes( $this->settings_page_id, 'side', array() );
+
+								// Print save button.
+								submit_button( __( 'Save Changes', 'conf-schedule' ), 'primary', 'conf_schedule_save_changes_side', false );
+
+								?>
 							</div>
 						</div>
 
@@ -316,7 +324,7 @@ class Conference_Schedule_Admin {
 							<?php
 
 							// Print save button.
-							submit_button( 'Save Changes', 'primary', 'conf_schedule_save_changes', false );
+							submit_button( __( 'Save Changes', 'conf-schedule' ), 'primary', 'conf_schedule_save_changes_bottom', false );
 
 							?>
 						</div>
@@ -533,8 +541,7 @@ class Conference_Schedule_Admin {
 								<label for="conf-schedule-schedule-pre-html" style="margin-bottom:15px;"><strong><?php _e( 'Content to add before the schedule:', 'conf-schedule' ); ?></strong></label>
 								<?php
 
-								// @TODO add to front-end output
-								$pre_html = ! empty( $settings['pre_html]'] ) ? $settings['pre_html]'] : '';
+								$pre_html = ! empty( $settings['pre_html'] ) ? $settings['pre_html'] : '';
 								wp_editor( $pre_html, 'conf-schedule-schedule-pre-html', array(
 									'wpautop'       => true,
 									'media_buttons' => true,
@@ -550,12 +557,43 @@ class Conference_Schedule_Admin {
 								<label for="conf-schedule-schedule-post-html" style="margin-bottom:15px;"><strong><?php _e( 'Content to add after the schedule:', 'conf-schedule' ); ?></strong></label>
 								<?php
 
-								// @TODO add to front-end output
-								$post_html = ! empty( $settings['post_html]'] ) ? $settings['post_html]'] : '';
+								$post_html = ! empty( $settings['post_html'] ) ? $settings['post_html'] : '';
 								wp_editor( $post_html, 'conf-schedule-schedule-post-html', array(
 									'wpautop'       => true,
 									'media_buttons' => true,
 									'textarea_name' => 'conf_schedule[post_html]',
+									'editor_height' => '200px',
+								));
+
+								?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="conf-schedule-event-pre-html" style="margin-bottom:15px;"><strong><?php _e( 'Content to add before the single event listings:', 'conf-schedule' ); ?></strong></label>
+								<?php
+
+								$pre_event_html = ! empty( $settings['pre_event_html'] ) ? $settings['pre_event_html'] : '';
+								wp_editor( $pre_event_html, 'conf-schedule-event-pre-html', array(
+									'wpautop'       => true,
+									'media_buttons' => true,
+									'textarea_name' => 'conf_schedule[pre_event_html]',
+									'editor_height' => '200px',
+								) );
+
+								?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="conf-schedule-event-post-html" style="margin-bottom:15px;"><strong><?php _e( 'Content to add after the single event listings:', 'conf-schedule' ); ?></strong></label>
+								<?php
+
+								$post_event_html = ! empty( $settings['post_event_html'] ) ? $settings['post_event_html'] : '';
+								wp_editor( $post_event_html, 'conf-schedule-event-post-html', array(
+									'wpautop'       => true,
+									'media_buttons' => true,
+									'textarea_name' => 'conf_schedule[post_event_html]',
 									'editor_height' => '200px',
 								));
 

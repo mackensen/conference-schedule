@@ -52,7 +52,5 @@ gulp.task('js', function() {
 });
 
 // Let's get this party started
-gulp.task('default', ['sass','js'], function() {
-	gulp.watch(src.scss, ['sass']);
-	gulp.watch(src.js, ['js']);
-});
+gulp.task('default', ['compile']);
+gulp.task('compile', ['sass','js']);

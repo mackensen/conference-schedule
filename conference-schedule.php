@@ -511,48 +511,69 @@ class Conference_Schedule {
 	public function the_content( $the_content ) {
 		global $post;
 
-		// For tweaking the single schedule pages
+		// For tweaking the single schedule pages.
 		if ( 'schedule' == get_query_var( 'post_type' ) ) {
 
-			// Get post type object
+			// Get the settings.
+			$settings = $this->get_settings();
+
+			// Get post type object.
 			$speakers_post_type_obj = get_post_type_object( 'speakers' );
 
-			// Get post type's archive title
+			// Get post type's archive title.
 			$speakers_archive_title = apply_filters( 'post_type_archive_title', $speakers_post_type_obj->labels->name, 'speakers' );
 
 			ob_start();
 
-			// Add livestream holder ?>
+			// If we have pre HTML...
+			if ( ! empty( $settings['pre_event_html'] ) ) :
+
+				// Filter the message.
+				$pre_html = apply_filters( 'conf_schedule_pre_event_message', $settings['pre_event_html'] );
+				if ( ! empty( $pre_html ) ) :
+
+					?>
+					<div class="conf-sch-pre-event-message"><?php echo wpautop( $pre_html ); ?></div>
+					<?php
+
+				endif;
+			endif;
+
+			// Add livestream holder.
+			?>
 			<div id="conf-sch-single-livestream"></div>
 			<?php
 
-			// Add the livestream template ?>
+			// Add the livestream template.
+			?>
 			<script id="conf-sch-single-ls-template" type="text/x-handlebars-template">
 				{{#if session_livestream_url}}<div class="callout"><a href="{{session_livestream_url}}"><?php _e( 'Watch the livestream', 'conf-schedule' ); ?></a></div>{{/if}}
 			</script>
 			<?php
 
-			// Add the info holders ?>
+			// Add the info holders.
+			?>
 			<div id="conf-sch-single-meta"></div>
 			<?php
 
-			// Print the content
+			// Print the content.
 			echo $the_content;
 
-			// Embed the video
+			// Embed the video.
 			$video_url = get_post_meta( $post->ID, 'conf_sch_event_video_url', true );
 			if ( ! empty( $video_url ) ) {
 
-				// Get embed
+				// Get embed.
 				$video_html = wp_oembed_get( $video_url, array(
 					'height' => 450,
 				));
 
-				// Filter video html
+				// Filter video html.
 				$video_html = apply_filters( 'conf_schedule_session_video_html', $video_html, $video_url, $post->ID );
 				if ( ! empty( $video_html ) ) {
 
-					// Print embed ?>
+					// Print embed.
+					?>
 					<div id="conf-sch-single-video">
 						<h2><?php _e( 'Watch The Session', 'conf-schedule' ); ?></h2>
 						<?php echo ! empty( $video_html ) ? $video_html : ''; ?>
@@ -567,9 +588,6 @@ class Conference_Schedule {
 			<div id="conf-sch-single-speakers">
 				<h2 class="conf-sch-single-speakers-title"><?php echo $speakers_archive_title; ?></h2>
 			</div>
-			<?php
-
-			// Add the before template ?>
 			<script id="conf-sch-single-meta-template" type="text/x-handlebars-template">
 				{{#event_date_display}}<span class="event-meta event-date"><span class="event-meta-label"><?php _e( 'Date', 'conf-schedule' ); ?>:</span> {{.}}</span>{{/event_date_display}}
 				{{#event_time_display}}<span class="event-meta event-time"><span class="event-meta-label"><?php _e( 'Time', 'conf-schedule' ); ?>:</span> {{.}}</span>{{/event_time_display}}
@@ -577,9 +595,6 @@ class Conference_Schedule {
 				{{#if session_categories}}<span class="event-meta event-categories"><span class="event-meta-label"><?php _e( 'Categories', 'conf-schedule' ); ?>:</span> {{#each session_categories}}{{#unless @first}}, {{/unless}}{{.}}{{/each}}</span>{{/if}}
 				{{#event_links}}{{body}}{{/event_links}}
 			</script>
-			<?php
-
-			// Add the speakers template ?>
 			<script id="conf-sch-single-speakers-template" type="text/x-handlebars-template">
 				<div class="event-speaker">
 					{{#if title.rendered}}<h3 class="speaker-name">{{{title.rendered}}}</h3>{{/if}}
@@ -595,14 +610,27 @@ class Conference_Schedule {
 			</script>
 			<?php
 
-			return ob_get_clean();
+			// If we have post HTML...
+			if ( ! empty( $settings['post_event_html'] ) ) :
 
+				// Filter the message.
+				$post_html = apply_filters( 'conf_schedule_post_event_message', $settings['post_event_html'] );
+				if ( ! empty( $post_html ) ) :
+
+					?>
+					<div class="conf-sch-post-event-message"><?php echo wpautop( $post_html ); ?></div>
+					<?php
+
+				endif;
+			endif;
+
+			return ob_get_clean();
 		}
 
 		// If we want to add the schedule to a page...
 		if ( $this->add_schedule_to_page() ) {
 
-			// Add the schedule
+			// Add the schedule.
 			$the_content .= $this->get_conference_schedule();
 
 		}
@@ -786,8 +814,47 @@ class Conference_Schedule {
 	public function get_conference_schedule() {
 		ob_start();
 
+		// Get settings.
+		$settings = $this->get_settings();
+
 		?>
-		<div id="conference-schedule"></div>
+		<div id="conference-schedule-container" class="loading">
+			<?php
+
+			// If we have pre HTML...
+			if ( ! empty( $settings['pre_html'] ) ) :
+
+				// Filter the message.
+				$pre_html = apply_filters( 'conf_schedule_pre_schedule_message', $settings['pre_html'] );
+				if ( ! empty( $pre_html ) ) :
+
+					?>
+					<div class="schedule-pre-message"><?php echo wpautop( $pre_html ); ?></div>
+					<?php
+
+				endif;
+			endif;
+
+			?>
+			<div id="conference-schedule"></div>
+			<?php
+
+			// If we have post HTML...
+			if ( ! empty( $settings['post_html'] ) ) :
+
+				// Filter the message.
+				$post_html = apply_filters( 'conf_schedule_post_schedule_message', $settings['post_html'] );
+				if ( ! empty( $post_html ) ) :
+
+					?>
+					<div class="schedule-post-message"><?php echo wpautop( $post_html ); ?></div>
+					<?php
+
+				endif;
+			endif;
+
+			?>
+		</div>
 		<script id="conference-schedule-template" type="text/x-handlebars-template">
 			<div id="conf-sch-event-{{id}}" class="schedule-event{{#if event_parent}} event-child{{/if}}{{#event_types}} {{.}}{{/event_types}}">
 				{{#event_time_display}}<div class="event-time">{{.}}</div>{{/event_time_display}}
