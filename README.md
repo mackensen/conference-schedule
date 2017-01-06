@@ -2,7 +2,7 @@
 
 I originally created this plugin for the HighEdWeb Association regionals to display their schedule online.
 
-You can see the plugin in action on [the HighEdWeb New England website](http://ne16.highedweb.org/schedule/) and on [the WPCampus 2016 website](https://2016.wpcampus.org/schedule/).
+You can see the plugin in action on [the HighEdWeb New England website](http://ne16.highedweb.org/schedule/), on [the WPCampus 2016 website](https://2016.wpcampus.org/schedule/), and on [the WPCampus Online website](https://online.wpcampus.org/schedule/).
 
 ## For Development
 
