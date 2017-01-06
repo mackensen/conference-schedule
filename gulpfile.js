@@ -6,6 +6,9 @@ var watch = require('gulp-watch');
 var autoprefixer = require('gulp-autoprefixer');
 var rename = require('gulp-rename');
 
+// Compatibility for older versions of npm
+require('es6-promise').polyfill();
+
 // Define the source paths for each file type
 var src = {
     scss: './assets/scss/*.scss',
